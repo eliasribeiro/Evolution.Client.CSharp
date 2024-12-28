@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Client.CSharp.Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Client.CSharp.IntegrationTests", "Evolution.Client.CSharp.IntegrationTests\Evolution.Client.CSharp.IntegrationTests.csproj", "{8EF4D0E5-F680-4A0F-8B04-003A584703B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.CSharp.Tests", "Evolution.CSharp.Tests\Evolution.CSharp.Tests.csproj", "{55144D6D-4984-4935-BB27-DAEEFFF4C950}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{8EF4D0E5-F680-4A0F-8B04-003A584703B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EF4D0E5-F680-4A0F-8B04-003A584703B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EF4D0E5-F680-4A0F-8B04-003A584703B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55144D6D-4984-4935-BB27-DAEEFFF4C950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55144D6D-4984-4935-BB27-DAEEFFF4C950}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55144D6D-4984-4935-BB27-DAEEFFF4C950}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55144D6D-4984-4935-BB27-DAEEFFF4C950}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
