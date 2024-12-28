@@ -14,8 +14,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>evolution.api; evolution.api.csharp; evolution.api.client</PackageTags>
     <PackageReleaseNotes>Versão preview.</PackageReleaseNotes>
-    <AssemblyVersion>0.1.0-preview1</AssemblyVersion>
-    <FileVersion>0.1.0-preview1</FileVersion>
+    <AssemblyVersion>0.1.0</AssemblyVersion>
+    <FileVersion>0.1.0</FileVersion>
+    <Version>0.1.0-preview1</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
