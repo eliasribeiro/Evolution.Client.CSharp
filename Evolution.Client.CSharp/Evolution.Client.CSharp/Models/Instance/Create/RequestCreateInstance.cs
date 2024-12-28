@@ -1,60 +1,141 @@
 ﻿namespace Evolution.Client.CSharp.Models.Instance.Create;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public class RequestCreateInstance
 {
-    public string instanceName { get; set; }
-    public string? token { get; set; }
-    public string? number { get; set; }
-    public bool qrcode { get; set; }
-    public string integration { get; set; } = "WHATSAPP-BAILEYS";
-    public bool? rejectCall { get; set; }
-    public string? msgCall { get; set; }
-    public bool? groupsIgnore { get; set; }
-    public bool? alwaysOnline { get; set; }
-    public bool? readMessages { get; set; }
-    public bool? readStatus { get; set; }
-    public bool? syncFullHistory { get; set; }
-    public string? proxyHost { get; set; }
-    public string? proxyPort { get; set; }
-    public string? proxyProtocol { get; set; }
-    public string? proxyUsername { get; set; }
-    public string? proxyPassword { get; set; }
-    public WebhookConfig? webhook { get; set; }
-    public RabbitMqConfig? rabbitmq { get; set; }
-    public SqsConfig? sqs { get; set; }
-    public string? chatwootAccountId { get; set; }
-    public string? chatwootToken { get; set; }
-    public string? chatwootUrl { get; set; }
-    public bool? chatwootSignMsg { get; set; }
-    public bool? chatwootReopenConversation { get; set; }
-    public bool? chatwootConversationPending { get; set; }
-    public bool? chatwootImportContacts { get; set; }
-    public string? chatwootNameInbox { get; set; }
-    public bool? chatwootMergeBrazilContacts { get; set; }
-    public bool? chatwootImportMessages { get; set; }
-    public int? chatwootDaysLimitImportMessages { get; set; }
-    public string? chatwootOrganization { get; set; }
-    public string? chatwootLogo { get; set; }
+    [JsonPropertyName("instanceName")]
+    public string InstanceName { get; set; }
+
+    [JsonPropertyName("token")]
+    public string? Token { get; set; }
+
+    [JsonPropertyName("number")]
+    public string? Number { get; set; }
+
+    [JsonPropertyName("qrcode")]
+    public bool Qrcode { get; set; }
+
+    [JsonPropertyName("integration")]
+    public string Integration { get; set; } = "WHATSAPP-BAILEYS";
+
+    [JsonPropertyName("rejectCall")]
+    public bool? RejectCall { get; set; }
+
+    [JsonPropertyName("msgCall")]
+    public string? MsgCall { get; set; }
+
+    [JsonPropertyName("groupsIgnore")]
+    public bool? GroupsIgnore { get; set; }
+
+    [JsonPropertyName("alwaysOnline")]
+    public bool? AlwaysOnline { get; set; }
+
+    [JsonPropertyName("readMessages")]
+    public bool? ReadMessages { get; set; }
+
+    [JsonPropertyName("readStatus")]
+    public bool? ReadStatus { get; set; }
+
+    [JsonPropertyName("syncFullHistory")]
+    public bool? SyncFullHistory { get; set; }
+
+    [JsonPropertyName("proxyHost")]
+    public string? ProxyHost { get; set; }
+
+    [JsonPropertyName("proxyPort")]
+    public string? ProxyPort { get; set; }
+
+    [JsonPropertyName("proxyProtocol")]
+    public string? ProxyProtocol { get; set; }
+
+    [JsonPropertyName("proxyUsername")]
+    public string? ProxyUsername { get; set; }
+
+    [JsonPropertyName("proxyPassword")]
+    public string? ProxyPassword { get; set; }
+
+    [JsonPropertyName("webhook")]
+    public WebhookConfig? Webhook { get; set; }
+
+    [JsonPropertyName("rabbitmq")]
+    public RabbitMqConfig? Rabbitmq { get; set; }
+
+    [JsonPropertyName("sqs")]
+    public SqsConfig? Sqs { get; set; }
+
+    [JsonPropertyName("chatwootAccountId")]
+    public string? ChatwootAccountId { get; set; }
+
+    [JsonPropertyName("chatwootToken")]
+    public string? ChatwootToken { get; set; }
+
+    [JsonPropertyName("chatwootUrl")]
+    public string? ChatwootUrl { get; set; }
+
+    [JsonPropertyName("chatwootSignMsg")]
+    public bool? ChatwootSignMsg { get; set; }
+
+    [JsonPropertyName("chatwootReopenConversation")]
+    public bool? ChatwootReopenConversation { get; set; }
+
+    [JsonPropertyName("chatwootConversationPending")]
+    public bool? ChatwootConversationPending { get; set; }
+
+    [JsonPropertyName("chatwootImportContacts")]
+    public bool? ChatwootImportContacts { get; set; }
+
+    [JsonPropertyName("chatwootNameInbox")]
+    public string? ChatwootNameInbox { get; set; }
+
+    [JsonPropertyName("chatwootMergeBrazilContacts")]
+    public bool? ChatwootMergeBrazilContacts { get; set; }
+
+    [JsonPropertyName("chatwootImportMessages")]
+    public bool? ChatwootImportMessages { get; set; }
+
+    [JsonPropertyName("chatwootDaysLimitImportMessages")]
+    public int? ChatwootDaysLimitImportMessages { get; set; }
+
+    [JsonPropertyName("chatwootOrganization")]
+    public string? ChatwootOrganization { get; set; }
+
+    [JsonPropertyName("chatwootLogo")]
+    public string? ChatwootLogo { get; set; }
 }
 
 public class WebhookConfig
 {
-    public string? url { get; set; }
-    public bool? byEvents { get; set; }
-    public bool? base64 { get; set; }
-    public Dictionary<string, string>? headers { get; set; }
-    public List<string>? events { get; set; }
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
+
+    [JsonPropertyName("byEvents")]
+    public bool? ByEvents { get; set; }
+
+    [JsonPropertyName("base64")]
+    public bool? Base64 { get; set; }
+
+    [JsonPropertyName("headers")]
+    public Dictionary<string, string>? Headers { get; set; }
+
+    [JsonPropertyName("events")]
+    public List<string>? Events { get; set; }
 }
 
 public class RabbitMqConfig
 {
-    public bool? enabled { get; set; }
-    public List<string>? events { get; set; }
+    [JsonPropertyName("enabled")]
+    public bool? Enabled { get; set; }
+
+    [JsonPropertyName("events")]
+    public List<string>? Events { get; set; }
 }
 
 public class SqsConfig
 {
-    public bool? enabled { get; set; }
-    public List<string>? events { get; set; }
+    [JsonPropertyName("enabled")]
+    public bool? Enabled { get; set; }
+
+    [JsonPropertyName("events")]
+    public List<string>? Events { get; set; }
 }
