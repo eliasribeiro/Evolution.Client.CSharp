@@ -8,9 +8,9 @@ Esta biblioteca permite que aplicações C# se comuniquem com a API do Evolution
 
 - [x] Gerenciamento de Instâncias
 - [x] Envio de mensagens de texto via WhatsApp
-- [] Envio de mensagens de mídia (imagens, vídeos, documentos)
-- [] Suporte a mensagens de grupo
-- [] Recebimento de notificações de mensagens
+- [ ] Envio de mensagens de mídia (imagens, vídeos, documentos)
+- [ ] Suporte a mensagens de grupo
+- [ ] Recebimento de notificações de mensagens
 
 ## Requisitos
 
