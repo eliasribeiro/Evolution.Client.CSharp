@@ -7,8 +7,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Evolution.Client.CSharp</Title>
     <Description>This library provides a robust and easy-to-use C# client for interacting with the Evolution API. It simplifies the process of integrating your C# applications with the Evolution platform, allowing you to manage instances, send messages, and in the future handle various other functionalities seamlessly.</Description>
-    <PackageProjectUrl>https://github.com/eliasribeiro/evolution-client-csharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/eliasribeiro/evolution-client-csharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/eliasribeiro/Evolution.Client.CSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/eliasribeiro/Evolution.Client.CSharp</RepositoryUrl>
     <PackageIcon>Evolution.CSharp.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
