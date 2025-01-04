@@ -1,0 +1,63 @@
+﻿@model ConfigServer
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-start">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <!-- Card para centralizar o formulário -->
+                <div class="card shadow">
+                    <div class="card-header text-center">
+                        <h5>Configuração Evolution</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Index" asp-controller="Home" method="post">
+                            <!-- Campo: URL do Servidor Evolution -->
+                            <div class="mb-3">
+                                <label for="serverUrl" class="form-label">URL do Servidor Evolution</label>
+                                <input
+                                    type="url"
+                                    class="form-control"
+                                    id="serverUrl"
+                                    asp-for="ServerUrl"
+                                    placeholder="https://seuservidor.com"
+                                    required>
+                                <div class="form-text">Insira a URL completa do seu servidor.</div>
+                            </div>
+
+                            <!-- Campo: Chave da API -->
+                            <div class="mb-3">
+                                <label for="apiKey" class="form-label">Chave da API do Evolution</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="apiKey"
+                                    asp-for="ApiKey"
+                                    placeholder="Digite sua chave de API"
+                                    required>
+                                <div class="form-text">Sua chave de API pode ser encontrada nas configurações do Evolution.</div>
+                            </div>
+
+                            <!-- Botão de envio -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Mensagem adicional abaixo do formulário -->
+                <p class="text-center mt-3 text-muted">Certifique-se de que os dados inseridos estão corretos.</p>
+            </div>
+        </div>
+    </div>
+
+</div>

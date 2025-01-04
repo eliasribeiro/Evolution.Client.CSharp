@@ -2,6 +2,7 @@
 {
     public class Instance
     {
+        
         public string InstanceName { get; set; }
         public string State { get; set; }
     }
