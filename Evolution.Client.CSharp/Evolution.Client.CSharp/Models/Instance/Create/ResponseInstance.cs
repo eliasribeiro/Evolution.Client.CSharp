@@ -38,7 +38,7 @@ namespace Evolution.Client.CSharp.Models.Instance.Create
         public string ClientName { get; set; }
 
         [JsonPropertyName("disconnectionReasonCode")]
-        public string? DisconnectionReasonCode { get; set; }
+        public int? DisconnectionReasonCode { get; set; }
 
         [JsonPropertyName("disconnectionObject")]
         public object? DisconnectionObject { get; set; }

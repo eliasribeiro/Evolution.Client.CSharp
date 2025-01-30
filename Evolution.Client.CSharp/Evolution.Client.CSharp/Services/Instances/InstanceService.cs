@@ -19,7 +19,7 @@ namespace Evolution.Client.CSharp.Services.Instances
         public async Task<ResponseInstanceConnect> InstanceConnect(string instance) => await this.client.GetAsync<ResponseInstanceConnect>($"instance/connect/{instance}");
         public async Task<ResponseInstanceConnect> RestartInstance(string instance) => await this.client.PostAsync<ResponseInstanceConnect>($"instance/restart/{instance}");
         public async Task<ResponseInstanceStatus> ConnectionStatus(string instance) => await this.client.GetAsync<ResponseInstanceStatus>($"instance/connectionState/{instance}");
-        public async Task<ResponseLogoutInstance> LogoutInstance(string instance) => await this.client.GetAsync<ResponseLogoutInstance>($"instance/logout/{instance}");
-        public async Task<ResponseDeleteInstance> DeleteInstance(string instance) => await this.client.GetAsync<ResponseDeleteInstance>($"instance/delete/{instance}");
+        public async Task<ResponseLogoutInstance> LogoutInstance(string instance) => await this.client.DeleteAsync<ResponseLogoutInstance>($"instance/logout/{instance}");
+        public async Task<ResponseDeleteInstance> DeleteInstance(string instance) => await this.client.DeleteAsync<ResponseDeleteInstance>($"instance/delete/{instance}");
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.CookiePolicy;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.CheckConsentNeeded = context => true; // Indica se será necessário o consentimento do cliente para usar cookies
