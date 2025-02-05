@@ -45,4 +45,17 @@ public class InstanceController : BaseController
 
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet("QRCode/{id}")]
+    public async Task<IActionResult> QRCode(string id)
+    {
+        var instance = await GetEvolutionClient().Instances.InstanceConnect(id);
+        if (instance is not null)
+        {
+            return View(instance);
+        }
+
+        TempData["MSG_INFO"] = "Instância não encontrada";
+        return RedirectToAction(nameof(Index));
+    }
 }
