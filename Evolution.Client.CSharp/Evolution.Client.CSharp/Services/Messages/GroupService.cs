@@ -1,6 +1,8 @@
 using Evolution.Client.CSharp.Models.Message.Group;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Evolution.Client.CSharp.Models.Message.SendMedia;
+using Evolution.Client.CSharp.Models.Message.SendText;
 
 namespace Evolution.Client.CSharp.Services.Messages
 {

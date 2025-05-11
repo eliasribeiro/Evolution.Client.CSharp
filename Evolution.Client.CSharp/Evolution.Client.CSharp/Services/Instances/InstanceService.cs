@@ -1,4 +1,5 @@
-﻿using Evolution.Client.CSharp.Models.Instance.ConnectionStatus;
+﻿using Evolution.Client.CSharp.Models.Instance;
+using Evolution.Client.CSharp.Models.Instance.ConnectionStatus;
 using Evolution.Client.CSharp.Models.Instance.Create;
 using Evolution.Client.CSharp.Models.Instance.FetchInstances;
 using Evolution.Client.CSharp.Models.Instance.InstanceConnect;
