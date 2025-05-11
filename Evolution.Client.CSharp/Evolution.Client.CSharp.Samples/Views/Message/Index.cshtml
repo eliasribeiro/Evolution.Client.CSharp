@@ -38,3 +38,75 @@
     <input name="caption" placeholder="Legenda" />
     <button type="submit">Enviar Mídia para Grupo (sample.jpg)</button>
 </form>
+
+<h2>Enviar Enquete (Poll)</h2>
+<form method="post" asp-action="SendPoll">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número (ex: 5511999999999)" required />
+    <input name="question" placeholder="Pergunta" required />
+    <input name="options" placeholder="Opções (separadas por vírgula)" required />
+    <button type="submit">Enviar Poll</button>
+</form>
+
+<h2>Enviar Lista</h2>
+<form method="post" asp-action="SendList">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número" required />
+    <input name="title" placeholder="Título" required />
+    <input name="description" placeholder="Descrição" required />
+    <input name="items" placeholder="Itens (separados por vírgula)" required />
+    <button type="submit">Enviar Lista</button>
+</form>
+
+<h2>Enviar Status</h2>
+<form method="post" asp-action="SendStatus">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="status" placeholder="Status" required />
+    <button type="submit">Enviar Status</button>
+</form>
+
+<h2>Enviar Localização</h2>
+<form method="post" asp-action="SendLocation">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número" required />
+    <input name="latitude" placeholder="Latitude" required />
+    <input name="longitude" placeholder="Longitude" required />
+    <input name="name" placeholder="Nome do local" required />
+    <input name="address" placeholder="Endereço" required />
+    <button type="submit">Enviar Localização</button>
+</form>
+
+<h2>Enviar Contato</h2>
+<form method="post" asp-action="SendContact">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número" required />
+    <input name="contactName" placeholder="Nome do contato" required />
+    <input name="contactNumber" placeholder="Telefone do contato" required />
+    <input name="email" placeholder="E-mail do contato" />
+    <button type="submit">Enviar Contato</button>
+</form>
+
+<h2>Enviar Reação</h2>
+<form method="post" asp-action="SendReaction">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número" required />
+    <input name="messageId" placeholder="ID da Mensagem" required />
+    <input name="emoji" placeholder="Emoji (ex: 👍)" required />
+    <button type="submit">Enviar Reação</button>
+</form>
+
+<h2>Enviar Sticker</h2>
+<form method="post" asp-action="SendSticker" enctype="multipart/form-data">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número" required />
+    <input type="file" name="stickerFile" accept="image/webp,image/png,image/jpeg" required />
+    <button type="submit">Enviar Sticker</button>
+</form>
+
+<h2>Enviar Áudio do WhatsApp</h2>
+<form method="post" asp-action="SendAudio" enctype="multipart/form-data">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número" required />
+    <input type="file" name="audioFile" accept="audio/ogg,audio/mpeg,audio/mp3" required />
+    <button type="submit">Enviar Áudio</button>
+</form>
