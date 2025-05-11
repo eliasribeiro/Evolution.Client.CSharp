@@ -3,6 +3,7 @@ using Evolution.Client.CSharp.Models.Instance.Create;
 using Evolution.Client.CSharp.Models.Instance.FetchInstances;
 using Evolution.Client.CSharp.Models.Instance.InstanceConnect;
 using Evolution.Client.CSharp.Models.Instance.LogoutInstance;
+using Evolution.Client.CSharp.Models.Webhook;
 
 namespace Evolution.Client.CSharp.Services.Instances
 {
@@ -21,5 +22,7 @@ namespace Evolution.Client.CSharp.Services.Instances
         public async Task<ResponseInstanceStatus> ConnectionStatus(string instance) => await this.client.GetAsync<ResponseInstanceStatus>($"instance/connectionState/{instance}");
         public async Task<ResponseLogoutInstance> LogoutInstance(string instance) => await this.client.DeleteAsync<ResponseLogoutInstance>($"instance/logout/{instance}");
         public async Task<ResponseDeleteInstance> DeleteInstance(string instance) => await this.client.DeleteAsync<ResponseDeleteInstance>($"instance/delete/{instance}");
+        public async Task<ResponseData> ConfigureWebhook(ConfigureWebhookRequest request)
+            => await this.client.PostAsync<ResponseData>("webhook/instance", request);
     }
 }

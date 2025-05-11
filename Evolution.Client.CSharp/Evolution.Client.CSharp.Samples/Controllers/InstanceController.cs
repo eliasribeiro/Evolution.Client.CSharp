@@ -2,6 +2,7 @@ using Evolution.Client.CSharp.Models.Instance.Create;
 using Evolution.Client.CSharp.Models.Instance.FetchInstances;
 using Evolution.Client.CSharp.Samples.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Evolution.Client.CSharp.Models.Webhook;
 
 namespace Evolution.Client.CSharp.Samples.Controllers;
 [ValidateCookies]
@@ -56,6 +57,26 @@ public class InstanceController : BaseController
         }
 
         TempData["MSG_INFO"] = "Instância não encontrada";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet("ConfigureWebhook")]
+    public IActionResult ConfigureWebhook()
+    {
+        return View();
+    }
+
+    [HttpPost("ConfigureWebhook")]
+    public async Task<IActionResult> ConfigureWebhook(string url, string events)
+    {
+        var eventos = events.Split(',').Select(e => e.Trim()).ToList();
+        var req = new ConfigureWebhookRequest
+        {
+            Url = url,
+            Events = eventos
+        };
+        await GetEvolutionClient().Instances.ConfigureWebhook(req);
+        TempData["MSG_INFO"] = "Webhook configurado com sucesso!";
         return RedirectToAction(nameof(Index));
     }
 }

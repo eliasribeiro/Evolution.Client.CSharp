@@ -2,4 +2,39 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Exemplo de Mensagens Evolution API";
 }
+
+<h2>Enviar Mensagem de Texto</h2>
+<form method="post" asp-action="SendText">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número (ex: 5511999999999)" required />
+    <input name="text" placeholder="Mensagem" required />
+    <button type="submit">Enviar Texto</button>
+</form>
+
+<h2>Enviar Mídia</h2>
+<form method="post" asp-action="SendMedia">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="number" placeholder="Número (ex: 5511999999999)" required />
+    <input name="type" placeholder="Tipo (image, video, etc)" required />
+    <input name="caption" placeholder="Legenda" />
+    <button type="submit">Enviar Mídia (sample.jpg)</button>
+</form>
+
+<h2>Enviar Texto para Grupo</h2>
+<form method="post" asp-action="SendGroupText">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="groupId" placeholder="ID do Grupo" required />
+    <input name="text" placeholder="Mensagem" required />
+    <button type="submit">Enviar Texto para Grupo</button>
+</form>
+
+<h2>Enviar Mídia para Grupo</h2>
+<form method="post" asp-action="SendGroupMedia">
+    <input name="instance" placeholder="ID da Instância" required />
+    <input name="groupId" placeholder="ID do Grupo" required />
+    <input name="type" placeholder="Tipo (image, video, etc)" required />
+    <input name="caption" placeholder="Legenda" />
+    <button type="submit">Enviar Mídia para Grupo (sample.jpg)</button>
+</form>

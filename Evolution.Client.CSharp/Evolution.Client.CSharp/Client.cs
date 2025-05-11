@@ -26,13 +26,13 @@ public class EvolutionClient
 
     public InstanceService Instances { get; }
     public MessageService Messages { get; }
+    public GroupService Group { get; }
     /*public InstanceOperationsService InstanceOperations { get; }
     
     public CallService Calls { get; }
     public ChatService Chat { get; }
     public LabelService Label { get; }
-    public ProfileService Profile { get; }
-    public GroupService Group { get; }*/
+    public ProfileService Profile { get; }*/
 
     public EvolutionClient(string baseUrl, string apiToken)
     {
@@ -42,13 +42,13 @@ public class EvolutionClient
 
         Instances = new InstanceService(this);
         Messages = new MessageService(this);
+        Group = new GroupService(this);
         /*InstanceOperations = new InstanceOperationsService(this);
         
         Calls = new CallService(this);
         Chat = new ChatService(this);
         Label = new LabelService(this);
-        Profile = new ProfileService(this);
-        Group = new GroupService(this);*/
+        Profile = new ProfileService(this);*/
     }
 
     private Dictionary<string, string> GetHeaders(string instanceToken = null)
@@ -103,6 +103,17 @@ public class EvolutionClient
         return await HandleResponse<T>(response);
     }
 
+    /// <summary>
+    /// Executa um POST para o endpoint especificado.
+    /// Se 'files' for fornecido, envia como multipart/form-data (usado para envio de mídia).
+    /// Caso contrário, envia como JSON.
+    /// </summary>
+    /// <typeparam name="T">Tipo de resposta esperada.</typeparam>
+    /// <param name="endpoint">Endpoint relativo da API.</param>
+    /// <param name="data">Objeto de dados a ser enviado (serializado em JSON ou campos do form).</param>
+    /// <param name="instanceToken">Token da instância, se necessário.</param>
+    /// <param name="files">Dicionário de arquivos: chave = nome do campo, valor = (nome do arquivo, bytes, mime type).</param>
+    /// <returns>Resposta desserializada do tipo T.</returns>
     public async Task<T> PostAsync<T>(string endpoint, object data = null, string instanceToken = null, Dictionary<string, (string, byte[], string)> files = null)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, GetFullUrl(endpoint));

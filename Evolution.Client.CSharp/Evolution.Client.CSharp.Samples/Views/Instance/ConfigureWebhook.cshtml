@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Configurar Webhook";
+}
+<h2>Configurar Webhook</h2>
+<form method="post">
+    <label>URL do Webhook:</label>
+    <input name="url" placeholder="https://seuservidor.com/webhook/message" required style="width:400px" />
+    <br />
+    <label>Eventos (separados por vírgula):</label>
+    <input name="events" value="MESSAGES_UPSERT,CONNECTION_UPDATE,QRCODE_UPDATED" style="width:400px" />
+    <br />
+    <button type="submit">Configurar</button>
+</form>
+@if (TempData["MSG_INFO"] != null)
+{
+    <div style="color:green">@TempData["MSG_INFO"]</div>
+} 
