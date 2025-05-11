@@ -14,10 +14,10 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <PackageTags>evolution.api; evolution.api.csharp; evolution.api.client</PackageTags>
-    <PackageReleaseNotes>Versão preview.</PackageReleaseNotes>
-    <AssemblyVersion>0.1.0</AssemblyVersion>
-    <FileVersion>0.1.0</FileVersion>
-    <Version>0.1.0-preview1</Version>
+    <PackageReleaseNotes>Evolution API - SDK de integração com Evolution API para WhatsApp.</PackageReleaseNotes>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <Version>1.0.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
