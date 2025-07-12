@@ -3,7 +3,7 @@ using Evolution.Client.CSharp.Models;
 using Evolution.Client.CSharp.Modules;
 using Microsoft.Extensions.Logging;
 
-namespace Evolution.Client;
+namespace Evolution.Client.CSharp;
 
 /// <summary>
 /// Cliente principal para interação com a Evolution API v2

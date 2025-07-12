@@ -1,6 +1,6 @@
 # Evolution.Client.CSharp
 
-SDK oficial em C# para integração com a **Evolution API v2**. Esta biblioteca oferece uma interface robusta, assíncrona e tipada para interagir com todos os recursos da Evolution API, eliminando a necessidade de lidar diretamente com requisições HTTP e serialização manual.
+SDK em C# para integração com a **Evolution API v2.2**. Esta biblioteca oferece uma interface robusta, assíncrona e tipada para interagir com todos os recursos da Evolution API, eliminando a necessidade de lidar diretamente com requisições HTTP e serialização manual.
 
 ## 🚀 Características
 
@@ -8,9 +8,8 @@ SDK oficial em C# para integração com a **Evolution API v2**. Esta biblioteca 
 - ✅ **Fortemente tipado** - IntelliSense completo e verificação de tipos em tempo de compilação
 - ✅ **Thread-safe** - Instâncias reutilizáveis em cenários paralelos
 - ✅ **Tratamento de erros robusto** - Exceções específicas com informações detalhadas
-- ✅ **Configurável** - Timeouts, retry policies, logging customizável
-- ✅ **Cobertura completa** - Suporte a todos os módulos da Evolution API v2
-- ✅ **Testes abrangentes** - Cobertura de testes ≥ 90% com xUnit + FluentAssertions
+- ✅ **Cobertura completa** - Suporte a todos os módulos da Evolution API v2.2
+- ✅ **Testes abrangentes** - Cobertura de testes.
 
 ## 📦 Instalação
 
@@ -23,9 +22,9 @@ dotnet add package Evolution.Client.CSharp
 ### Configuração do Cliente
 
 ```csharp
-using Evolution.Client;
-using Evolution.Client.Models;
-using Evolution.Client.Modules;
+using Evolution.Client.CSharp;
+using Evolution.Client.CSharp.Models;
+using Evolution.Client.CSharp.Modules;
 
 // Configuração simples
 var client = EvolutionClient.Create("https://api.evolution.com", "sua-api-key");
@@ -34,7 +33,6 @@ var client = EvolutionClient.Create("https://api.evolution.com", "sua-api-key");
 var client = EvolutionClient.Create("https://api.evolution.com", "sua-api-key", options =>
 {
     options.Timeout = TimeSpan.FromMinutes(2);
-    options.MaxRetryAttempts = 5;
     options.LogHttpRequests = true;
 });
 ```

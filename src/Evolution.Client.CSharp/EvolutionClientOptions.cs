@@ -1,4 +1,4 @@
-namespace Evolution.Client;
+namespace Evolution.Client.CSharp;
 
 /// <summary>
 /// Opções de configuração para o EvolutionClient
@@ -19,21 +19,6 @@ public class EvolutionClientOptions
     /// Timeout para requisições HTTP (padrão: 30 segundos)
     /// </summary>
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
-
-    /// <summary>
-    /// Número máximo de tentativas para requisições que falharam (padrão: 3)
-    /// </summary>
-    public int MaxRetryAttempts { get; set; } = 3;
-
-    /// <summary>
-    /// Delay base para retry exponencial (padrão: 1 segundo)
-    /// </summary>
-    public TimeSpan RetryDelay { get; set; } = TimeSpan.FromSeconds(1);
-
-    /// <summary>
-    /// Indica se deve usar retry exponencial (padrão: true)
-    /// </summary>
-    public bool UseExponentialBackoff { get; set; } = true;
 
     /// <summary>
     /// User-Agent personalizado para as requisições
