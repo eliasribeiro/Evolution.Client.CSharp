@@ -1,9 +1,9 @@
-﻿using Evolution.Client;
-using Evolution.Client.Modules;
+using Evolution.Client;
+using Evolution.Client.CSharp.Modules;
 
-// Exemplo básico de uso do Evolution.Client.CSharp
+// Exemplo básico de uso do Evolution.Client.CSharp.CSharp
 
-Console.WriteLine("=== Evolution.Client.CSharp - Exemplo Básico ===");
+Console.WriteLine("=== Evolution.Client.CSharp.CSharp - Exemplo Básico ===");
 
 // Configuração do cliente
 var baseUrl = "https://api.evolution.com";
@@ -82,7 +82,7 @@ try
     var sendMessageRequest = new SendTextMessageRequest
     {
         Number = "5511888888888",
-        Text = "Olá! Esta é uma mensagem de teste do Evolution.Client.CSharp"
+        Text = "Olá! Esta é uma mensagem de teste do Evolution.Client.CSharp.CSharp"
     };
 
     var messageResponse = await client.Messages.SendTextAsync("minha-instancia", sendMessageRequest);

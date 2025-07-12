@@ -5,11 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Client", "src\Evolution.Client\Evolution.Client.csproj", "{CC0D1387-0427-4AC0-9763-2DB0937DE69F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Client", "src\Evolution.Client.CSharp\Evolution.Client.CSharp.csproj", "{CC0D1387-0427-4AC0-9763-2DB0937DE69F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Client.Tests", "tests\Evolution.Client.Tests\Evolution.Client.Tests.csproj", "{DDE3FAB5-7B94-48AD-BFF6-47968B8AFB55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evolution.Client.Tests", "tests\Evolution.Client.CSharp.Tests\Evolution.Client.CSharp.Tests.csproj", "{DDE3FAB5-7B94-48AD-BFF6-47968B8AFB55}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5D20AA90-6969-D8BD-9DCD-8634F4692FDA}"
 EndProject

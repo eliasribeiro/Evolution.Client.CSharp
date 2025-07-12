@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Evolution.Client\Evolution.Client.csproj" />
+    <ProjectReference Include="..\..\src\Evolution.Client.CSharp\Evolution.Client.CSharp.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
