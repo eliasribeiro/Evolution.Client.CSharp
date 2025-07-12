@@ -23,6 +23,9 @@ jobs:
       - name: Build
         run: dotnet build src/Evolution.Client/Evolution.Client.csproj --configuration Release --no-restore
 
+      - name: Test
+        run: dotnet test tests/Evolution.Client.Tests/Evolution.Client.Tests.csproj --no-build --configuration Release
+
       - name: Pack
         run: dotnet pack src/Evolution.Client/Evolution.Client.csproj --configuration Release --no-build --output ./nupkg
 
