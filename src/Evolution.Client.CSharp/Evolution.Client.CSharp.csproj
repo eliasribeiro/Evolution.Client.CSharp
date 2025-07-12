@@ -5,12 +5,12 @@
     <LangVersion>12</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Evolution.Client.CSharp.CSharp</AssemblyName>
-    <RootNamespace>Evolution.Client.CSharp.CSharp</RootNamespace>
-    <PackageId>Evolution.Client.CSharp.CSharp</PackageId>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
+    <AssemblyName>Evolution.Client.CSharp</AssemblyName>
+    <RootNamespace>Evolution.Client.CSharp</RootNamespace>
+    <PackageId>Evolution.Client.CSharp</PackageId>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
