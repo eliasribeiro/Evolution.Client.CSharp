@@ -18,13 +18,13 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore Evolution.Client.CSharp/Evolution.Client.CSharp/Evolution.Client.CSharp.csproj
+        run: dotnet restore src/Evolution.Client/Evolution.Client.csproj
 
       - name: Build
-        run: dotnet build Evolution.Client.CSharp/Evolution.Client.CSharp/Evolution.Client.CSharp.csproj --configuration Release --no-restore
+        run: dotnet build src/Evolution.Client/Evolution.Client.csproj --configuration Release --no-restore
 
       - name: Pack
-        run: dotnet pack Evolution.Client.CSharp/Evolution.Client.CSharp/Evolution.Client.CSharp.csproj --configuration Release --no-build --output ./nupkg
+        run: dotnet pack src/Evolution.Client/Evolution.Client.csproj --configuration Release --no-build --output ./nupkg
 
       - name: Publish to NuGet
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
