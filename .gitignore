@@ -1,3 +1,5 @@
+.augment/
+
 *.swp
 *.*~
 project.lock.json
