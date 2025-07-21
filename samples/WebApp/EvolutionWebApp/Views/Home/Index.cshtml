@@ -1,0 +1,96 @@
+@model EvolutionWebApp.Models.EvolutionViewModel
+
+@{
+    ViewData["Title"] = "Evolution API Dashboard";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4">Evolution API Dashboard</h1>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro!</h4>
+            <p>@Model.ErrorMessage</p>
+        </div>
+    }
+
+    @if (Model.ApiInformation != null)
+    {
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2>Informações da API</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Status:</strong> @Model.ApiInformation.Status</p>
+                        <p><strong>Mensagem:</strong> @Model.ApiInformation.Message</p>
+                        <p><strong>Versão:</strong> @Model.ApiInformation.Version</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Swagger:</strong> <a href="@Model.ApiInformation.Swagger" target="_blank">@Model.ApiInformation.Swagger</a></p>
+                        <p><strong>Manager:</strong> <a href="@Model.ApiInformation.Manager" target="_blank">@Model.ApiInformation.Manager</a></p>
+                        <p><strong>Documentação:</strong> <a href="@Model.ApiInformation.Documentation" target="_blank">@Model.ApiInformation.Documentation</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.Instances != null && Model.Instances.Count > 0)
+    {
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2>Instâncias Disponíveis (@Model.Instances.Count)</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>ID</th>
+                                <th>Status</th>
+                                <th>Proprietário</th>
+                                <th>URL do Servidor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var instance in Model.Instances)
+                            {
+                                <tr>
+                                    <td>@instance.Instance?.InstanceName</td>
+                                    <td>@instance.Instance?.InstanceId</td>
+                                    <td>
+                                        @if (instance.Instance?.Status == "open")
+                                        {
+                                            <span class="badge bg-success">Aberto</span>
+                                        }
+                                        else if (instance.Instance?.Status == "close")
+                                        {
+                                            <span class="badge bg-danger">Fechado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@instance.Instance?.Status</span>
+                                        }
+                                    </td>
+                                    <td>@instance.Instance?.Owner</td>
+                                    <td>@instance.Instance?.ServerUrl</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else if (Model.ApiInformation != null)
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Nenhuma instância encontrada!</h4>
+            <p>Não há instâncias disponíveis no momento. Verifique se a API está configurada corretamente.</p>
+        </div>
+    }
+</div>

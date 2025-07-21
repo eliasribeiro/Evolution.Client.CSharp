@@ -1,0 +1,77 @@
+@model IEnumerable<Evolution.Client.CSharp.Models.Instance.InstanceResponse>
+
+@{
+    ViewData["Title"] = "Gerenciamento de Instâncias";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 text-center mb-4">Gerenciamento de Instâncias</h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Erro!</h4>
+            <p>@TempData["ErrorMessage"]</p>
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h2>Instâncias Disponíveis (@Model.Count())</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>ID</th>
+                                <th>Status</th>
+                                <th>Proprietário</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var instance in Model)
+                            {
+                                <tr>
+                                    <td>@instance.Instance?.InstanceName</td>
+                                    <td>@instance.Instance?.InstanceId</td>
+                                    <td>
+                                        @if (instance.Instance?.Status == "open")
+                                        {
+                                            <span class="badge bg-success">Aberto</span>
+                                        }
+                                        else if (instance.Instance?.Status == "close")
+                                        {
+                                            <span class="badge bg-danger">Fechado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@instance.Instance?.Status</span>
+                                        }
+                                    </td>
+                                    <td>@instance.Instance?.Owner</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@instance.Instance?.InstanceId" class="btn btn-info btn-sm">
+                                            <i class="bi bi-info-circle"></i> Detalhes
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Nenhuma instância encontrada!</h4>
+            <p>Não há instâncias disponíveis no momento. Verifique se a API está configurada corretamente.</p>
+        </div>
+    }
+</div>

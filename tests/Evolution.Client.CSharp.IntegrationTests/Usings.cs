@@ -1,0 +1,11 @@
+global using Xunit;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
+global using System.Net.Http;
+global using System.Text.Json;
+global using Evolution.Client.CSharp;
+global using Evolution.Client.CSharp.Configuration;
+global using Evolution.Client.CSharp.Extensions;
+global using Evolution.Client.CSharp.Interfaces;
+global using Evolution.Client.CSharp.Models;

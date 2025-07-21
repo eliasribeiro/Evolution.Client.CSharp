@@ -7,6 +7,11 @@ project.lock.json
 *.pyc
 nupkg/
 
+# Arquivos de configuração com informações sensíveis
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
 # Visual Studio Code
 .vscode/
 

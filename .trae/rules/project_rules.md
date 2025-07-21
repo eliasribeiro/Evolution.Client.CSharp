@@ -1,8 +1,9 @@
 ## Project Rules
 
 1. O framework e versão.
-    1. .NET 8.0
+    1. .NET 9.0
     2. System.Text.Json
+2. Use as melhores praticas do .NET 9.0, padrão de codificação e padrão de nomenclatura.
 
 ## Project
 O projeto é para desenvolver um SDK em C# para consumir a API EvolutionAPI, uma API para integração de mensagens com WhatsApp.

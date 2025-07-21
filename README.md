@@ -9,7 +9,7 @@ SDK em C# para integração com a **Evolution API v2.2**. Esta biblioteca oferec
 - ✅ **Thread-safe** - Instâncias reutilizáveis em cenários paralelos
 - ✅ **Tratamento de erros robusto** - Exceções específicas com informações detalhadas
 - ✅ **Cobertura completa** - Suporte a todos os módulos da Evolution API v2.2
-- ✅ **Testes abrangentes** - Cobertura de testes.
+- ✅ **Testes abrangentes** - Testes unitários e de integração
 
 ## 📦 Instalação
 
@@ -41,13 +41,48 @@ var client = EvolutionClient.Create("https://api.evolution.com", "sua-api-key", 
 
 ```csharp
 // Obter informações da Evolution API
-var apiInfo = await client.GetInformationAsync();
+var apiInfo = await client.Information.GetInformationAsync();
 Console.WriteLine($"API Version: {apiInfo.Version}");
 Console.WriteLine($"Status: {apiInfo.Status}");
 Console.WriteLine($"Documentation: {apiInfo.Documentation}");
 ```
 
 ### Gerenciamento de Instâncias
+```csharp
+// Obter todas as instâncias disponíveis
+var instances = await client.Instance.FetchInstancesAsync();
+
+// Exibir informações das instâncias
+foreach (var instance in instances)
+{
+    Console.WriteLine($"Nome: {instance.Instance?.InstanceName}");
+    Console.WriteLine($"ID: {instance.Instance?.InstanceId}");
+    Console.WriteLine($"Status: {instance.Instance?.Status}");
+    Console.WriteLine($"Proprietário: {instance.Instance?.Owner}");
+}
+```
+
+## 🧪 Testes
+
+### Testes Unitários
+
+O projeto inclui testes unitários para garantir a qualidade e o funcionamento correto do SDK.
+
+```bash
+# Executar testes unitários
+dotnet test tests/Evolution.Client.CSharp.Tests/Evolution.Client.CSharp.Tests.csproj
+```
+
+### Testes de Integração
+
+O projeto também inclui testes de integração que verificam a comunicação real com a API Evolution.
+
+```bash
+# Executar testes de integração usando o script auxiliar
+./run-integration-tests.sh
+```
+
+> **Nota:** Os testes de integração requerem configuração adicional. Consulte a [documentação de testes de integração](docs/integration-tests.md) para mais detalhes.
 
 ```csharp
 // Criar uma nova instância
@@ -379,7 +414,7 @@ Esta biblioteca permite que aplicações C# se comuniquem com a API do Evolution
 
 ## Requisitos
 
-- .NET 8
+- .NET 9
 
 ## Instalação
 
