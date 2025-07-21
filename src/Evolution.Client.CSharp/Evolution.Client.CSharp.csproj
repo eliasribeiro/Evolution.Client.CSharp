@@ -8,9 +8,9 @@
     <AssemblyName>Evolution.Client.CSharp</AssemblyName>
     <RootNamespace>Evolution.Client.CSharp</RootNamespace>
     <PackageId>Evolution.Client.CSharp</PackageId>
-    <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.3</FileVersion>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
