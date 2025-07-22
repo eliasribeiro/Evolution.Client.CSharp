@@ -1,4 +1,4 @@
-@model Evolution.Client.CSharp.Models.Instance.InstanceResponse
+@model Evolution.Client.CSharp.Models.Instance.InstanceResponse?
 
 @{
     ViewData["Title"] = "Detalhes da Instância";
@@ -7,11 +7,11 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h2>Detalhes da Instância: @Model.Instance?.InstanceName</h2>
+            <h2>Detalhes da Instância: @Model?.Name</h2>
             <a asp-action="Index" class="btn btn-light">Voltar para Lista</a>
         </div>
         <div class="card-body">
-            @if (Model.Instance != null)
+            @if (Model != null)
             {
                 <div class="row">
                     <div class="col-md-6">
@@ -20,54 +20,18 @@
                             <hr />
                             <dl class="row">
                                 <dt class="col-sm-4">Nome:</dt>
-                                <dd class="col-sm-8">@Model.Instance.InstanceName</dd>
+                                <dd class="col-sm-8">@Model.Name</dd>
 
                                 <dt class="col-sm-4">ID:</dt>
-                                <dd class="col-sm-8">@Model.Instance.InstanceId</dd>
+                                <dd class="col-sm-8">@Model.Id</dd>
 
                                 <dt class="col-sm-4">Status:</dt>
                                 <dd class="col-sm-8">
-                                    @if (Model.Instance.Status == "open")
-                                    {
-                                        <span class="badge bg-success">Aberto</span>
-                                    }
-                                    else if (Model.Instance.Status == "close")
-                                    {
-                                        <span class="badge bg-danger">Fechado</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">@Model.Instance.Status</span>
-                                    }
+                                    @Model.ConnectionStatus
                                 </dd>
 
-                                <dt class="col-sm-4">Proprietário:</dt>
-                                <dd class="col-sm-8">@Model.Instance.Owner</dd>
-                            </dl>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <h4>Informações de Conexão</h4>
-                            <hr />
-                            <dl class="row">
-                                <dt class="col-sm-4">URL do Servidor:</dt>
-                                <dd class="col-sm-8">@Model.Instance.ServerUrl</dd>
-
-                                <dt class="col-sm-4">API Key:</dt>
-                                <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Instance.ApiKey) ? "<não disponível>" : Model.Instance.ApiKey)</dd>
-
-                                <dt class="col-sm-4">Conectado:</dt>
-                                <dd class="col-sm-8">
-                                    @if (Model.Instance.Status == "open")
-                                    {
-                                        <span class="badge bg-success">Sim</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Não</span>
-                                    }
-                                </dd>
+                                <dt class="col-sm-4">Número:</dt>
+                                <dd class="col-sm-8">@Model.Number</dd>
                             </dl>
                         </div>
                     </div>

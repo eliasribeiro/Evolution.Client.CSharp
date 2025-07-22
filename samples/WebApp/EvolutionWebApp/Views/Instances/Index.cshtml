@@ -29,7 +29,7 @@
                                 <th>Nome</th>
                                 <th>ID</th>
                                 <th>Status</th>
-                                <th>Proprietário</th>
+                                <th>Número</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -37,25 +37,14 @@
                             @foreach (var instance in Model)
                             {
                                 <tr>
-                                    <td>@instance.Instance?.InstanceName</td>
-                                    <td>@instance.Instance?.InstanceId</td>
+                                    <td>@instance.Name</td>
+                                    <td>@instance.Id</td>
                                     <td>
-                                        @if (instance.Instance?.Status == "open")
-                                        {
-                                            <span class="badge bg-success">Aberto</span>
-                                        }
-                                        else if (instance.Instance?.Status == "close")
-                                        {
-                                            <span class="badge bg-danger">Fechado</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">@instance.Instance?.Status</span>
-                                        }
+                                        @instance.ConnectionStatus
                                     </td>
-                                    <td>@instance.Instance?.Owner</td>
+                                    <td>@instance.Number</td>
                                     <td>
-                                        <a asp-action="Details" asp-route-id="@instance.Instance?.InstanceId" class="btn btn-info btn-sm">
+                                        <a asp-action="Details" asp-route-id="@instance.Id" class="btn btn-info btn-sm">
                                             <i class="bi bi-info-circle"></i> Detalhes
                                         </a>
                                     </td>

@@ -46,7 +46,6 @@ public static class EvolutionClient
         // Adiciona serviços de logging
         services.AddLogging(builder =>
         {
-            builder.AddConsole();
             builder.SetMinimumLevel(LogLevel.Information);
         });
 

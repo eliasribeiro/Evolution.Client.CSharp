@@ -110,7 +110,7 @@ public class EvolutionInstanceService : IEvolutionInstanceService
     /// <remarks>
     /// Este método faz uma requisição GET para o endpoint /instance/fetchInstances e retorna os dados no formato V2.
     /// </remarks>
-    public async Task<InstancesResponseV2> FetchInstancesV2Async()
+    public async Task<InstancesResponse> FetchInstancesV2Async()
     {
         try
         {
@@ -126,7 +126,7 @@ public class EvolutionInstanceService : IEvolutionInstanceService
             var content = await response.Content.ReadAsStringAsync();
 
             // Desserializa a resposta JSON
-            var result = JsonSerializer.Deserialize<InstancesResponseV2>(content, _jsonOptions);
+            var result = JsonSerializer.Deserialize<InstancesResponse>(content, _jsonOptions);
 
             if (result == null)
             {

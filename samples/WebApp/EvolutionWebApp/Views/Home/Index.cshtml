@@ -52,32 +52,19 @@
                                 <th>Nome</th>
                                 <th>ID</th>
                                 <th>Status</th>
-                                <th>Proprietário</th>
-                                <th>URL do Servidor</th>
+                                <th>Número</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var instance in Model.Instances)
                             {
                                 <tr>
-                                    <td>@instance.Instance?.InstanceName</td>
-                                    <td>@instance.Instance?.InstanceId</td>
+                                    <td>@instance.Name</td>
+                                    <td>@instance.Id</td>
                                     <td>
-                                        @if (instance.Instance?.Status == "open")
-                                        {
-                                            <span class="badge bg-success">Aberto</span>
-                                        }
-                                        else if (instance.Instance?.Status == "close")
-                                        {
-                                            <span class="badge bg-danger">Fechado</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">@instance.Instance?.Status</span>
-                                        }
+                                        @instance.ConnectionStatus
                                     </td>
-                                    <td>@instance.Instance?.Owner</td>
-                                    <td>@instance.Instance?.ServerUrl</td>
+                                    <td>@instance.Number</td>
                                 </tr>
                             }
                         </tbody>

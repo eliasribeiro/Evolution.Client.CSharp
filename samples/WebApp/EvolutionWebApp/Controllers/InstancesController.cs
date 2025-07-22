@@ -31,7 +31,7 @@ public class InstancesController : Controller
     {
         try
         {
-            var instances = await _evolutionClient.Instance.FetchInstancesAsync();
+            var instances = await _evolutionClient.Instance.FetchInstancesV2Async();
             return View(instances);
         }
         catch (Exception ex)
@@ -57,7 +57,7 @@ public class InstancesController : Controller
         try
         {
             var instances = await _evolutionClient.Instance.FetchInstancesAsync();
-            var instance = instances.FirstOrDefault(i => i.Instance?.InstanceId == id);
+            var instance = instances.FirstOrDefault(i => i.Id == id);
 
             if (instance == null)
             {

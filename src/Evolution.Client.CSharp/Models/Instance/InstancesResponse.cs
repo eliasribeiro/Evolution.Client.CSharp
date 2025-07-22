@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace Evolution.Client.CSharp.Models.Instance;
 
 /// <summary>
-/// Representa a resposta do endpoint fetch-instances da API Evolution.
+/// Representa a resposta do endpoint fetch-instances da API Evolution (versão 2).
 /// </summary>
 public class InstancesResponse : List<InstanceResponse>
 {

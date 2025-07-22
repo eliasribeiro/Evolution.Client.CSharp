@@ -15,7 +15,7 @@ public interface IEvolutionInstanceService
     /// Este método faz uma requisição GET para o endpoint /instance/fetchInstances.
     /// </remarks>
     Task<InstancesResponse> FetchInstancesAsync();
-    
+
     /// <summary>
     /// Obtém todas as instâncias disponíveis usando o modelo V2.
     /// </summary>
@@ -23,5 +23,5 @@ public interface IEvolutionInstanceService
     /// <remarks>
     /// Este método faz uma requisição GET para o endpoint /instance/fetchInstances e retorna os dados no formato V2.
     /// </remarks>
-    Task<InstancesResponseV2> FetchInstancesV2Async();
+    Task<InstancesResponse> FetchInstancesV2Async();
 }
