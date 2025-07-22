@@ -37,7 +37,7 @@ internal interface IHttpService
     /// <param name="endpoint">Endpoint da API</param>
     /// <param name="request">Dados da requisição</param>
     /// <param name="cancellationToken">Token de cancelamento</param>
-    Task PostAsync<TRequest>(
+    Task<bool> PostAsync<TRequest>(
         string endpoint,
         TRequest request,
         CancellationToken cancellationToken = default);
@@ -63,7 +63,7 @@ internal interface IHttpService
     /// <param name="endpoint">Endpoint da API</param>
     /// <param name="request">Dados da requisição</param>
     /// <param name="cancellationToken">Token de cancelamento</param>
-    Task PutAsync<TRequest>(
+    Task<bool> PutAsync<TRequest>(
         string endpoint,
         TRequest request,
         CancellationToken cancellationToken = default);
@@ -84,7 +84,7 @@ internal interface IHttpService
     /// </summary>
     /// <param name="endpoint">Endpoint da API</param>
     /// <param name="cancellationToken">Token de cancelamento</param>
-    Task DeleteAsync(
+    Task<bool> DeleteAsync(
         string endpoint,
         CancellationToken cancellationToken = default);
 }

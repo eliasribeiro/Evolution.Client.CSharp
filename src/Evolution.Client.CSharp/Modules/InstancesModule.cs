@@ -50,16 +50,18 @@ internal class InstancesModule : IInstancesModule
             cancellationToken);
     }
 
-    public async Task DeleteAsync(
+    public async Task<bool> DeleteAsync(
         string instanceName,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(instanceName))
             throw new ArgumentException("Nome da instância é obrigatório", nameof(instanceName));
 
-        await _httpService.DeleteAsync(
+        return await _httpService.DeleteAsync(
             $"instance/delete/{instanceName}",
             cancellationToken);
+
+        
     }
 
     public async Task<ConnectInstanceResponse> ConnectAsync(

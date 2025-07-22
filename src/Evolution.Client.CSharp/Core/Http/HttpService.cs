@@ -78,39 +78,50 @@ internal class HttpService : IHttpService
             cancellationToken);
     }
 
-    public async Task PostAsync<TRequest>(
+    public async Task<bool> PostAsync<TRequest>(
         string endpoint,
         TRequest request,
         CancellationToken cancellationToken = default)
     {
-        await SendRequestAsync(
+        var response = await SendRequestAsync(
             HttpMethod.Post,
             endpoint,
             request,
             cancellationToken);
+        if (response.IsSuccessStatusCode)
+            return true;
+        return false;
     }
 
-    public async Task PutAsync<TRequest>(
+    public async Task<bool> PutAsync<TRequest>(
         string endpoint,
         TRequest request,
         CancellationToken cancellationToken = default)
     {
-        await SendRequestAsync(
+        var response = await SendRequestAsync(
             HttpMethod.Put,
             endpoint,
             request,
             cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+            return true;
+        return false;
     }
 
-    public async Task DeleteAsync(
+    public async Task<bool> DeleteAsync(
         string endpoint,
         CancellationToken cancellationToken = default)
     {
-        await SendRequestAsync(
+        var response = await SendRequestAsync(
             HttpMethod.Delete,
             endpoint,
             null,
             cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+            return true;
+        return false;
     }
 
     private async Task<TResponse> SendRequestAsync<TResponse>(
