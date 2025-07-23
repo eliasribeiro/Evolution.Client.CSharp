@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Evolution.Client.CSharp.Converters;
 
 namespace Evolution.Client.CSharp.Models.Instance;
 
@@ -35,6 +36,7 @@ public class CreateInstanceRequest
     /// Obtém ou define o tipo de integração do WhatsApp.
     /// </summary>
     [JsonPropertyName("integration")]
+    [JsonConverter(typeof(WhatsAppIntegrationConverter))]
     public WhatsAppIntegration? Integration { get; set; }
 
     /// <summary>
@@ -220,13 +222,11 @@ public enum WhatsAppIntegration
     /// <summary>
     /// Integração WhatsApp Baileys.
     /// </summary>
-    [JsonPropertyName("WHATSAPP-BAILEYS")]
     WhatsAppBaileys,
 
     /// <summary>
     /// Integração WhatsApp Business.
     /// </summary>
-    [JsonPropertyName("WHATSAPP-BUSINESS")]
     WhatsAppBusiness
 }
 
