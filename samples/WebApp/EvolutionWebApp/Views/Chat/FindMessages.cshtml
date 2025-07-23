@@ -1,0 +1,350 @@
+@model EvolutionWebApp.Models.MessageSearchResultViewModel
+
+@{
+    ViewData["Title"] = "Buscar Mensagens";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-envelope text-info"></i> Buscar Mensagens</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Chat" asp-action="Index">Chat</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Buscar Mensagens</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exibir alertas se houver -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-envelope"></i> Buscar Mensagens
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FindMessages" method="post">
+                        <div class="mb-3">
+                            <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                   value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchRemoteJid" class="form-label">Remote JID</label>
+                            <input type="text" class="form-control" id="SearchRemoteJid" name="SearchRemoteJid" 
+                                   value="@ViewBag.SearchRemoteJid" placeholder="Ex: 556292340444@s.whatsapp.net ou 120363099046685618@g.us">
+                            <div class="form-text">JID do contato ou grupo (opcional)</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Page" class="form-label">Página</label>
+                                    <input type="number" class="form-control" id="Page" name="Page" 
+                                           value="@(ViewBag.Page ?? 1)" placeholder="1" min="1">
+                                    <div class="form-text">Número da página (padrão: 1)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Offset" class="form-label">Offset</label>
+                                    <input type="number" class="form-control" id="Offset" name="Offset" 
+                                           value="@ViewBag.Offset" placeholder="0" min="0">
+                                    <div class="form-text">Número de registros para pular</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-search"></i> Buscar Mensagens
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Como Usar
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-lightbulb"></i> Instruções:</h6>
+                        <ol class="mb-0">
+                            <li>Digite o nome de uma instância conectada</li>
+                            <li>Opcionalmente, filtre por Remote JID específico</li>
+                            <li>Configure a paginação se necessário</li>
+                            <li>Clique em "Buscar Mensagens" para consultar</li>
+                        </ol>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Tipos de JID:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Contato:</strong> 556292340444@s.whatsapp.net</li>
+                            <li><strong>Grupo:</strong> 120363099046685618@g.us</li>
+                            <li><strong>Vazio:</strong> Busca todas as mensagens</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-chart-bar"></i> Paginação:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Página:</strong> Número da página atual</li>
+                            <li><strong>Offset:</strong> Registros para pular</li>
+                            <li><strong>Padrão:</strong> 50 mensagens por página</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Resultados -->
+    @if (Model != null && Model.Messages != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-list"></i> Resultados da Busca
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informações de paginação -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="card border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-info"><i class="fas fa-info-circle"></i> Informações da Busca</h6>
+                                        <div class="row">
+                                            <div class="col-6"><strong>Total de mensagens:</strong><br><span class="badge bg-primary fs-6">@Model.TotalCount</span></div>
+                                            <div class="col-6"><strong>Página atual:</strong><br><span class="badge bg-success fs-6">@Model.CurrentPage de @Model.TotalPages</span></div>
+                                        </div>
+                                        <div class="mt-2"><strong>Mensagens nesta página:</strong> <span class="badge bg-info">@(Model.Messages?.Count ?? 0)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Navegação de páginas -->
+                            @if (Model.TotalPages > 1)
+                            {
+                                <div class="col-md-6">
+                                    <div class="card border-secondary">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-secondary"><i class="fas fa-arrows-alt-h"></i> Navegação</h6>
+                                            <div class="btn-group" role="group">
+                                                @if (Model.CurrentPage > 1)
+                                                {
+                                                    <a asp-action="FindMessages" 
+                                                       asp-route-instanceName="@ViewBag.InstanceName"
+                                                       asp-route-searchRemoteJid="@ViewBag.SearchRemoteJid"
+                                                       asp-route-page="@(Model.CurrentPage - 1)"
+                                                       asp-route-offset="@ViewBag.Offset"
+                                                       class="btn btn-outline-primary btn-sm">
+                                                        <i class="fas fa-chevron-left"></i> Anterior
+                                                    </a>
+                                                }
+                                                
+                                                @if (Model.CurrentPage < Model.TotalPages)
+                                                {
+                                                    <a asp-action="FindMessages" 
+                                                       asp-route-instanceName="@ViewBag.InstanceName"
+                                                       asp-route-searchRemoteJid="@ViewBag.SearchRemoteJid"
+                                                       asp-route-page="@(Model.CurrentPage + 1)"
+                                                       asp-route-offset="@ViewBag.Offset"
+                                                       class="btn btn-outline-primary btn-sm">
+                                                        Próxima <i class="fas fa-chevron-right"></i>
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Tabela de mensagens -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 140px;"><i class="fas fa-clock"></i> Data/Hora</th>
+                                        <th style="width: 120px;"><i class="fas fa-user"></i> Remetente</th>
+                                        <th style="width: 80px;"><i class="fas fa-exchange-alt"></i> Direção</th>
+                                        <th style="width: 100px;"><i class="fas fa-tag"></i> Tipo</th>
+                                        <th><i class="fas fa-comment-dots"></i> Conteúdo</th>
+                                        <th style="width: 100px;"><i class="fas fa-check-double"></i> Status</th>
+                                        <th style="width: 80px;"><i class="fas fa-mobile-alt"></i> Origem</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Messages?.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                                Nenhuma mensagem encontrada
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var message in Model.Messages ?? new List<MessageResult>())
+                                        {
+                                            var timestamp = message.DateTime;
+                                            var sender = message.PushName ?? "Sistema";
+                                            var remoteJidShort = message.ChatId?.Split('@')[0] ?? "N/A";
+                                            
+                                            <tr>
+                                                <td>
+                                                    <div class="small">
+                                                        <div><strong>@timestamp.ToString("dd/MM/yyyy")</strong></div>
+                                                        <div class="text-muted">@timestamp.ToString("HH:mm:ss")</div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 12px;">
+                                                            @(string.IsNullOrEmpty(sender) ? "?" : sender.FirstOrDefault().ToString()?.ToUpper() ?? "?")
+                                                        </div>
+                                                        <div>
+                                                            <div class="fw-bold small">@sender</div>
+                                                            <div class="text-muted small">@remoteJidShort</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @if (message.FromMe)
+                                                    {
+                                                        <span class="badge bg-primary"><i class="fas fa-arrow-right"></i> Enviada</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-success"><i class="fas fa-arrow-left"></i> Recebida</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info">@(message.MessageType ?? "N/A")</span>
+                                                </td>
+                                                <td>
+                                                    <div class="message-content" style="max-width: 300px; word-wrap: break-word;">
+                                                        @Html.Raw(GetMessageContentHtml(message))
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @Html.Raw(GetMessageStatusHtml(message))
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-@GetSourceIcon(message.Source)"></i> @(message.Source ?? "N/A")
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@functions {
+    private string GetMessageContentHtml(MessageResult message)
+    {
+        if (string.IsNullOrEmpty(message.Message))
+        {
+            return "<span class=\"text-muted\"><i class=\"fas fa-question-circle\"></i> Conteúdo não disponível</span>";
+        }
+
+        // Mensagem de texto simples
+        var text = message.Message.Length > 100 ? message.Message[..100] + "..." : message.Message;
+        return $"<i class=\"fas fa-comment text-primary\"></i> {Html.Encode(text)}";
+    }
+
+    private string GetMessageStatusHtml(MessageResult message)
+    {
+        if (!string.IsNullOrEmpty(message.Status))
+        {
+            switch (message.Status.ToUpper())
+            {
+                case "PENDING":
+                    return "<span class=\"badge bg-warning\"><i class=\"fas fa-clock\"></i> Pendente</span>";
+                case "SENT":
+                    return "<span class=\"badge bg-primary\"><i class=\"fas fa-check\"></i> Enviada</span>";
+                case "DELIVERED":
+                    return "<span class=\"badge bg-success\"><i class=\"fas fa-check-double\"></i> Entregue</span>";
+                case "READ":
+                    return "<span class=\"badge bg-info\"><i class=\"fas fa-check-double text-primary\"></i> Lida</span>";
+                case "RECEIVED":
+                    return "<span class=\"badge bg-success\"><i class=\"fas fa-download\"></i> Recebida</span>";
+                default:
+                    return $"<span class=\"badge bg-secondary\"><i class=\"fas fa-question\"></i> {message.Status}</span>";
+            }
+        }
+
+        return "<span class=\"badge bg-light text-dark\"><i class=\"fas fa-minus\"></i> N/A</span>";
+    }
+
+    private string GetSourceIcon(string? source)
+    {
+        switch (source?.ToLower())
+        {
+            case "web": return "globe";
+            case "mobile": return "mobile-alt";
+            case "desktop": return "desktop";
+            case "api": return "code";
+            case "ios": return "mobile-alt";
+            case "android": return "robot";
+            case "windows": return "windows";
+            case "mac": return "apple";
+            case "linux": return "linux";
+            case "whatsapp": return "whatsapp";
+            default: return "question";
+        }
+    }
+
+    private string FormatFileSize(long bytes)
+    {
+        if (bytes == 0) return "0 Bytes";
+        var k = 1024;
+        var sizes = new[] { "Bytes", "KB", "MB", "GB" };
+        var i = (int)Math.Floor(Math.Log(bytes) / Math.Log(k));
+        return $"{Math.Round(bytes / Math.Pow(k, i), 2)} {sizes[i]}";
+    }
+}

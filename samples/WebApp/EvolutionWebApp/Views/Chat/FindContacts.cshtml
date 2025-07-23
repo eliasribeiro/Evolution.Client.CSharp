@@ -1,0 +1,208 @@
+@model EvolutionWebApp.Models.ContactSearchResultViewModel
+
+@{
+    ViewData["Title"] = "Buscar Contatos";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-address-book text-primary"></i> Buscar Contatos</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Chat" asp-action="Index">Chat</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Buscar Contatos</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exibir alertas se houver -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-address-book"></i> Buscar Contatos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FindContacts" method="post">
+                        <div class="mb-3">
+                            <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                   value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchId" class="form-label">ID do Contato</label>
+                            <input type="text" class="form-control" id="SearchId" name="SearchId" 
+                                   value="@ViewBag.SearchId" placeholder="Ex: cmdg73boz26qln54qc7ctmcrm">
+                            <div class="form-text">ID único do contato (opcional)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchRemoteJid" class="form-label">Remote JID</label>
+                            <input type="text" class="form-control" id="SearchRemoteJid" name="SearchRemoteJid" 
+                                   value="@ViewBag.SearchRemoteJid" placeholder="Ex: 556292340444@s.whatsapp.net">
+                            <div class="form-text">JID do WhatsApp (opcional)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchPushName" class="form-label">Nome do Contato</label>
+                            <input type="text" class="form-control" id="SearchPushName" name="SearchPushName" 
+                                   value="@ViewBag.SearchPushName" placeholder="Ex: João Silva">
+                            <div class="form-text">Nome exibido do contato (opcional)</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Buscar Contatos
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Como Usar
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-lightbulb"></i> Instruções:</h6>
+                        <ol class="mb-0">
+                            <li>Digite o nome de uma instância conectada</li>
+                            <li>Preencha um ou mais campos de busca (opcional)</li>
+                            <li>Deixe todos os campos vazios para listar todos os contatos</li>
+                            <li>Clique em "Buscar Contatos" para consultar</li>
+                        </ol>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Critérios de Busca:</h6>
+                        <ul class="mb-0">
+                            <li><strong>ID:</strong> Identificador único do contato</li>
+                            <li><strong>Remote JID:</strong> Identificador do WhatsApp</li>
+                            <li><strong>Nome:</strong> Nome exibido do contato</li>
+                            <li><strong>Vazio:</strong> Lista todos os contatos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Resultados -->
+    @if (Model != null && Model.Contacts != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-list"></i> Resultados da Busca
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informações da busca -->
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle"></i> Informações da Busca</h6>
+                                    <p class="mb-0"><strong>Total de contatos encontrados:</strong> <span class="badge bg-primary fs-6">@Model.Contacts.Count</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabela de contatos -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th><i class="fas fa-id-badge"></i> ID</th>
+                                        <th><i class="fas fa-user"></i> Nome</th>
+                                        <th><i class="fas fa-phone"></i> Remote JID</th>
+                                        <th><i class="fas fa-image"></i> Foto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Contacts.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted py-4">
+                                                <i class="fas fa-address-book fa-2x mb-2"></i><br>
+                                                Nenhum contato encontrado
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var contact in Model.Contacts)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <code>@(contact.Id ?? "-")</code>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 12px;">
+                                                            @{
+                                                                var displayName = contact.PushName ?? contact.Name ?? "?";
+                                                                var firstChar = displayName?.FirstOrDefault();
+                                                                var initial = firstChar != '\0' ? firstChar?.ToString()?.ToUpper() ?? "?" : "?";
+                                                            }
+                                                            @initial
+                                                        </div>
+                                                        <strong>@(contact.PushName ?? contact.Name ?? "-")</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="text-monospace">@(contact.RemoteJid ?? "-")</span>
+                                                </td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(contact.ProfilePictureUrl))
+                                                    {
+                                                        <img src="@contact.ProfilePictureUrl" alt="Foto" class="rounded-circle" style="width: 40px; height: 40px;">
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-user-circle fa-2x text-muted"></i>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

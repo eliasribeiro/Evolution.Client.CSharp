@@ -1,12 +1,12 @@
 @{
-    ViewData["Title"] = "Chat - Funcionalidades";
+    ViewData["Title"] = "Chat - Dashboard";
 }
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-comments text-success"></i> Chat - Funcionalidades</h2>
+                <h2><i class="fas fa-comments text-success"></i> Chat - Dashboard</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
@@ -17,472 +17,114 @@
         </div>
     </div>
 
-    <!-- Navegação por Abas -->
     <div class="row">
         <div class="col-12">
-            <ul class="nav nav-tabs" id="chatTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="check-whatsapp-tab" data-bs-toggle="tab" data-bs-target="#check-whatsapp" type="button" role="tab" aria-controls="check-whatsapp" aria-selected="true">
-                        <i class="fas fa-search"></i> Verificar WhatsApp
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="find-contacts-tab" data-bs-toggle="tab" data-bs-target="#find-contacts" type="button" role="tab" aria-controls="find-contacts" aria-selected="false">
-                        <i class="fas fa-address-book"></i> Buscar Contatos
-                    </button>
-                </li>
-            </ul>
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> Funcionalidades do Chat</h5>
+                <p class="mb-0">
+                    Utilize o menu <strong>Chat</strong> na barra de navegação para acessar as funcionalidades disponíveis:
+                    <strong>Verificar WhatsApp</strong>, <strong>Buscar Contatos</strong> e <strong>Buscar Mensagens</strong>.
+                </p>
+            </div>
         </div>
     </div>
 
-    <!-- Conteúdo das Abas -->
-    <div class="tab-content" id="chatTabsContent">
-        <!-- Aba: Verificar WhatsApp -->
-        <div class="tab-pane fade show active" id="check-whatsapp" role="tabpanel" aria-labelledby="check-whatsapp-tab">
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-search"></i> Verificar Números no WhatsApp
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="checkWhatsAppForm">
-                                <div class="mb-3">
-                                    <label for="instanceName" class="form-label">Instância <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="instanceName" name="instanceName" 
-                                           placeholder="Digite o nome da instância" required>
-                                    <div class="form-text">Nome da instância conectada ao WhatsApp</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="numbers" class="form-label">Números de Telefone <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" id="numbers" name="numbers" rows="6" 
-                                              placeholder="Digite os números separados por vírgula ou quebra de linha&#10;Exemplo:&#10;5561999887766&#10;5561888776655&#10;5561777665544" required></textarea>
-                                    <div class="form-text">
-                                        Digite os números com código do país (ex: 5561999887766)<br>
-                                        Separe múltiplos números por vírgula ou quebra de linha
-                                    </div>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-success" id="checkButton">
-                                        <i class="fas fa-search"></i> Verificar Números
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+    <div class="row">
+        <!-- Card Verificar WhatsApp -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-3x text-success"></i>
                     </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-info-circle"></i> Como Usar
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-info">
-                                <h6><i class="fas fa-lightbulb"></i> Instruções:</h6>
-                                <ol class="mb-0">
-                                    <li>Digite o nome de uma instância conectada</li>
-                                    <li>Insira os números de telefone com código do país</li>
-                                    <li>Separe múltiplos números por vírgula ou quebra de linha</li>
-                                    <li>Clique em "Verificar Números" para consultar</li>
-                                </ol>
-                            </div>
-
-                            <div class="alert alert-warning">
-                                <h6><i class="fas fa-exclamation-triangle"></i> Formato dos Números:</h6>
-                                <ul class="mb-0">
-                                    <li><strong>Correto:</strong> 5561999887766</li>
-                                    <li><strong>Incorreto:</strong> (61) 99988-7766</li>
-                                    <li><strong>Incorreto:</strong> +55 61 9 9988-7766</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <h5 class="card-title">Verificar WhatsApp</h5>
+                    <p class="card-text">
+                        Verifique se números de telefone estão registrados no WhatsApp.
+                        Útil para validar contatos antes de enviar mensagens.
+                    </p>
+                    <a asp-controller="Chat" asp-action="CheckWhatsApp" class="btn btn-success">
+                        <i class="fas fa-search"></i> Acessar
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Aba: Buscar Contatos -->
-        <div class="tab-pane fade" id="find-contacts" role="tabpanel" aria-labelledby="find-contacts-tab">
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-address-book"></i> Buscar Contatos
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="findContactsForm">
-                                <div class="mb-3">
-                                    <label for="contactInstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="contactInstanceName" name="contactInstanceName" 
-                                           placeholder="Digite o nome da instância" required>
-                                    <div class="form-text">Nome da instância conectada ao WhatsApp</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="searchId" class="form-label">ID do Contato</label>
-                                    <input type="text" class="form-control" id="searchId" name="searchId" 
-                                           placeholder="Ex: cmdg73boz26qln54qc7ctmcrm">
-                                    <div class="form-text">ID único do contato (opcional)</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="searchRemoteJid" class="form-label">Remote JID</label>
-                                    <input type="text" class="form-control" id="searchRemoteJid" name="searchRemoteJid" 
-                                           placeholder="Ex: 556292340444@s.whatsapp.net">
-                                    <div class="form-text">JID do WhatsApp (opcional)</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="searchPushName" class="form-label">Nome do Contato</label>
-                                    <input type="text" class="form-control" id="searchPushName" name="searchPushName" 
-                                           placeholder="Ex: João Silva">
-                                    <div class="form-text">Nome exibido do contato (opcional)</div>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary" id="findContactsButton">
-                                        <i class="fas fa-search"></i> Buscar Contatos
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+        <!-- Card Buscar Contatos -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-address-book fa-3x text-primary"></i>
                     </div>
+                    <h5 class="card-title">Buscar Contatos</h5>
+                    <p class="card-text">
+                        Busque e liste contatos salvos na instância do WhatsApp.
+                        Filtre por ID, JID ou nome do contato.
+                    </p>
+                    <a asp-controller="Chat" asp-action="FindContacts" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Acessar
+                    </a>
                 </div>
+            </div>
+        </div>
 
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-info-circle"></i> Como Usar
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-info">
-                                <h6><i class="fas fa-lightbulb"></i> Instruções:</h6>
-                                <ol class="mb-0">
-                                    <li>Digite o nome de uma instância conectada</li>
-                                    <li>Preencha um ou mais campos de busca (opcional)</li>
-                                    <li>Deixe todos os campos vazios para listar todos os contatos</li>
-                                    <li>Clique em "Buscar Contatos" para consultar</li>
-                                </ol>
-                            </div>
-
-                            <div class="alert alert-warning">
-                                <h6><i class="fas fa-exclamation-triangle"></i> Critérios de Busca:</h6>
-                                <ul class="mb-0">
-                                    <li><strong>ID:</strong> Identificador único do contato</li>
-                                    <li><strong>Remote JID:</strong> Identificador do WhatsApp</li>
-                                    <li><strong>Nome:</strong> Nome exibido do contato</li>
-                                    <li><strong>Vazio:</strong> Lista todos os contatos</li>
-                                </ul>
-                            </div>
-                        </div>
+        <!-- Card Buscar Mensagens -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-envelope fa-3x text-info"></i>
                     </div>
+                    <h5 class="card-title">Buscar Mensagens</h5>
+                    <p class="card-text">
+                        Busque mensagens enviadas e recebidas na instância.
+                        Filtre por contato/grupo e navegue com paginação.
+                    </p>
+                    <a asp-controller="Chat" asp-action="FindMessages" class="btn btn-info">
+                        <i class="fas fa-search"></i> Acessar
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Resultados -->
-    <div class="row mt-4" id="resultsSection" style="display: none;">
+    <div class="row mt-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0" id="resultsTitle">
-                        <i class="fas fa-list"></i> Resultados
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-lightbulb"></i> Dicas de Uso
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div id="resultsContent"></div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-check-circle text-success"></i> Verificar WhatsApp</h6>
+                            <ul class="small">
+                                <li>Use números com código do país (ex: 5561999887766)</li>
+                                <li>Separe múltiplos números por vírgula ou quebra de linha</li>
+                                <li>Ideal para validar listas de contatos</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-address-book text-primary"></i> Buscar Contatos</h6>
+                            <ul class="small">
+                                <li>Deixe campos vazios para listar todos os contatos</li>
+                                <li>Use filtros específicos para busca direcionada</li>
+                                <li>Remote JID identifica contatos únicos</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-envelope text-info"></i> Buscar Mensagens</h6>
+                            <ul class="small">
+                                <li>Filtre por contato individual ou grupo</li>
+                                <li>Use paginação para navegar em grandes volumes</li>
+                                <li>Suporte a diferentes tipos de mídia</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function() {
-            $('#checkWhatsAppForm').on('submit', function(e) {
-                e.preventDefault();
-                checkWhatsAppNumbers();
-            });
-
-            $('#findContactsForm').on('submit', function(e) {
-                e.preventDefault();
-                findContacts();
-            });
-        });
-
-        function checkWhatsAppNumbers() {
-            const instanceName = $('#instanceName').val().trim();
-            const numbers = $('#numbers').val().trim();
-            const $button = $('#checkButton');
-            const $resultsSection = $('#resultsSection');
-            const $resultsContent = $('#resultsContent');
-            const $resultsTitle = $('#resultsTitle');
-
-            if (!instanceName) {
-                showAlert('danger', 'Nome da instância é obrigatório.');
-                return;
-            }
-
-            if (!numbers) {
-                showAlert('danger', 'Pelo menos um número deve ser fornecido.');
-                return;
-            }
-
-            // Desabilita o botão e mostra loading
-            $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Verificando...');
-            $resultsSection.hide();
-
-            $.ajax({
-                url: '@Url.Action("CheckWhatsApp", "Chat")',
-                type: 'POST',
-                data: {
-                    instanceName: instanceName,
-                    numbers: numbers
-                },
-                success: function(response) {
-                    if (response.success) {
-                        showAlert('success', response.message);
-                        $resultsTitle.html('<i class="fas fa-list"></i> Resultados da Verificação');
-                        displayWhatsAppResults(response.data);
-                        $resultsSection.show();
-                    } else {
-                        showAlert('danger', response.message);
-                        $resultsSection.hide();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Erro na requisição:', error);
-                    showAlert('danger', 'Erro ao verificar números. Tente novamente.');
-                    $resultsSection.hide();
-                },
-                complete: function() {
-                    // Reabilita o botão
-                    $button.prop('disabled', false).html('<i class="fas fa-search"></i> Verificar Números');
-                }
-            });
-        }
-
-        function findContacts() {
-            const instanceName = $('#contactInstanceName').val().trim();
-            const searchId = $('#searchId').val().trim();
-            const searchRemoteJid = $('#searchRemoteJid').val().trim();
-            const searchPushName = $('#searchPushName').val().trim();
-            const $button = $('#findContactsButton');
-            const $resultsSection = $('#resultsSection');
-            const $resultsContent = $('#resultsContent');
-            const $resultsTitle = $('#resultsTitle');
-
-            if (!instanceName) {
-                showAlert('danger', 'Nome da instância é obrigatório.');
-                return;
-            }
-
-            // Desabilita o botão e mostra loading
-            $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Buscando...');
-            $resultsSection.hide();
-
-            $.ajax({
-                url: '@Url.Action("FindContacts", "Chat")',
-                type: 'POST',
-                data: {
-                    instanceName: instanceName,
-                    searchId: searchId,
-                    searchRemoteJid: searchRemoteJid,
-                    searchPushName: searchPushName
-                },
-                success: function(response) {
-                    if (response.success) {
-                        showAlert('success', response.message);
-                        $resultsTitle.html('<i class="fas fa-address-book"></i> Contatos Encontrados');
-                        displayContactsResults(response.data);
-                        $resultsSection.show();
-                    } else {
-                        showAlert('danger', response.message);
-                        $resultsSection.hide();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Erro na requisição:', error);
-                    showAlert('danger', 'Erro ao buscar contatos. Tente novamente.');
-                    $resultsSection.hide();
-                },
-                complete: function() {
-                    // Reabilita o botão
-                    $button.prop('disabled', false).html('<i class="fas fa-search"></i> Buscar Contatos');
-                }
-            });
-        }
-
-        function displayWhatsAppResults(data) {
-            const $content = $('#resultsContent');
-            
-            if (!data || data.length === 0) {
-                $content.html('<div class="alert alert-warning">Nenhum resultado encontrado.</div>');
-                return;
-            }
-
-            let html = '<div class="table-responsive"><table class="table table-striped table-hover">';
-            html += '<thead class="table-dark">';
-            html += '<tr>';
-            html += '<th>Número</th>';
-            html += '<th>Status</th>';
-            html += '<th>Nome</th>';
-            html += '<th>JID</th>';
-            html += '</tr>';
-            html += '</thead>';
-            html += '<tbody>';
-
-            data.forEach(function(item) {
-                const statusBadge = item.exists 
-                    ? '<span class="badge bg-success"><i class="fas fa-check"></i> Existe</span>'
-                    : '<span class="badge bg-danger"><i class="fas fa-times"></i> Não existe</span>';
-                
-                const name = item.name || '<span class="text-muted">-</span>';
-                
-                html += '<tr>';
-                html += `<td><strong>${item.number}</strong></td>`;
-                html += `<td>${statusBadge}</td>`;
-                html += `<td>${name}</td>`;
-                html += `<td><small class="text-muted">${item.jid}</small></td>`;
-                html += '</tr>';
-            });
-
-            html += '</tbody></table></div>';
-
-            // Estatísticas
-            const existsCount = data.filter(item => item.exists).length;
-            const notExistsCount = data.length - existsCount;
-
-            html += '<div class="row mt-3">';
-            html += '<div class="col-md-4">';
-            html += `<div class="card bg-primary text-white">`;
-            html += `<div class="card-body text-center">`;
-            html += `<h5>${data.length}</h5>`;
-            html += `<small>Total Verificados</small>`;
-            html += `</div></div></div>`;
-            
-            html += '<div class="col-md-4">';
-            html += `<div class="card bg-success text-white">`;
-            html += `<div class="card-body text-center">`;
-            html += `<h5>${existsCount}</h5>`;
-            html += `<small>Existem no WhatsApp</small>`;
-            html += `</div></div></div>`;
-            
-            html += '<div class="col-md-4">';
-            html += `<div class="card bg-danger text-white">`;
-            html += `<div class="card-body text-center">`;
-            html += `<h5>${notExistsCount}</h5>`;
-            html += `<small>Não existem</small>`;
-            html += `</div></div></div>`;
-            html += '</div>';
-
-            $content.html(html);
-        }
-
-        function displayContactsResults(data) {
-            const $content = $('#resultsContent');
-            
-            if (!data || data.length === 0) {
-                $content.html('<div class="alert alert-warning">Nenhum contato encontrado.</div>');
-                return;
-            }
-
-            let html = '<div class="table-responsive"><table class="table table-striped table-hover">';
-            html += '<thead class="table-dark">';
-            html += '<tr>';
-            html += '<th>Nome</th>';
-            html += '<th>Remote JID</th>';
-            html += '<th>Foto</th>';
-            html += '<th>Criado em</th>';
-            html += '<th>Atualizado em</th>';
-            html += '<th>ID</th>';
-            html += '</tr>';
-            html += '</thead>';
-            html += '<tbody>';
-
-            data.forEach(function(contact) {
-                const pushName = contact.pushName || '<span class="text-muted">-</span>';
-                const remoteJid = contact.remoteJid || '<span class="text-muted">-</span>';
-                const profilePic = contact.profilePicUrl 
-                    ? `<img src="${contact.profilePicUrl}" alt="Foto" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">`
-                    : '<span class="text-muted">-</span>';
-                
-                const createdAt = contact.createdAt ? new Date(contact.createdAt).toLocaleString('pt-BR') : '<span class="text-muted">-</span>';
-                const updatedAt = contact.updatedAt ? new Date(contact.updatedAt).toLocaleString('pt-BR') : '<span class="text-muted">-</span>';
-                
-                html += '<tr>';
-                html += `<td><strong>${pushName}</strong></td>`;
-                html += `<td><small class="text-muted">${remoteJid}</small></td>`;
-                html += `<td class="text-center">${profilePic}</td>`;
-                html += `<td><small>${createdAt}</small></td>`;
-                html += `<td><small>${updatedAt}</small></td>`;
-                html += `<td><small class="text-muted">${contact.id}</small></td>`;
-                html += '</tr>';
-            });
-
-            html += '</tbody></table></div>';
-
-            // Estatísticas
-            const withPhotoCount = data.filter(contact => contact.profilePicUrl).length;
-            const withoutPhotoCount = data.length - withPhotoCount;
-
-            html += '<div class="row mt-3">';
-            html += '<div class="col-md-4">';
-            html += `<div class="card bg-primary text-white">`;
-            html += `<div class="card-body text-center">`;
-            html += `<h5>${data.length}</h5>`;
-            html += `<small>Total de Contatos</small>`;
-            html += `</div></div></div>`;
-            
-            html += '<div class="col-md-4">';
-            html += `<div class="card bg-success text-white">`;
-            html += `<div class="card-body text-center">`;
-            html += `<h5>${withPhotoCount}</h5>`;
-            html += `<small>Com Foto</small>`;
-            html += `</div></div></div>`;
-            
-            html += '<div class="col-md-4">';
-            html += `<div class="card bg-warning text-white">`;
-            html += `<div class="card-body text-center">`;
-            html += `<h5>${withoutPhotoCount}</h5>`;
-            html += `<small>Sem Foto</small>`;
-            html += `</div></div></div>`;
-            html += '</div>';
-
-            $content.html(html);
-        }
-
-        function showAlert(type, message) {
-            const alertHtml = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `;
-            
-            // Remove alertas anteriores
-            $('.alert').remove();
-            
-            // Adiciona o novo alerta no topo da página
-            $('.container-fluid').prepend(alertHtml);
-            
-            // Auto-remove após 5 segundos
-            setTimeout(function() {
-                $('.alert').fadeOut();
-            }, 5000);
-        }
-    </script>
-}

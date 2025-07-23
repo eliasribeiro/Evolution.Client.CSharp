@@ -182,4 +182,69 @@ public class EvolutionChatService : IEvolutionChatService
             throw;
         }
     }
+
+    /// <summary>
+    /// Busca mensagens da instância especificada.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os critérios de busca (opcional).</param>
+    /// <returns>Uma lista de mensagens encontradas com informações de paginação.</returns>
+    public async Task<FindMessagesResponse> FindMessagesAsync(string instanceName, FindMessagesRequest? request = null)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        try
+        {
+            _logger.LogInformation("Buscando mensagens para a instância: {InstanceName}", instanceName);
+
+            var endpoint = $"/chat/findMessages/{instanceName}";
+            
+            // Se não há critérios de busca, cria uma requisição vazia
+            var searchRequest = request ?? new FindMessagesRequest();
+            
+            var jsonContent = JsonSerializer.Serialize(searchRequest, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<FindMessagesResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Busca de mensagens concluída com sucesso para a instância: {InstanceName}. Total de mensagens encontradas: {Count}", 
+                    instanceName, result?.Messages?.Total ?? 0);
+
+                return result ?? new FindMessagesResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao buscar mensagens para a instância: {InstanceName}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada.");
+                }
+
+                throw new HttpRequestException($"Erro ao buscar mensagens: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao buscar mensagens para a instância: {InstanceName}", instanceName);
+            throw;
+        }
+    }
 }

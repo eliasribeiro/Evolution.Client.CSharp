@@ -22,4 +22,12 @@ public interface IEvolutionChatService
     /// <param name="request">A requisição contendo os critérios de busca (opcional).</param>
     /// <returns>Uma lista de contatos encontrados.</returns>
     Task<FindContactsResponse> FindContactsAsync(string instanceName, FindContactsRequest? request = null);
+
+    /// <summary>
+    /// Busca mensagens da instância especificada.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os critérios de busca (opcional).</param>
+    /// <returns>Uma lista de mensagens encontradas com informações de paginação.</returns>
+    Task<FindMessagesResponse> FindMessagesAsync(string instanceName, FindMessagesRequest? request = null);
 }
