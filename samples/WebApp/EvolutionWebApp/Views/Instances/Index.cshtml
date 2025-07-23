@@ -74,6 +74,9 @@
                                             <button type="button" class="btn btn-danger btn-sm" onclick="logoutInstance('@instance.Name')" title="Fazer Logout">
                                                 <i class="bi bi-box-arrow-right"></i> Logout
                                             </button>
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="deleteInstance('@instance.Name')" title="Deletar Instância">
+                                                <i class="bi bi-trash"></i> Deletar
+                                            </button>
                                             <button type="button" class="btn btn-success btn-sm" onclick="checkConnectionState('@instance.Name')" title="Verificar Estado">
                                                 <i class="bi bi-arrow-clockwise"></i>
                                             </button>
@@ -348,6 +351,43 @@ function logoutInstance(instanceName) {
         } else {
             // Mostrar mensagem de erro
             alert('Erro ao fazer logout: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro de comunicação: ' + error.message);
+    });
+}
+
+function deleteInstance(instanceName) {
+    // Confirmar ação com o usuário (dupla confirmação para deletar)
+    if (!confirm(`ATENÇÃO: Tem certeza que deseja DELETAR PERMANENTEMENTE a instância "${instanceName}"?`)) {
+        return;
+    }
+    
+    if (!confirm(`Esta ação é IRREVERSÍVEL! Confirma a exclusão da instância "${instanceName}"?`)) {
+        return;
+    }
+    
+    // Fazer requisição AJAX para deletar
+    fetch('@Url.Action("Delete", "Instances")', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+        },
+        body: 'instanceName=' + encodeURIComponent(instanceName)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Mostrar mensagem de sucesso
+            alert('Instância deletada com sucesso: ' + data.data.message);
+            
+            // Recarregar a página para atualizar a lista de instâncias
+            window.location.reload();
+        } else {
+            // Mostrar mensagem de erro
+            alert('Erro ao deletar instância: ' + data.message);
         }
     })
     .catch(error => {

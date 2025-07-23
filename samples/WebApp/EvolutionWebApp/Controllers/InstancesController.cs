@@ -314,4 +314,49 @@ public class InstancesController : Controller
             return Json(new { success = false, message = $"Erro ao fazer logout: {ex.Message}" });
         }
     }
+
+    /// <summary>
+    /// Deleta uma instância específica via AJAX.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser deletada.</param>
+    /// <returns>JSON com o resultado da operação de exclusão ou erro.</returns>
+    [HttpPost]
+    public async Task<IActionResult> Delete(string instanceName)
+    {
+        if (string.IsNullOrEmpty(instanceName))
+        {
+            return Json(new { success = false, message = "Nome da instância não fornecido" });
+        }
+
+        try
+        {
+            _logger.LogInformation("Deletando instância: {InstanceName}", instanceName);
+
+            var deleteResult = await _evolutionClient.Instance.DeleteInstanceAsync(instanceName);
+
+            _logger.LogInformation("Instância deletada com sucesso: {InstanceName} - Mensagem: {Message}", 
+                instanceName, deleteResult.Response?.Message);
+
+            return Json(new 
+            { 
+                success = true, 
+                data = new
+                {
+                    instanceName = instanceName,
+                    status = deleteResult.Status,
+                    message = deleteResult.Response?.Message
+                }
+            });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            _logger.LogError(ex, "Instância não encontrada: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Instância '{instanceName}' não encontrada" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao deletar instância: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Erro ao deletar instância: {ex.Message}" });
+        }
+    }
 }

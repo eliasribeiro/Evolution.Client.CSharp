@@ -66,4 +66,15 @@ public interface IEvolutionInstanceService
     /// A instância deve estar conectada para que o logout seja bem-sucedido.
     /// </remarks>
     Task<LogoutInstanceResponse> LogoutInstanceAsync(string instanceName);
+
+    /// <summary>
+    /// Deleta uma instância específica.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser deletada.</param>
+    /// <returns>A resposta contendo o resultado da operação de exclusão.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição DELETE para o endpoint /instance/delete/{instanceName}.
+    /// A instância será permanentemente removida e não poderá ser recuperada.
+    /// </remarks>
+    Task<DeleteInstanceResponse> DeleteInstanceAsync(string instanceName);
 }

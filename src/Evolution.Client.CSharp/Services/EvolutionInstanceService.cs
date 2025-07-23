@@ -467,4 +467,86 @@ public class EvolutionInstanceService : IEvolutionInstanceService
             throw;
         }
     }
+
+    /// <summary>
+    /// Deleta uma instância específica.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser deletada.</param>
+    /// <returns>A resposta contendo o resultado da operação de exclusão.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição DELETE para o endpoint /instance/delete/{instanceName}.
+    /// A instância será permanentemente removida e não poderá ser recuperada.
+    /// </remarks>
+    public async Task<DeleteInstanceResponse> DeleteInstanceAsync(string instanceName)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        try
+        {
+            _logger.LogInformation("Deletando instância: {InstanceName}", instanceName);
+
+            // Faz a requisição DELETE para o endpoint de deletar instância
+            var response = await _httpClient.DeleteAsync($"/instance/delete/{instanceName}");
+
+            // Lê o conteúdo da resposta
+            var content = await response.Content.ReadAsStringAsync();
+
+            // Verifica se a requisição foi bem-sucedida
+            if (response.IsSuccessStatusCode)
+            {
+                // Desserializa a resposta de sucesso
+                var result = JsonSerializer.Deserialize<DeleteInstanceResponse>(content, _jsonOptions);
+
+                if (result == null)
+                {
+                    throw new JsonException("Falha ao desserializar a resposta da API");
+                }
+
+                _logger.LogInformation("Instância deletada com sucesso: {InstanceName} - Mensagem: {Message}", 
+                    instanceName, result.Response?.Message);
+
+                return result;
+            }
+            else
+            {
+                // Tenta desserializar a resposta de erro
+                try
+                {
+                    var errorResponse = JsonSerializer.Deserialize<DeleteInstanceErrorResponse>(content, _jsonOptions);
+                    var errorMessage = errorResponse?.Response?.Message != null && errorResponse.Response.Message.Count > 0
+                        ? string.Join(", ", errorResponse.Response.Message)
+                        : errorResponse?.Error ?? "Erro desconhecido";
+
+                    _logger.LogError("Erro ao deletar instância: {StatusCode} - {ErrorMessage}", 
+                        response.StatusCode, errorMessage);
+
+                    throw new HttpRequestException($"Erro ao deletar instância: {errorMessage}", null, response.StatusCode);
+                }
+                catch (JsonException)
+                {
+                    // Se não conseguir desserializar o erro, usa a resposta bruta
+                    _logger.LogError("Erro ao deletar instância: {StatusCode} - {ResponseContent}", 
+                        response.StatusCode, content);
+
+                    throw new HttpRequestException($"Erro ao deletar instância: {response.StatusCode} - {content}", 
+                        null, response.StatusCode);
+                }
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao desserializar a resposta da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao deletar instância na API Evolution");
+            throw;
+        }
+    }
 }
