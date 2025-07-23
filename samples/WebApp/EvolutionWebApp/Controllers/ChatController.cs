@@ -96,4 +96,67 @@ public class ChatController : Controller
             return Json(new { success = false, message = "Erro interno do servidor. Tente novamente." });
         }
     }
+
+    /// <summary>
+    /// Busca contatos da instância especificada.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="searchId">ID do contato para buscar (opcional).</param>
+    /// <param name="searchRemoteJid">Remote JID do contato para buscar (opcional).</param>
+    /// <param name="searchPushName">Push Name do contato para buscar (opcional).</param>
+    /// <returns>Um JSON com a lista de contatos encontrados.</returns>
+    [HttpPost]
+    public async Task<IActionResult> FindContacts(string instanceName, string? searchId = null, string? searchRemoteJid = null, string? searchPushName = null)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(instanceName))
+            {
+                return Json(new { success = false, message = "Nome da instância é obrigatório." });
+            }
+
+            FindContactsRequest? request = null;
+
+            // Se algum critério de busca foi fornecido, cria a requisição
+            if (!string.IsNullOrWhiteSpace(searchId) || !string.IsNullOrWhiteSpace(searchRemoteJid) || !string.IsNullOrWhiteSpace(searchPushName))
+            {
+                request = new FindContactsRequest
+                {
+                    Where = new FindContactsWhere()
+                };
+
+                if (!string.IsNullOrWhiteSpace(searchId))
+                    request.Where.Id = searchId.Trim();
+
+                if (!string.IsNullOrWhiteSpace(searchRemoteJid))
+                    request.Where.RemoteJid = searchRemoteJid.Trim();
+
+                if (!string.IsNullOrWhiteSpace(searchPushName))
+                    request.Where.PushName = searchPushName.Trim();
+            }
+
+            _logger.LogInformation("Buscando contatos para a instância: {InstanceName}", instanceName);
+
+            var result = await _evolutionClient.Chat.FindContactsAsync(instanceName, request);
+
+            _logger.LogInformation("Busca de contatos concluída com sucesso para a instância: {InstanceName}. Contatos encontrados: {Count}", 
+                instanceName, result.Count);
+
+            return Json(new { 
+                success = true, 
+                message = $"Busca concluída! {result.Count} contato(s) encontrado(s).",
+                data = result
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("não encontrada"))
+        {
+            _logger.LogWarning("Instância não encontrada: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Instância '{instanceName}' não encontrada." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao buscar contatos para a instância: {InstanceName}", instanceName);
+            return Json(new { success = false, message = "Erro interno do servidor. Tente novamente." });
+        }
+    }
 }

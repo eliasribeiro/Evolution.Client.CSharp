@@ -114,4 +114,72 @@ public class EvolutionChatService : IEvolutionChatService
             throw;
         }
     }
+
+    /// <summary>
+    /// Busca contatos da instância especificada.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os critérios de busca (opcional).</param>
+    /// <returns>Uma lista de contatos encontrados.</returns>
+    public async Task<FindContactsResponse> FindContactsAsync(string instanceName, FindContactsRequest? request = null)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        try
+        {
+            _logger.LogInformation("Buscando contatos para a instância: {InstanceName}", instanceName);
+
+            var endpoint = $"/chat/findContacts/{instanceName}";
+            
+            // Se não há critérios de busca, cria uma requisição com where vazio
+            var searchRequest = request ?? new FindContactsRequest 
+            { 
+                Where = new FindContactsWhere() 
+            };
+            
+            var jsonContent = JsonSerializer.Serialize(searchRequest, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<FindContactsResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Busca de contatos concluída com sucesso para a instância: {InstanceName}. Total de contatos encontrados: {Count}", 
+                    instanceName, result?.Count ?? 0);
+
+                return result ?? new FindContactsResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao buscar contatos para a instância: {InstanceName}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada.");
+                }
+
+                throw new HttpRequestException($"Erro ao buscar contatos: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao buscar contatos para a instância: {InstanceName}", instanceName);
+            throw;
+        }
+    }
 }
