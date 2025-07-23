@@ -1,0 +1,323 @@
+@{
+    ViewData["Title"] = "Obter Base64 de Mensagem de Mídia";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-file-download text-primary"></i> Obter Base64 de Mensagem de Mídia</h2>
+                <a href="@Url.Action("Index", "Chat")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Chat
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Formulário de Busca -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-search"></i> Obter Base64 de Mídia
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="getBase64Form">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">
+                                <i class="fas fa-server"></i> Nome da Instância <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Ex: minha-instancia" required>
+                            <div class="form-text">Nome da instância configurada na API Evolution</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="messageId" class="form-label">
+                                <i class="fas fa-hashtag"></i> ID da Mensagem <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="messageId" name="messageId" 
+                                   placeholder="Ex: 3A96A062B86582C5C6F5..." required>
+                            <div class="form-text">ID único da mensagem de mídia</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="convertToMp4" name="convertToMp4">
+                                <label class="form-check-label" for="convertToMp4">
+                                    <i class="fas fa-video"></i> Converter vídeo para MP4
+                                </label>
+                                <div class="form-text">Aplicável apenas para mensagens de vídeo</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Obter Base64
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                            <i class="fas fa-eraser"></i> Limpar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações e Dicas -->
+        <div class="col-md-6">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="card-title mb-0"><i class="fas fa-info-circle"></i> Informações</h6>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="small">
+                        <li>Informe o nome da instância configurada</li>
+                        <li>Insira o ID da mensagem de mídia</li>
+                        <li>Marque a opção para converter vídeo se necessário</li>
+                        <li>O resultado incluirá o base64 da mídia</li>
+                    </ul>
+
+                    <h6><i class="fas fa-file-image text-success"></i> Tipos de mídia suportados:</h6>
+                    <ul class="small">
+                        <li>Imagens (JPEG, PNG, GIF, etc.)</li>
+                        <li>Vídeos (MP4, AVI, MOV, etc.)</li>
+                        <li>Áudios (MP3, WAV, OGG, etc.)</li>
+                        <li>Documentos e outros arquivos</li>
+                    </ul>
+
+                    <h6><i class="fas fa-exclamation-triangle text-warning"></i> Observações:</h6>
+                    <ul class="small">
+                        <li>O ID da mensagem deve ser válido e existir</li>
+                        <li>A mensagem deve conter mídia</li>
+                        <li>Arquivos grandes podem demorar mais para processar</li>
+                        <li>O base64 retornado pode ser usado para download</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de Resultados -->
+    <div class="row mt-4" id="resultsArea" style="display: none;">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-file-download"></i> Resultado
+                    </h5>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearResults()">
+                        <i class="fas fa-times"></i> Fechar
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="resultContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p class="mt-3 mb-0">Obtendo base64 da mensagem de mídia...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#getBase64Form').on('submit', function(e) {
+                e.preventDefault();
+                getBase64FromMediaMessage();
+            });
+        });
+
+        function getBase64FromMediaMessage() {
+            const instanceName = $('#instanceName').val().trim();
+            const messageId = $('#messageId').val().trim();
+            const convertToMp4 = $('#convertToMp4').is(':checked');
+
+            if (!instanceName) {
+                showAlert('Nome da instância é obrigatório.', 'danger');
+                return;
+            }
+
+            if (!messageId) {
+                showAlert('ID da mensagem é obrigatório.', 'danger');
+                return;
+            }
+
+            // Mostra o modal de loading
+            $('#loadingModal').modal('show');
+
+            $.ajax({
+                url: '@Url.Action("GetBase64FromMediaMessage", "Chat")',
+                type: 'POST',
+                data: {
+                    instanceName: instanceName,
+                    messageId: messageId,
+                    convertToMp4: convertToMp4
+                },
+                success: function(response) {
+                    $('#loadingModal').modal('hide');
+                    
+                    if (response.success) {
+                        showAlert(response.message, 'success');
+                        displayResults(response.data);
+                    } else {
+                        showAlert(response.message, 'danger');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#loadingModal').modal('hide');
+                    console.error('Erro na requisição:', error);
+                    showAlert('Erro na comunicação com o servidor.', 'danger');
+                }
+            });
+        }
+
+        function displayResults(data) {
+            let html = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-info-circle text-info"></i> Informações da Mídia</h6>
+                        <table class="table table-sm table-bordered">
+                            <tr><th>Tipo de Mídia:</th><td><span class="badge bg-primary">${data.mediaType || 'N/A'}</span></td></tr>
+                            <tr><th>Nome do Arquivo:</th><td>${data.fileName || 'N/A'}</td></tr>
+                            <tr><th>Tipo MIME:</th><td>${data.mimeType || 'N/A'}</td></tr>
+                            <tr><th>Tamanho:</th><td>${data.size?.fileLength || 'N/A'} bytes</td></tr>
+            `;
+
+            if (data.size?.width && data.size?.height) {
+                html += `<tr><th>Dimensões:</th><td>${data.size.width} x ${data.size.height} pixels</td></tr>`;
+            }
+
+            html += `
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-download text-success"></i> Ações</h6>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-success" onclick="downloadBase64('${data.fileName}', '${data.base64}', '${data.mimeType}')">
+                                <i class="fas fa-download"></i> Baixar Arquivo
+                            </button>
+                            <button type="button" class="btn btn-outline-info" onclick="copyBase64('${data.base64}')">
+                                <i class="fas fa-copy"></i> Copiar Base64
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Se for uma imagem, mostra preview
+            if (data.mediaType && data.mediaType.includes('image') && data.base64) {
+                html += `
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6><i class="fas fa-image text-info"></i> Preview da Imagem</h6>
+                            <div class="text-center">
+                                <img src="data:${data.mimeType};base64,${data.base64}" 
+                                     class="img-fluid" style="max-height: 300px; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            $('#resultContent').html(html);
+            $('#resultsArea').show();
+        }
+
+        function downloadBase64(fileName, base64Data, mimeType) {
+            try {
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: mimeType });
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName || 'media-file';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                showAlert('Download iniciado!', 'success');
+            } catch (error) {
+                console.error('Erro no download:', error);
+                showAlert('Erro ao fazer download do arquivo.', 'danger');
+            }
+        }
+
+        function copyBase64(base64Data) {
+            navigator.clipboard.writeText(base64Data).then(function() {
+                showAlert('Base64 copiado para a área de transferência!', 'success');
+            }).catch(function(error) {
+                console.error('Erro ao copiar:', error);
+                showAlert('Erro ao copiar base64.', 'danger');
+            });
+        }
+
+        function clearForm() {
+            $('#getBase64Form')[0].reset();
+            clearResults();
+        }
+
+        function clearResults() {
+            $('#resultsArea').hide();
+            $('#resultContent').html('');
+        }
+
+        function showAlert(message, type) {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            // Remove alertas existentes
+            $('.alert').remove();
+            
+            // Adiciona o novo alerta no topo da página
+            $('.container-fluid').prepend(alertHtml);
+            
+            // Auto-remove após 5 segundos
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        }
+    </script>
+}

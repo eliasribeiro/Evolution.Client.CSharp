@@ -16,6 +16,7 @@ public class MessageSearchResultViewModel
 public class MessageResult
 {
     public string? Key { get; set; }
+    public string? MessageId { get; set; }
     public string? PushName { get; set; }
     public string? Message { get; set; }
     public string? MessageType { get; set; }

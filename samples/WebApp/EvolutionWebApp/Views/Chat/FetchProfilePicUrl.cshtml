@@ -1,0 +1,245 @@
+@model EvolutionWebApp.Models.ProfilePicUrlViewModel
+
+@{
+    ViewData["Title"] = "Buscar Foto de Perfil";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-user-circle text-info"></i> Buscar Foto de Perfil</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Chat" asp-action="Index">Chat</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Buscar Foto de Perfil</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-circle"></i> Buscar Foto de Perfil
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FetchProfilePicUrl" method="post">
+                        <div class="mb-3">
+                            <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                   value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Number" class="form-label">Número do WhatsApp <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="Number" name="Number" 
+                                   value="@ViewBag.Number" placeholder="Digite o número (ex: 5511999999999)" required>
+                            <div class="form-text">Número do WhatsApp sem símbolos (apenas números)</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-search"></i> Buscar Foto de Perfil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Preencha o nome da instância (obrigatório)</li>
+                        <li><i class="fas fa-check text-success"></i> Digite o número do WhatsApp (obrigatório)</li>
+                        <li><i class="fas fa-check text-success"></i> Clique em "Buscar Foto de Perfil"</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-phone text-info"></i> Formato do número:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Correto:</strong> 5511999999999</li>
+                        <li><strong>Incorreto:</strong> +55 (11) 99999-9999</li>
+                        <li><strong>Incorreto:</strong> 11999999999</li>
+                    </ul>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Dica:</strong> O número deve incluir o código do país (55 para Brasil) 
+                        seguido do código da área e do número, sem espaços ou símbolos.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Result != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-image"></i> Resultado da Busca
+                        </h5>
+                        <span class="badge bg-success fs-6">Foto encontrada</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informações da busca -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <i class="fas fa-server"></i> <strong>Instância:</strong> @Model.InstanceName
+                                </small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> Busca realizada em @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                @if (Model.Result.HasProfilePicture)
+                                {
+                                    <div class="mb-3">
+                                        <img src="@Model.Result.ProfilePictureUrl" alt="Foto de Perfil" 
+                                             class="img-fluid rounded-circle shadow" 
+                                             style="max-width: 200px; max-height: 200px; object-fit: cover;"
+                                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDODcuMjk3IDcwIDc3IDgwLjI5NyA3NyA5M0M3NyAxMDUuNzAzIDg3LjI5NyAxMTYgMTAwIDExNkMxMTIuNzAzIDExNiAxMjMgMTA1LjcwMyAxMjMgOTNDMTIzIDgwLjI5NyAxMTIuNzAzIDcwIDEwMCA3MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTEwMCAxMzBDNzYuODA0IDEzMCA1OC4zMzMzIDE0OC40NzEgNTguMzMzMyAxNzEuNjY3VjE4MEgxNDEuNjY3VjE3MS42NjdDMTQxLjY2NyAxNDguNDcxIDEyMy4xOTYgMTMwIDEwMCAxMzBaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';">
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <a href="@Model.Result.ProfilePictureUrl" target="_blank" class="btn btn-primary">
+                                            <i class="fas fa-external-link-alt"></i> Abrir Imagem Original
+                                        </a>
+                                        <button class="btn btn-outline-secondary" onclick="copyToClipboard('@Model.Result.ProfilePictureUrl')">
+                                            <i class="fas fa-copy"></i> Copiar URL
+                                        </button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
+                                        <p class="text-muted">Nenhuma foto de perfil encontrada</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong><i class="fas fa-phone"></i> Número:</strong></td>
+                                        <td><code>@Model.Number</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-id-badge"></i> WhatsApp ID:</strong></td>
+                                        <td><code>@Model.Result.Wuid</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-image"></i> Tem Foto:</strong></td>
+                                        <td>
+                                            @if (Model.Result.HasProfilePicture)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check"></i> Sim
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-times"></i> Não
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    @if (Model.Result.HasProfilePicture)
+                                    {
+                                        <tr>
+                                            <td><strong><i class="fas fa-link"></i> URL da Foto:</strong></td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" value="@Model.Result.ProfilePictureUrl" readonly id="profilePicUrl">
+                                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('@Model.Result.ProfilePictureUrl')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Mostra uma notificação de sucesso
+                const toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed top-0 end-0 m-3';
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                toast.style.zIndex = '9999';
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-check-circle"></i> URL copiada para a área de transferência!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                `;
+                
+                document.body.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                // Remove o toast após ser ocultado
+                toast.addEventListener('hidden.bs.toast', function() {
+                    document.body.removeChild(toast);
+                });
+            }).catch(function(err) {
+                console.error('Erro ao copiar para a área de transferência: ', err);
+                alert('Erro ao copiar URL. Tente selecionar e copiar manualmente.');
+            });
+        }
+    </script>
+}

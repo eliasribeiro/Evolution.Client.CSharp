@@ -1,0 +1,322 @@
+@model EvolutionWebApp.Models.ChatSearchResultViewModel
+
+@{
+    ViewData["Title"] = "Buscar Chats";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-comments text-success"></i> Buscar Chats</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Chat" asp-action="Index">Chat</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Buscar Chats</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-comments"></i> Buscar Chats
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FindChats" method="post">
+                        <div class="mb-3">
+                            <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                   value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchId" class="form-label">ID do Chat</label>
+                            <input type="text" class="form-control" id="SearchId" name="SearchId" 
+                                   value="@ViewBag.SearchId" placeholder="Digite o ID do chat (opcional)">
+                            <div class="form-text">ID único do chat para buscar</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchRemoteJid" class="form-label">Remote JID</label>
+                            <input type="text" class="form-control" id="SearchRemoteJid" name="SearchRemoteJid" 
+                                   value="@ViewBag.SearchRemoteJid" placeholder="Digite o Remote JID (opcional)">
+                            <div class="form-text">JID remoto do contato ou grupo (ex: 5511999999999@s.whatsapp.net)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="SearchPushName" class="form-label">Nome do Contato/Grupo</label>
+                            <input type="text" class="form-control" id="SearchPushName" name="SearchPushName" 
+                                   value="@ViewBag.SearchPushName" placeholder="Digite o nome (opcional)">
+                            <div class="form-text">Nome do contato ou grupo para buscar</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-search"></i> Buscar Chats
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Preencha o nome da instância (obrigatório)</li>
+                        <li><i class="fas fa-check text-success"></i> Use os filtros opcionais para refinar a busca</li>
+                        <li><i class="fas fa-check text-success"></i> Deixe os campos vazios para listar todos os chats</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-filter text-info"></i> Filtros disponíveis:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>ID do Chat:</strong> Identificador único do chat</li>
+                        <li><strong>Remote JID:</strong> Identificador do WhatsApp</li>
+                        <li><strong>Nome:</strong> Nome do contato ou grupo</li>
+                    </ul>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Dica:</strong> Os chats incluem conversas individuais e grupos.
+                        Grupos são identificados pelo sufixo "@@g.us" no Remote JID.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Chats != null && Model.Chats.Count > 0)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-list"></i> Resultados da Busca
+                        </h5>
+                        <span class="badge bg-success fs-6">@Model.TotalCount chat(s) encontrado(s)</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informações da busca -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <i class="fas fa-server"></i> <strong>Instância:</strong> @Model.InstanceName
+                                </small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> Busca realizada em @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Tabela de chats -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 60px;"><i class="fas fa-image"></i></th>
+                                        <th style="width: 200px;"><i class="fas fa-user"></i> Nome</th>
+                                        <th style="width: 100px;"><i class="fas fa-tag"></i> Tipo</th>
+                                        <th><i class="fas fa-at"></i> Remote JID</th>
+                                        <th style="width: 140px;"><i class="fas fa-clock"></i> Última Atualização</th>
+                                        <th style="width: 100px;"><i class="fas fa-window-maximize"></i> Janela</th>
+                                        <th style="width: 80px;"><i class="fas fa-eye"></i> Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Chats?.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                                Nenhum chat encontrado com os critérios especificados.
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var chat in Model.Chats!)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(chat.ProfilePicUrl))
+                                                    {
+                                                        <img src="@chat.ProfilePicUrl" alt="Foto" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                            <i class="fas @(chat.IsGroup ? "fa-users" : "fa-user") text-white"></i>
+                                                        </div>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <strong>@(string.IsNullOrEmpty(chat.PushName) ? "Sem nome" : chat.PushName)</strong>
+                                                    </div>
+                                                    <small class="text-muted">ID: @chat.Id</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge @(chat.IsGroup ? "bg-info" : "bg-primary")">
+                                                        <i class="fas @(chat.IsGroup ? "fa-users" : "fa-user")"></i>
+                                                        @chat.ChatType
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <small class="text-muted font-monospace">@chat.RemoteJid</small>
+                                                </td>
+                                                <td>
+                                                    <small>@chat.UpdatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge @(chat.WindowActive ? "bg-success" : "bg-secondary")">
+                                                        <i class="fas @(chat.WindowActive ? "fa-check-circle" : "fa-times-circle")"></i>
+                                                        @(chat.WindowActive ? "Ativa" : "Inativa")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="showChatDetails('@chat.Id')" title="Ver detalhes">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal para detalhes do chat -->
+<div class="modal fade" id="chatDetailsModal" tabindex="-1" aria-labelledby="chatDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatDetailsModalLabel">
+                    <i class="fas fa-info-circle"></i> Detalhes do Chat
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="chatDetailsContent">
+                <!-- Conteúdo será preenchido via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showChatDetails(chatId) {
+            // Encontra o chat na lista
+            const chats = @Html.Raw(Json.Serialize(Model.Chats ?? new List<EvolutionWebApp.Models.ChatResult>()));
+            const chat = chats.find(c => c.id === chatId);
+            
+            if (!chat) {
+                alert('Chat não encontrado!');
+                return;
+            }
+
+            // Formata as datas
+            const updatedAt = new Date(chat.updatedAt).toLocaleString('pt-BR');
+            const windowStart = new Date(chat.windowStart).toLocaleString('pt-BR');
+            const windowExpires = new Date(chat.windowExpires).toLocaleString('pt-BR');
+
+            // Monta o conteúdo do modal
+            const content = `
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        ${chat.profilePicUrl ? 
+                            `<img src="${chat.profilePicUrl}" alt="Foto" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">` :
+                            `<div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 100px; height: 100px;">
+                                <i class="fas ${chat.isGroup ? 'fa-users' : 'fa-user'} fa-2x text-white"></i>
+                            </div>`
+                        }
+                        <h5>${chat.pushName || 'Sem nome'}</h5>
+                        <span class="badge ${chat.isGroup ? 'bg-info' : 'bg-primary'} fs-6">
+                            <i class="fas ${chat.isGroup ? 'fa-users' : 'fa-user'}"></i>
+                            ${chat.chatType}
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong><i class="fas fa-fingerprint"></i> ID:</strong></td>
+                                <td><code>${chat.id}</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong><i class="fas fa-at"></i> Remote JID:</strong></td>
+                                <td><code>${chat.remoteJid}</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong><i class="fas fa-clock"></i> Última Atualização:</strong></td>
+                                <td>${updatedAt}</td>
+                            </tr>
+                            <tr>
+                                <td><strong><i class="fas fa-window-maximize"></i> Status da Janela:</strong></td>
+                                <td>
+                                    <span class="badge ${chat.windowActive ? 'bg-success' : 'bg-secondary'}">
+                                        <i class="fas ${chat.windowActive ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                        ${chat.windowActive ? 'Ativa' : 'Inativa'}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong><i class="fas fa-play"></i> Início da Janela:</strong></td>
+                                <td>${windowStart}</td>
+                            </tr>
+                            <tr>
+                                <td><strong><i class="fas fa-stop"></i> Expiração da Janela:</strong></td>
+                                <td>${windowExpires}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('chatDetailsContent').innerHTML = content;
+            new bootstrap.Modal(document.getElementById('chatDetailsModal')).show();
+        }
+    </script>
+}

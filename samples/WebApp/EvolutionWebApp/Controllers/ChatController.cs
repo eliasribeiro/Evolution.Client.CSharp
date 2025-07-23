@@ -55,10 +55,39 @@ public class ChatController : Controller
     /// <summary>
     /// Exibe a página de Buscar Mensagens.
     /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="searchRemoteJid">Remote JID para buscar mensagens (opcional).</param>
+    /// <param name="page">Número da página para paginação (opcional).</param>
+    /// <param name="offset">Offset para paginação (opcional).</param>
     /// <returns>A view da página de Buscar Mensagens.</returns>
-    public IActionResult FindMessages()
+    public async Task<IActionResult> FindMessages(string? instanceName = null, string? searchRemoteJid = null, int? page = null, int? offset = null)
     {
-        return View();
+        // Se não há parâmetros, apenas exibe a página vazia
+        if (string.IsNullOrWhiteSpace(instanceName))
+        {
+            return View();
+        }
+
+        // Se há parâmetros, executa a busca (mesmo código do POST)
+        return await ExecuteFindMessages(instanceName, searchRemoteJid, page, offset);
+    }
+
+    /// <summary>
+    /// Exibe a página de Buscar Chats.
+    /// </summary>
+    /// <returns>A view da página de Buscar Chats.</returns>
+    public IActionResult FindChats()
+    {
+        return View(new ChatSearchResultViewModel());
+    }
+
+    /// <summary>
+    /// Exibe a página de Buscar URL da Foto de Perfil.
+    /// </summary>
+    /// <returns>A view da página de Buscar URL da Foto de Perfil.</returns>
+    public IActionResult FetchProfilePicUrl()
+    {
+        return View(new ProfilePicUrlViewModel());
     }
 
     /// <summary>
@@ -134,7 +163,21 @@ public class ChatController : Controller
     /// <param name="offset">Offset para paginação (opcional).</param>
     /// <returns>A view com os resultados da busca.</returns>
     [HttpPost]
-    public async Task<IActionResult> FindMessages(string instanceName, string? searchRemoteJid = null, int? page = null, int? offset = null)
+    [ActionName("FindMessages")]
+    public async Task<IActionResult> FindMessagesPost(string instanceName, string? searchRemoteJid = null, int? page = null, int? offset = null)
+    {
+        return await ExecuteFindMessages(instanceName, searchRemoteJid, page, offset);
+    }
+
+    /// <summary>
+    /// Executa a busca de mensagens (método comum para GET e POST).
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="searchRemoteJid">Remote JID para buscar mensagens (opcional).</param>
+    /// <param name="page">Número da página para paginação (opcional).</param>
+    /// <param name="offset">Offset para paginação (opcional).</param>
+    /// <returns>A view com os resultados da busca.</returns>
+    private async Task<IActionResult> ExecuteFindMessages(string instanceName, string? searchRemoteJid = null, int? page = null, int? offset = null)
     {
         var viewModel = new MessageSearchResultViewModel();
         
@@ -185,6 +228,7 @@ public class ChatController : Controller
             viewModel.Messages = result.Messages.Records?.Select(m => new MessageResult
             {
                 Key = m.Key?.Id,
+                MessageId = m.Key?.Id, // Adicionando ID da mensagem
                 PushName = m.PushName,
                 Message = m.Message?.Conversation ?? m.Message?.MessageContextInfo?.MessageSecret,
                 MessageType = m.MessageType,
@@ -311,6 +355,96 @@ public class ChatController : Controller
     }
 
     /// <summary>
+    /// Busca chats usando formulário ASP.NET MVC tradicional.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="searchId">ID do chat para buscar (opcional).</param>
+    /// <param name="searchRemoteJid">Remote JID do chat para buscar (opcional).</param>
+    /// <param name="searchPushName">Push Name do chat para buscar (opcional).</param>
+    /// <returns>A view com os resultados da busca.</returns>
+    [HttpPost]
+    public async Task<IActionResult> FindChats(string instanceName, string? searchId = null, string? searchRemoteJid = null, string? searchPushName = null)
+    {
+        var viewModel = new ChatSearchResultViewModel();
+
+        try
+        {
+            // Preserva os valores do formulário
+            ViewBag.InstanceName = instanceName;
+            ViewBag.SearchId = searchId;
+            ViewBag.SearchRemoteJid = searchRemoteJid;
+            ViewBag.SearchPushName = searchPushName;
+
+            if (string.IsNullOrWhiteSpace(instanceName))
+            {
+                TempData["ErrorMessage"] = "Nome da instância é obrigatório.";
+                return View(viewModel);
+            }
+
+            FindChatsRequest? request = null;
+
+            // Se algum critério de busca foi fornecido, cria a requisição
+            if (!string.IsNullOrWhiteSpace(searchId) || !string.IsNullOrWhiteSpace(searchRemoteJid) || !string.IsNullOrWhiteSpace(searchPushName))
+            {
+                request = new FindChatsRequest
+                {
+                    Where = new FindChatsWhere()
+                };
+
+                if (!string.IsNullOrWhiteSpace(searchId))
+                    request.Where.Id = searchId.Trim();
+
+                if (!string.IsNullOrWhiteSpace(searchRemoteJid))
+                    request.Where.RemoteJid = searchRemoteJid.Trim();
+
+                if (!string.IsNullOrWhiteSpace(searchPushName))
+                    request.Where.PushName = searchPushName.Trim();
+            }
+
+            _logger.LogInformation("Buscando chats para a instância: {InstanceName}", instanceName);
+
+            var result = await _evolutionClient.Chat.FindChatsAsync(instanceName, request);
+
+            // Mapeia os resultados para o ViewModel
+            viewModel.Chats = result.Select(c => new ChatResult
+            {
+                Id = c.Id,
+                RemoteJid = c.RemoteJid,
+                PushName = c.PushName,
+                ProfilePicUrl = c.ProfilePicUrl,
+                UpdatedAt = c.UpdatedAt,
+                WindowStart = c.WindowStart,
+                WindowExpires = c.WindowExpires,
+                WindowActive = c.WindowActive,
+                ChatType = c.RemoteJid?.Contains("@g.us") == true ? "Grupo" : "Individual"
+            }).ToList();
+
+            viewModel.TotalCount = result.Count;
+            viewModel.InstanceName = instanceName;
+            viewModel.SearchId = searchId;
+            viewModel.SearchRemoteJid = searchRemoteJid;
+            viewModel.SearchPushName = searchPushName;
+
+            _logger.LogInformation("Busca de chats concluída com sucesso para a instância: {InstanceName}. Chats encontrados: {Count}",
+                instanceName, result.Count);
+
+            TempData["SuccessMessage"] = $"Busca concluída! {result.Count} chat(s) encontrado(s).";
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("não encontrada"))
+        {
+            _logger.LogWarning("Instância não encontrada: {InstanceName}", instanceName);
+            TempData["ErrorMessage"] = $"Instância '{instanceName}' não encontrada.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao buscar chats para a instância: {InstanceName}", instanceName);
+            TempData["ErrorMessage"] = "Erro interno do servidor. Tente novamente.";
+        }
+
+        return View(viewModel);
+    }
+
+    /// <summary>
     /// Verifica números do WhatsApp usando formulário ASP.NET MVC tradicional.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
@@ -387,6 +521,75 @@ public class ChatController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao verificar números do WhatsApp para a instância: {InstanceName}", instanceName);
+            TempData["ErrorMessage"] = "Erro interno do servidor. Tente novamente.";
+        }
+
+        return View(viewModel);
+    }
+
+    /// <summary>
+    /// Busca a URL da foto de perfil usando formulário ASP.NET MVC tradicional.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="number">Número do WhatsApp para buscar a foto de perfil.</param>
+    /// <returns>A view com o resultado da busca.</returns>
+    [HttpPost]
+    public async Task<IActionResult> FetchProfilePicUrl(string instanceName, string number)
+    {
+        var viewModel = new ProfilePicUrlViewModel();
+
+        try
+        {
+            // Preserva os valores do formulário
+            ViewBag.InstanceName = instanceName;
+            ViewBag.Number = number;
+
+            if (string.IsNullOrWhiteSpace(instanceName))
+            {
+                TempData["ErrorMessage"] = "Nome da instância é obrigatório.";
+                return View(viewModel);
+            }
+
+            if (string.IsNullOrWhiteSpace(number))
+            {
+                TempData["ErrorMessage"] = "Número do WhatsApp é obrigatório.";
+                return View(viewModel);
+            }
+
+            var request = new FetchProfilePicUrlRequest
+            {
+                Number = number.Trim()
+            };
+
+            _logger.LogInformation("Buscando URL da foto de perfil para o número: {Number} na instância: {InstanceName}",
+                number, instanceName);
+
+            var result = await _evolutionClient.Chat.FetchProfilePicUrlAsync(instanceName, request);
+
+            // Mapeia o resultado para o ViewModel
+            viewModel.Result = new ProfilePicUrlResult
+            {
+                Wuid = result.Wuid,
+                ProfilePictureUrl = result.ProfilePictureUrl
+            };
+
+            viewModel.InstanceName = instanceName;
+            viewModel.Number = number;
+
+            _logger.LogInformation("URL da foto de perfil obtida com sucesso para o número: {Number} na instância: {InstanceName}",
+                number, instanceName);
+
+            TempData["SuccessMessage"] = "URL da foto de perfil obtida com sucesso!";
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("não encontrada"))
+        {
+            _logger.LogWarning("Instância não encontrada ou número inválido: {InstanceName}, {Number}", instanceName, number);
+            TempData["ErrorMessage"] = $"Instância '{instanceName}' não encontrada ou número '{number}' não existe no WhatsApp.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao buscar URL da foto de perfil para o número: {Number} na instância: {InstanceName}",
+                number, instanceName);
             TempData["ErrorMessage"] = "Erro interno do servidor. Tente novamente.";
         }
 
@@ -523,4 +726,75 @@ public class ChatController : Controller
             return Json(new { success = false, message = "Erro interno do servidor. Tente novamente." });
         }
     }
+
+    /// <summary>
+    /// Exibe a página de Obter Base64 de Mensagem de Mídia.
+    /// </summary>
+    /// <returns>A view da página de Obter Base64 de Mensagem de Mídia.</returns>
+    public IActionResult GetBase64FromMediaMessage()
+    {
+        return View();
+    }
+
+    /// <summary>
+    /// Obtém o base64 de uma mensagem de mídia.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="messageId">O ID da mensagem de mídia.</param>
+    /// <param name="convertToMp4">Indica se deve converter vídeo para MP4 (apenas para vídeos).</param>
+    /// <returns>Um JSON com os dados da mídia em base64.</returns>
+    [HttpPost]
+    public async Task<IActionResult> GetBase64FromMediaMessage(string instanceName, string messageId, bool convertToMp4 = false)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(instanceName))
+            {
+                return Json(new { success = false, message = "Nome da instância é obrigatório." });
+            }
+
+            if (string.IsNullOrWhiteSpace(messageId))
+            {
+                return Json(new { success = false, message = "ID da mensagem é obrigatório." });
+            }
+
+            var request = new GetBase64FromMediaMessageRequest
+            {
+                Message = new MediaMessageInfo
+                {
+                    Key = new MediaMessageKey
+                    {
+                        Id = messageId.Trim()
+                    }
+                },
+                ConvertToMp4 = convertToMp4
+            };
+
+            _logger.LogInformation("Obtendo base64 da mensagem de mídia para a instância: {InstanceName}, ID da mensagem: {MessageId}", 
+                instanceName, messageId);
+
+            var result = await _evolutionClient.Chat.GetBase64FromMediaMessageAsync(instanceName, request);
+
+            _logger.LogInformation("Base64 da mensagem de mídia obtido com sucesso para a instância: {InstanceName}, ID da mensagem: {MessageId}, Tipo de mídia: {MediaType}", 
+                instanceName, messageId, result.MediaType);
+
+            return Json(new { 
+                success = true, 
+                message = $"Base64 obtido com sucesso! Tipo de mídia: {result.MediaType}, Arquivo: {result.FileName}",
+                data = result
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("não encontrada"))
+        {
+            _logger.LogWarning("Instância ou mensagem não encontrada: {InstanceName}, ID da mensagem: {MessageId}", instanceName, messageId);
+            return Json(new { success = false, message = $"Instância '{instanceName}' ou mensagem com ID '{messageId}' não encontrada." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter base64 da mensagem de mídia para a instância: {InstanceName}, ID da mensagem: {MessageId}", instanceName, messageId);
+            return Json(new { success = false, message = "Erro interno do servidor. Tente novamente." });
+        }
+    }
+
+
 }

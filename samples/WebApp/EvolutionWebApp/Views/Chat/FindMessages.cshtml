@@ -189,6 +189,32 @@
                                                     </a>
                                                 }
                                             </div>
+                                            
+                                            <!-- Navegação direta para páginas -->
+                                            @if (Model.TotalPages > 2)
+                                            {
+                                                <div class="mt-2">
+                                                    <small class="text-muted">Ir para página:</small>
+                                                    <div class="btn-group btn-group-sm mt-1" role="group">
+                                                        @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                                                        {
+                                                            if (i == Model.CurrentPage)
+                                                            {
+                                                                <span class="btn btn-primary btn-sm active">@i</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a asp-action="FindMessages" 
+                                                                   asp-route-instanceName="@ViewBag.InstanceName"
+                                                                   asp-route-searchRemoteJid="@ViewBag.SearchRemoteJid"
+                                                                   asp-route-page="@i"
+                                                                   asp-route-offset="@ViewBag.Offset"
+                                                                   class="btn btn-outline-primary btn-sm">@i</a>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -200,6 +226,7 @@
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th style="width: 200px;"><i class="fas fa-fingerprint"></i> ID da Mensagem</th>
                                         <th style="width: 140px;"><i class="fas fa-clock"></i> Data/Hora</th>
                                         <th style="width: 120px;"><i class="fas fa-user"></i> Remetente</th>
                                         <th style="width: 80px;"><i class="fas fa-exchange-alt"></i> Direção</th>
@@ -213,7 +240,7 @@
                                     @if (Model.Messages?.Count == 0)
                                     {
                                         <tr>
-                                            <td colspan="7" class="text-center text-muted py-4">
+                                            <td colspan="8" class="text-center text-muted py-4">
                                                 <i class="fas fa-inbox fa-2x mb-2"></i><br>
                                                 Nenhuma mensagem encontrada
                                             </td>
@@ -228,6 +255,11 @@
                                             var remoteJidShort = message.ChatId?.Split('@')[0] ?? "N/A";
                                             
                                             <tr>
+                                                <td>
+                                                    <div class="small">
+                                                        <code class="text-primary">@(message.MessageId ?? "N/A")</code>
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <div class="small">
                                                         <div><strong>@timestamp.ToString("dd/MM/yyyy")</strong></div>

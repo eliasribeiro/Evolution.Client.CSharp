@@ -17,13 +17,13 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-12">
             <div class="alert alert-info">
                 <h5><i class="fas fa-info-circle"></i> Funcionalidades do Chat</h5>
                 <p class="mb-0">
                     Utilize o menu <strong>Chat</strong> na barra de navegação para acessar as funcionalidades disponíveis:
-                    <strong>Verificar WhatsApp</strong>, <strong>Buscar Contatos</strong> e <strong>Buscar Mensagens</strong>.
+                    <strong>Verificar WhatsApp</strong>, <strong>Buscar Contatos</strong>, <strong>Buscar Chats</strong>, <strong>Buscar Foto de Perfil</strong>, <strong>Buscar Mensagens</strong> e <strong>Obter Base64 de Mídia</strong>.
                 </p>
             </div>
         </div>
@@ -68,20 +68,77 @@
             </div>
         </div>
 
+        <!-- Card Buscar Chats -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-comments fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Buscar Chats</h5>
+                    <p class="card-text">
+                        Busque conversas (chats) individuais e grupos da instância.
+                        Filtre por ID, JID ou nome do chat.
+                    </p>
+                    <a asp-controller="Chat" asp-action="FindChats" class="btn btn-success">
+                        <i class="fas fa-search"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Buscar Foto de Perfil -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Buscar Foto de Perfil</h5>
+                    <p class="card-text">
+                        Obtenha a URL da foto de perfil de qualquer número do WhatsApp.
+                        Visualize e baixe as imagens de perfil.
+                    </p>
+                    <a asp-controller="Chat" asp-action="FetchProfilePicUrl" class="btn btn-info">
+                        <i class="fas fa-search"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Card Buscar Mensagens -->
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
                     <div class="mb-3">
-                        <i class="fas fa-envelope fa-3x text-info"></i>
+                        <i class="fas fa-envelope fa-3x text-warning"></i>
                     </div>
                     <h5 class="card-title">Buscar Mensagens</h5>
                     <p class="card-text">
                         Busque mensagens enviadas e recebidas na instância.
                         Filtre por contato/grupo e navegue com paginação.
                     </p>
-                    <a asp-controller="Chat" asp-action="FindMessages" class="btn btn-info">
+                    <a asp-controller="Chat" asp-action="FindMessages" class="btn btn-warning">
                         <i class="fas fa-search"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Obter Base64 de Mídia -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-file-download fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Obter Base64 de Mídia</h5>
+                    <p class="card-text">
+                        Obtenha o conteúdo base64 de mensagens de mídia (imagens, vídeos, áudios).
+                        Ideal para download e processamento de arquivos.
+                    </p>
+                    <a asp-controller="Chat" asp-action="GetBase64FromMediaMessage" class="btn btn-warning">
+                        <i class="fas fa-download"></i> Acessar
                     </a>
                 </div>
             </div>
@@ -98,7 +155,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h6><i class="fas fa-check-circle text-success"></i> Verificar WhatsApp</h6>
                             <ul class="small">
                                 <li>Use números com código do país (ex: 5561999887766)</li>
@@ -106,7 +163,7 @@
                                 <li>Ideal para validar listas de contatos</li>
                             </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h6><i class="fas fa-address-book text-primary"></i> Buscar Contatos</h6>
                             <ul class="small">
                                 <li>Deixe campos vazios para listar todos os contatos</li>
@@ -114,12 +171,20 @@
                                 <li>Remote JID identifica contatos únicos</li>
                             </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h6><i class="fas fa-envelope text-info"></i> Buscar Mensagens</h6>
                             <ul class="small">
                                 <li>Filtre por contato individual ou grupo</li>
                                 <li>Use paginação para navegar em grandes volumes</li>
                                 <li>Suporte a diferentes tipos de mídia</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <h6><i class="fas fa-file-download text-warning"></i> Obter Base64 de Mídia</h6>
+                            <ul class="small">
+                                <li>Informe o ID da mensagem de mídia</li>
+                                <li>Suporte a imagens, vídeos, áudios e documentos</li>
+                                <li>Opção para converter vídeos para MP4</li>
                             </ul>
                         </div>
                     </div>
