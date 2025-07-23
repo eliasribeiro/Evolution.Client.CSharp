@@ -253,37 +253,66 @@ await client.Profile.UpdatePrivacySettingsAsync("minha-instancia", updatePrivacy
 ### Envio de Mensagens
 
 ```csharp
-// Mensagem de texto
-var textMessage = new SendTextMessageRequest
+// Mensagem de texto simples
+var textRequest = new SendTextRequest
 {
-    Number = "5511888888888",
+    Number = "5511999999999",
     Text = "Olá! Como você está?"
 };
 
-var response = await client.Messages.SendTextAsync("minha-instancia", textMessage);
+var response = await client.Message.SendTextAsync("minha-instancia", textRequest);
+Console.WriteLine($"Mensagem enviada! ID: {response.Key.Id}, Status: {response.Status}");
 
-// Mensagem de mídia
-var mediaMessage = new SendMediaMessageRequest
+// Mensagem de texto com opções avançadas
+var advancedTextRequest = new SendTextRequest
 {
-    Number = "5511888888888",
-    MediaUrl = "https://exemplo.com/imagem.jpg",
-    MediaType = "image",
-    Caption = "Confira esta imagem!"
+    Number = "5511999999999",
+    Text = "Olá pessoal! @João como vocês estão?",
+    LinkPreview = true,
+    Delay = 1000, // 1 segundo de atraso
+    MentionsEveryOne = false,
+    Mentioned = new List<string> { "5511888888888@s.whatsapp.net" }
 };
 
-await client.Messages.SendMediaAsync("minha-instancia", mediaMessage);
+await client.Message.SendTextAsync("minha-instancia", advancedTextRequest);
 
-// Mensagem de localização
-var locationMessage = new SendLocationMessageRequest
+// Mensagem citando outra mensagem
+var quotedTextRequest = new SendTextRequest
 {
-    Number = "5511888888888",
-    Latitude = -23.5505,
-    Longitude = -46.6333,
-    Name = "São Paulo",
-    Address = "São Paulo, SP, Brasil"
+    Number = "5511999999999",
+    Text = "Esta é uma resposta à sua mensagem",
+    Quoted = new QuotedMessage
+    {
+        Key = new QuotedMessageKey { Id = "BAE594145F4C59B4" },
+        Message = new QuotedMessageContent { Conversation = "Mensagem original" }
+    }
 };
 
-await client.Messages.SendLocationAsync("minha-instancia", locationMessage);
+await client.Message.SendTextAsync("minha-instancia", quotedTextRequest);
+```
+
+#### Parâmetros do SendTextRequest
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `Number` | `string` | ✅ | Número do destinatário com código do país (ex: 5511999999999) |
+| `Text` | `string` | ✅ | Texto da mensagem a ser enviada |
+| `Delay` | `int?` | ❌ | Atraso em milissegundos antes de enviar (0-60000) |
+| `LinkPreview` | `bool?` | ❌ | Exibir preview de links na mensagem |
+| `MentionsEveryOne` | `bool?` | ❌ | Mencionar todos os participantes (apenas grupos) |
+| `Mentioned` | `List<string>?` | ❌ | Lista de JIDs dos usuários mencionados |
+| `Quoted` | `QuotedMessage?` | ❌ | Mensagem citada/respondida |
+
+#### Resposta do SendText
+
+```csharp
+public class SendTextResponse
+{
+    public MessageKey Key { get; set; }           // Chave da mensagem
+    public SentMessageContent Message { get; set; } // Conteúdo da mensagem
+    public string MessageTimestamp { get; set; }    // Timestamp Unix
+    public string Status { get; set; }              // Status (PENDING, SENT, etc.)
+}
 ```
 
 ### Gerenciamento de Grupos

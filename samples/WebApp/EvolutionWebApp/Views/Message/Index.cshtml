@@ -1,0 +1,126 @@
+@{
+    ViewData["Title"] = "Mensagens";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-envelope text-primary"></i> Mensagens</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Mensagens</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>Bem-vindo ao módulo de Mensagens!</strong>
+                <p class="mb-0">
+                    Utilize o menu <strong>Mensagens</strong> na barra de navegação para acessar as funcionalidades disponíveis:
+                    <strong>Enviar Mensagem de Texto</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Card Enviar Mensagem de Texto -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-paper-plane fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Mensagem de Texto</h5>
+                    <p class="card-text">
+                        Envie mensagens de texto para contatos individuais ou grupos.
+                        Suporte a menções, citações e preview de links.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendText" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card placeholder para futuras funcionalidades -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-image fa-3x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title text-muted">Enviar Mídia</h5>
+                    <p class="card-text text-muted">
+                        Funcionalidade para envio de imagens, vídeos, áudios e documentos.
+                        Em breve...
+                    </p>
+                    <button class="btn btn-secondary" disabled>
+                        <i class="fas fa-clock"></i> Em breve
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card placeholder para futuras funcionalidades -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-location-arrow fa-3x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title text-muted">Enviar Localização</h5>
+                    <p class="card-text text-muted">
+                        Funcionalidade para envio de localização geográfica.
+                        Em breve...
+                    </p>
+                    <button class="btn btn-secondary" disabled>
+                        <i class="fas fa-clock"></i> Em breve
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações Importantes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-check-circle text-success"></i> Funcionalidades Disponíveis</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-paper-plane text-primary"></i> Envio de mensagens de texto</li>
+                                <li><i class="fas fa-at text-info"></i> Menções a usuários específicos</li>
+                                <li><i class="fas fa-reply text-warning"></i> Citação de mensagens</li>
+                                <li><i class="fas fa-link text-success"></i> Preview de links</li>
+                                <li><i class="fas fa-clock text-secondary"></i> Atraso no envio</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exclamation-triangle text-warning"></i> Requisitos</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-server"></i> Instância conectada ao WhatsApp</li>
+                                <li><i class="fas fa-phone"></i> Número válido do destinatário</li>
+                                <li><i class="fas fa-key"></i> Permissões adequadas na API</li>
+                                <li><i class="fas fa-wifi"></i> Conexão estável com a internet</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

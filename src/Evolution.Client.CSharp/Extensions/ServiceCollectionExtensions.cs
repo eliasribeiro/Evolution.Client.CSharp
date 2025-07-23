@@ -37,12 +37,14 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<IEvolutionInformationService, EvolutionInformationService>();
         services.AddHttpClient<IEvolutionInstanceService, EvolutionInstanceService>();
         services.AddHttpClient<IEvolutionChatService, EvolutionChatService>();
+        services.AddHttpClient<IEvolutionMessageService, EvolutionMessageService>();
 
         // Registra os serviços
         services.TryAddSingleton<EvolutionApiClient>();
         services.TryAddSingleton<IEvolutionInformationService, EvolutionInformationService>();
         services.TryAddSingleton<IEvolutionInstanceService, EvolutionInstanceService>();
         services.TryAddSingleton<IEvolutionChatService, EvolutionChatService>();
+        services.TryAddSingleton<IEvolutionMessageService, EvolutionMessageService>();
 
         return services;
     }
