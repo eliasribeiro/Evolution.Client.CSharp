@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Client.CSharp;
 using EvolutionWebApp.Models;
+using System.Net;
 
 namespace EvolutionWebApp.Controllers;
 
@@ -130,6 +131,93 @@ public class InstancesController : Controller
             _logger.LogError(ex, "Erro inesperado ao criar instância: {InstanceName}", model.InstanceName);
             ModelState.AddModelError("", $"Erro inesperado ao criar instância: {ex.Message}");
             return View(model);
+        }
+    }
+
+    /// <summary>
+    /// Conecta uma instância e exibe o QR code para escaneamento.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser conectada.</param>
+    /// <returns>A view com o QR code para escaneamento.</returns>
+    public async Task<IActionResult> Connect(string instanceName)
+    {
+        if (string.IsNullOrEmpty(instanceName))
+        {
+            return BadRequest("Nome da instância não fornecido");
+        }
+
+        try
+        {
+            _logger.LogInformation("Tentando conectar instância: {InstanceName}", instanceName);
+
+            var connection = await _evolutionClient.Instance.ConnectInstanceAsync(instanceName);
+
+            _logger.LogInformation("QR code gerado com sucesso para a instância: {InstanceName}", instanceName);
+
+            return View(new ConnectInstanceViewModel
+            {
+                InstanceName = instanceName,
+                QrCodeBase64 = connection.Base64 ?? string.Empty,
+                PairingCode = connection.PairingCode,
+                Count = connection.Count
+            });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            _logger.LogError(ex, "Instância não encontrada: {InstanceName}", instanceName);
+            TempData["ErrorMessage"] = $"Instância '{instanceName}' não encontrada";
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao conectar instância: {InstanceName}", instanceName);
+            TempData["ErrorMessage"] = $"Erro ao conectar instância: {ex.Message}";
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
+    /// <summary>
+    /// Conecta uma instância via AJAX e retorna os dados de conexão em JSON.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser conectada.</param>
+    /// <returns>JSON com os dados de conexão ou erro.</returns>
+    [HttpPost]
+    public async Task<IActionResult> ConnectAjax(string instanceName)
+    {
+        if (string.IsNullOrEmpty(instanceName))
+        {
+            return Json(new { success = false, message = "Nome da instância não fornecido" });
+        }
+
+        try
+        {
+            _logger.LogInformation("Tentando conectar instância via AJAX: {InstanceName}", instanceName);
+
+            var connection = await _evolutionClient.Instance.ConnectInstanceAsync(instanceName);
+
+            _logger.LogInformation("QR code gerado com sucesso para a instância: {InstanceName}", instanceName);
+
+            return Json(new 
+            { 
+                success = true, 
+                data = new
+                {
+                    instanceName = instanceName,
+                    qrCodeBase64 = connection.Base64 ?? string.Empty,
+                    pairingCode = connection.PairingCode,
+                    count = connection.Count
+                }
+            });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            _logger.LogError(ex, "Instância não encontrada: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Instância '{instanceName}' não encontrada" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao conectar instância: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Erro ao conectar instância: {ex.Message}" });
         }
     }
 }

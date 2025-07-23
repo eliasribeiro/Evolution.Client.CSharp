@@ -18,6 +18,16 @@ public interface IEvolutionInstanceService
     Task<CreateInstanceResponse> CreateInstanceAsync(CreateInstanceRequest request);
 
     /// <summary>
+    /// Conecta uma instância existente e retorna os dados de conexão (QR code).
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser conectada.</param>
+    /// <returns>A resposta contendo os dados de conexão, incluindo o QR code.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição GET para o endpoint /instance/connect/{instanceName}.
+    /// </remarks>
+    Task<ConnectInstanceResponse> ConnectInstanceAsync(string instanceName);
+
+    /// <summary>
     /// Obtém todas as instâncias disponíveis.
     /// </summary>
     /// <returns>Uma lista de instâncias disponíveis.</returns>

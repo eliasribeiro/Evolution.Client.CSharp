@@ -248,4 +248,59 @@ public class EvolutionInstanceService : IEvolutionInstanceService
             throw;
         }
     }
+
+    /// <summary>
+    /// Conecta uma instância existente e retorna os dados de conexão (QR code).
+    /// </summary>
+    /// <param name="instanceName">O nome da instância a ser conectada.</param>
+    /// <returns>A resposta contendo os dados de conexão, incluindo o QR code.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição GET para o endpoint /instance/connect/{instanceName}.
+    /// </remarks>
+    public async Task<ConnectInstanceResponse> ConnectInstanceAsync(string instanceName)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        try
+        {
+            _logger.LogInformation("Conectando instância: {InstanceName}", instanceName);
+
+            // Faz a requisição GET para o endpoint de conexão da instância
+            var response = await _httpClient.GetAsync($"/instance/connect/{instanceName}");
+
+            // Verifica se a requisição foi bem-sucedida
+            response.EnsureSuccessStatusCode();
+
+            // Lê o conteúdo da resposta
+            var content = await response.Content.ReadAsStringAsync();
+
+            // Desserializa a resposta JSON
+            var result = JsonSerializer.Deserialize<ConnectInstanceResponse>(content, _jsonOptions);
+
+            if (result == null)
+            {
+                throw new JsonException("Falha ao desserializar a resposta da API");
+            }
+
+            _logger.LogInformation("Instância conectada com sucesso: {InstanceName}", instanceName);
+
+            return result;
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Erro ao fazer requisição HTTP para a API Evolution");
+            throw;
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao desserializar a resposta da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao conectar instância na API Evolution");
+            throw;
+        }
+    }
 }

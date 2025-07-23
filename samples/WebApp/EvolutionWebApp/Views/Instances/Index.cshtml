@@ -58,9 +58,14 @@
                                     </td>
                                     <td>@instance.Number</td>
                                     <td>
-                                        <a asp-action="Details" asp-route-id="@instance.Id" class="btn btn-info btn-sm">
-                                            <i class="bi bi-info-circle"></i> Detalhes
-                                        </a>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@instance.Id" class="btn btn-info btn-sm">
+                                                <i class="bi bi-info-circle"></i> Detalhes
+                                            </a>
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="connectInstance('@instance.Name')">
+                                                <i class="bi bi-qr-code"></i> Conectar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -84,3 +89,157 @@
         </div>
     }
 </div>
+
+<!-- Modal para exibir QR Code -->
+<div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="qrCodeModalLabel">
+                    <i class="bi bi-qr-code"></i> Conectar Instância
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="loadingSpinner" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Gerando QR Code...</p>
+                </div>
+                
+                <div id="qrCodeContent" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">Informações da Conexão</h6>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-5">Instância:</dt>
+                                        <dd class="col-sm-7" id="instanceName"></dd>
+                                        
+                                        <dt class="col-sm-5">Contagem:</dt>
+                                        <dd class="col-sm-7" id="count"></dd>
+                                        
+                                        <div id="pairingCodeSection" style="display: none;">
+                                            <dt class="col-sm-5">Código de Pareamento:</dt>
+                                            <dd class="col-sm-7">
+                                                <div class="alert alert-info mb-0">
+                                                    <strong id="pairingCode"></strong>
+                                                </div>
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">QR Code</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <img id="qrCodeImage" src="" alt="QR Code" class="img-fluid" style="max-width: 250px;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <div class="alert alert-info">
+                            <h6><i class="bi bi-info-circle"></i> Instruções</h6>
+                            <ol class="mb-0">
+                                <li>Abra o WhatsApp no seu celular</li>
+                                <li>Toque em <strong>Menu</strong> ou <strong>Configurações</strong></li>
+                                <li>Toque em <strong>Dispositivos Conectados</strong></li>
+                                <li>Toque em <strong>Conectar um Dispositivo</strong></li>
+                                <li>Aponte a câmera do seu celular para escanear o QR code</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="errorContent" style="display: none;">
+                    <div class="alert alert-danger">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Erro</h6>
+                        <p id="errorMessage" class="mb-0"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" id="refreshQrCode" onclick="refreshCurrentQrCode()" style="display: none;">
+                    <i class="bi bi-arrow-clockwise"></i> Atualizar QR Code
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentInstanceName = '';
+
+function connectInstance(instanceName) {
+    currentInstanceName = instanceName;
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+    modal.show();
+    
+    // Resetar estado do modal
+    document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('qrCodeContent').style.display = 'none';
+    document.getElementById('errorContent').style.display = 'none';
+    document.getElementById('refreshQrCode').style.display = 'none';
+    
+    // Fazer requisição AJAX
+    fetch('@Url.Action("ConnectAjax", "Instances")', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+        },
+        body: 'instanceName=' + encodeURIComponent(instanceName)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        
+        if (data.success) {
+            // Exibir dados de conexão
+            document.getElementById('instanceName').textContent = data.data.instanceName;
+            document.getElementById('count').textContent = data.data.count;
+            document.getElementById('qrCodeImage').src = data.data.qrCodeBase64;
+            
+            // Mostrar código de pareamento se disponível
+            if (data.data.pairingCode) {
+                document.getElementById('pairingCode').textContent = data.data.pairingCode;
+                document.getElementById('pairingCodeSection').style.display = 'block';
+            } else {
+                document.getElementById('pairingCodeSection').style.display = 'none';
+            }
+            
+            document.getElementById('qrCodeContent').style.display = 'block';
+            document.getElementById('refreshQrCode').style.display = 'inline-block';
+        } else {
+            // Exibir erro
+            document.getElementById('errorMessage').textContent = data.message;
+            document.getElementById('errorContent').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('errorMessage').textContent = 'Erro de comunicação: ' + error.message;
+        document.getElementById('errorContent').style.display = 'block';
+    });
+}
+
+function refreshCurrentQrCode() {
+    if (currentInstanceName) {
+        connectInstance(currentInstanceName);
+    }
+}
+</script>

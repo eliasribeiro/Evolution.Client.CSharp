@@ -105,9 +105,11 @@ var createRequest = new CreateInstanceRequest
 
 var instance = await client.Instances.CreateAsync(createRequest);
 
-// Conectar instância
-var connection = await client.Instances.ConnectAsync("minha-instancia");
+// Conectar instância e obter QR code
+var connection = await client.Instance.ConnectInstanceAsync("minha-instancia");
 Console.WriteLine($"QR Code: {connection.Base64}");
+Console.WriteLine($"Código de pareamento: {connection.PairingCode}");
+Console.WriteLine($"Contagem: {connection.Count}");
 
 // Verificar status de conexão
 var status = await client.Instances.GetConnectionStatusAsync("minha-instancia");

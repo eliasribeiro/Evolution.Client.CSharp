@@ -1,0 +1,79 @@
+@model EvolutionWebApp.Models.ConnectInstanceViewModel
+
+@{
+    ViewData["Title"] = $"Conectar Instância - {Model.InstanceName}";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4 mb-4">Conectar Instância</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informações da Conexão</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.InstanceName)</dt>
+                        <dd class="col-sm-8">@Model.InstanceName</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Count)</dt>
+                        <dd class="col-sm-8">@Model.Count</dd>
+
+                        @if (!string.IsNullOrEmpty(Model.PairingCode))
+                        {
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PairingCode)</dt>
+                            <dd class="col-sm-8">
+                                <div class="alert alert-info">
+                                    <strong>@Model.PairingCode</strong>
+                                </div>
+                                <small class="text-muted">Use este código para parear sem escanear o QR code.</small>
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a asp-action="Index" class="btn btn-secondary">Voltar para Lista</a>
+                <a asp-action="Connect" asp-route-instanceName="@Model.InstanceName" class="btn btn-primary">Atualizar QR Code</a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">QR Code</h5>
+                </div>
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.QrCodeBase64))
+                    {
+                        <img src="@Model.QrCodeBase64" alt="QR Code" class="img-fluid" style="max-width: 300px;" />
+                        <p class="mt-3 text-muted">Escaneie este QR code com o WhatsApp no seu celular para conectar a instância.</p>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> QR Code não disponível.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="alert alert-info">
+        <h5><i class="bi bi-info-circle"></i> Instruções</h5>
+        <ol>
+            <li>Abra o WhatsApp no seu celular</li>
+            <li>Toque em <strong>Menu</strong> ou <strong>Configurações</strong></li>
+            <li>Toque em <strong>Dispositivos Conectados</strong></li>
+            <li>Toque em <strong>Conectar um Dispositivo</strong></li>
+            <li>Aponte a câmera do seu celular para esta tela para escanear o QR code</li>
+        </ol>
+        <p>Se o QR code expirar, clique em <strong>Atualizar QR Code</strong> para gerar um novo.</p>
+    </div>
+</div>
