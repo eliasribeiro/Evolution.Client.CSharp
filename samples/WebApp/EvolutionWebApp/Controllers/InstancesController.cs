@@ -220,4 +220,98 @@ public class InstancesController : Controller
             return Json(new { success = false, message = $"Erro ao conectar instância: {ex.Message}" });
         }
     }
+
+    /// <summary>
+    /// Obtém o estado de conexão de uma instância específica via AJAX.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância para verificar o estado.</param>
+    /// <returns>JSON com o estado de conexão da instância ou erro.</returns>
+    [HttpGet]
+    public async Task<IActionResult> ConnectionState(string instanceName)
+    {
+        if (string.IsNullOrEmpty(instanceName))
+        {
+            return Json(new { success = false, message = "Nome da instância não fornecido" });
+        }
+
+        try
+        {
+            _logger.LogInformation("Verificando estado de conexão da instância: {InstanceName}", instanceName);
+
+            var connectionState = await _evolutionClient.Instance.GetConnectionStateAsync(instanceName);
+
+            _logger.LogInformation("Estado de conexão obtido com sucesso para a instância: {InstanceName} - Estado: {State}", 
+                instanceName, connectionState.Instance?.State);
+
+            return Json(new 
+            { 
+                success = true, 
+                data = new
+                {
+                    instanceName = connectionState.Instance?.InstanceName,
+                    state = connectionState.Instance?.State
+                }
+            });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            _logger.LogError(ex, "Instância não encontrada: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Instância '{instanceName}' não encontrada" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter estado de conexão da instância: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Erro ao obter estado de conexão: {ex.Message}" });
+        }
+    }
+
+    /// <summary>
+    /// Faz logout de uma instância específica via AJAX.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância para fazer logout.</param>
+    /// <returns>JSON com o resultado da operação de logout ou erro.</returns>
+    [HttpPost]
+    public async Task<IActionResult> Logout(string instanceName)
+    {
+        if (string.IsNullOrEmpty(instanceName))
+        {
+            return Json(new { success = false, message = "Nome da instância não fornecido" });
+        }
+
+        try
+        {
+            _logger.LogInformation("Fazendo logout da instância: {InstanceName}", instanceName);
+
+            var logoutResult = await _evolutionClient.Instance.LogoutInstanceAsync(instanceName);
+
+            _logger.LogInformation("Logout realizado com sucesso para a instância: {InstanceName} - Mensagem: {Message}", 
+                instanceName, logoutResult.Response?.Message);
+
+            return Json(new 
+            { 
+                success = true, 
+                data = new
+                {
+                    instanceName = instanceName,
+                    status = logoutResult.Status,
+                    message = logoutResult.Response?.Message
+                }
+            });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
+        {
+            _logger.LogError(ex, "Erro de requisição ao fazer logout da instância: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Erro ao fazer logout: {ex.Message}" });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            _logger.LogError(ex, "Instância não encontrada: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Instância '{instanceName}' não encontrada" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao fazer logout da instância: {InstanceName}", instanceName);
+            return Json(new { success = false, message = $"Erro ao fazer logout: {ex.Message}" });
+        }
+    }
 }

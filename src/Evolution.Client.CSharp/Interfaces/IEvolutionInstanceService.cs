@@ -44,4 +44,26 @@ public interface IEvolutionInstanceService
     /// Este método faz uma requisição GET para o endpoint /instance/fetchInstances e retorna os dados no formato V2.
     /// </remarks>
     Task<InstancesResponse> FetchInstancesV2Async();
+
+    /// <summary>
+    /// Obtém o estado de conexão de uma instância específica.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância para verificar o estado de conexão.</param>
+    /// <returns>A resposta contendo o estado de conexão da instância.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição GET para o endpoint /instance/connectionState/{instanceName}.
+    /// Os estados possíveis incluem: "open", "close", "connecting", etc.
+    /// </remarks>
+    Task<ConnectionStateResponse> GetConnectionStateAsync(string instanceName);
+
+    /// <summary>
+    /// Faz logout de uma instância específica.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância para fazer logout.</param>
+    /// <returns>A resposta contendo o resultado da operação de logout.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição DELETE para o endpoint /instance/logout/{instanceName}.
+    /// A instância deve estar conectada para que o logout seja bem-sucedido.
+    /// </remarks>
+    Task<LogoutInstanceResponse> LogoutInstanceAsync(string instanceName);
 }

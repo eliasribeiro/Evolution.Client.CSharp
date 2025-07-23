@@ -43,6 +43,7 @@
                                 <th>Nome</th>
                                 <th>ID</th>
                                 <th>Status</th>
+                                <th>Estado de Conexão</th>
                                 <th>Número</th>
                                 <th>Ações</th>
                             </tr>
@@ -56,6 +57,11 @@
                                     <td>
                                         @instance.ConnectionStatus
                                     </td>
+                                    <td>
+                                        <span id="connectionState-@instance.Name" class="badge bg-secondary">
+                                            <i class="bi bi-hourglass-split"></i> Verificando...
+                                        </span>
+                                    </td>
                                     <td>@instance.Number</td>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -64,6 +70,12 @@
                                             </a>
                                             <button type="button" class="btn btn-primary btn-sm" onclick="connectInstance('@instance.Name')">
                                                 <i class="bi bi-qr-code"></i> Conectar
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="logoutInstance('@instance.Name')" title="Fazer Logout">
+                                                <i class="bi bi-box-arrow-right"></i> Logout
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-sm" onclick="checkConnectionState('@instance.Name')" title="Verificar Estado">
+                                                <i class="bi bi-arrow-clockwise"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -242,4 +254,113 @@ function refreshCurrentQrCode() {
         connectInstance(currentInstanceName);
     }
 }
+
+function checkConnectionState(instanceName) {
+    const stateElement = document.getElementById('connectionState-' + instanceName);
+    
+    // Mostrar estado de carregamento
+    stateElement.innerHTML = '<i class="bi bi-hourglass-split"></i> Verificando...';
+    stateElement.className = 'badge bg-secondary';
+    
+    // Fazer requisição AJAX para verificar o estado
+    fetch('@Url.Action("ConnectionState", "Instances")?instanceName=' + encodeURIComponent(instanceName), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateConnectionStateDisplay(instanceName, data.data.state);
+        } else {
+            stateElement.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Erro';
+            stateElement.className = 'badge bg-danger';
+            stateElement.title = data.message;
+        }
+    })
+    .catch(error => {
+        stateElement.innerHTML = '<i class="bi bi-wifi-off"></i> Erro';
+        stateElement.className = 'badge bg-danger';
+        stateElement.title = 'Erro de comunicação: ' + error.message;
+    });
+}
+
+function updateConnectionStateDisplay(instanceName, state) {
+    const stateElement = document.getElementById('connectionState-' + instanceName);
+    
+    switch (state?.toLowerCase()) {
+        case 'open':
+            stateElement.innerHTML = '<i class="bi bi-check-circle"></i> Conectado';
+            stateElement.className = 'badge bg-success';
+            stateElement.title = 'Instância conectada e ativa';
+            break;
+        case 'close':
+            stateElement.innerHTML = '<i class="bi bi-x-circle"></i> Desconectado';
+            stateElement.className = 'badge bg-danger';
+            stateElement.title = 'Instância desconectada';
+            break;
+        case 'connecting':
+            stateElement.innerHTML = '<i class="bi bi-arrow-repeat"></i> Conectando';
+            stateElement.className = 'badge bg-warning';
+            stateElement.title = 'Instância tentando conectar';
+            break;
+        default:
+            stateElement.innerHTML = '<i class="bi bi-question-circle"></i> ' + (state || 'Desconhecido');
+            stateElement.className = 'badge bg-secondary';
+            stateElement.title = 'Estado: ' + (state || 'Desconhecido');
+            break;
+    }
+}
+
+function checkAllConnectionStates() {
+    // Verificar o estado de todas as instâncias na página
+    const stateElements = document.querySelectorAll('[id^="connectionState-"]');
+    stateElements.forEach(element => {
+        const instanceName = element.id.replace('connectionState-', '');
+        checkConnectionState(instanceName);
+    });
+}
+
+function logoutInstance(instanceName) {
+    // Confirmar ação com o usuário
+    if (!confirm(`Tem certeza que deseja fazer logout da instância "${instanceName}"?`)) {
+        return;
+    }
+    
+    // Fazer requisição AJAX para logout
+    fetch('@Url.Action("Logout", "Instances")', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+        },
+        body: 'instanceName=' + encodeURIComponent(instanceName)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Mostrar mensagem de sucesso
+            alert('Logout realizado com sucesso: ' + data.message);
+            
+            // Atualizar o estado de conexão da instância
+            checkConnectionState(instanceName);
+        } else {
+            // Mostrar mensagem de erro
+            alert('Erro ao fazer logout: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro de comunicação: ' + error.message);
+    });
+}
+
+// Verificar estados automaticamente quando a página carrega
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar estados iniciais
+    setTimeout(checkAllConnectionStates, 1000);
+    
+    // Verificar estados a cada 30 segundos
+    setInterval(checkAllConnectionStates, 30000);
+});
 </script>
