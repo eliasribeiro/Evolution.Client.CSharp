@@ -8,6 +8,16 @@ namespace Evolution.Client.CSharp.Interfaces;
 public interface IEvolutionInstanceService
 {
     /// <summary>
+    /// Cria uma nova instância na API Evolution.
+    /// </summary>
+    /// <param name="request">Os dados da instância a ser criada.</param>
+    /// <returns>A resposta contendo as informações da instância criada.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição POST para o endpoint /instance/create.
+    /// </remarks>
+    Task<CreateInstanceResponse> CreateInstanceAsync(CreateInstanceRequest request);
+
+    /// <summary>
     /// Obtém todas as instâncias disponíveis.
     /// </summary>
     /// <returns>Uma lista de instâncias disponíveis.</returns>

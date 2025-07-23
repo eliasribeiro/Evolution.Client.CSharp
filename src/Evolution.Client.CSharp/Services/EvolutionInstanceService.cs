@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using Evolution.Client.CSharp.Configuration;
 using Evolution.Client.CSharp.Interfaces;
@@ -53,6 +54,94 @@ public class EvolutionInstanceService : IEvolutionInstanceService
     }
 
     /// <summary>
+    /// Cria uma nova instância na API Evolution.
+    /// </summary>
+    /// <param name="request">Os dados da instância a ser criada.</param>
+    /// <returns>A resposta contendo as informações da instância criada.</returns>
+    /// <remarks>
+    /// Este método faz uma requisição POST para o endpoint /instance/create.
+    /// </remarks>
+    public async Task<CreateInstanceResponse> CreateInstanceAsync(CreateInstanceRequest request)
+    {
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (string.IsNullOrWhiteSpace(request.InstanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(request));
+
+        try
+        {
+            _logger.LogInformation("Criando nova instância: {InstanceName}", request.InstanceName);
+
+            // Serializa a requisição para JSON
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            // Faz a requisição POST para o endpoint de criação de instância
+            var response = await _httpClient.PostAsync("/instance/create", content);
+
+            // Lê o conteúdo da resposta
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Verifica se a requisição foi bem-sucedida
+            if (response.IsSuccessStatusCode)
+            {
+                // Desserializa a resposta de sucesso
+                var result = JsonSerializer.Deserialize<CreateInstanceResponse>(responseContent, _jsonOptions);
+
+                if (result == null)
+                {
+                    throw new JsonException("Falha ao desserializar a resposta da API");
+                }
+
+                _logger.LogInformation("Instância criada com sucesso: {InstanceName} (ID: {InstanceId})", 
+                    result.Instance?.InstanceName, result.Instance?.InstanceId);
+
+                return result;
+            }
+            else
+            {
+                // Tenta desserializar a resposta de erro
+                try
+                {
+                    var errorResponse = JsonSerializer.Deserialize<CreateInstanceErrorResponse>(responseContent, _jsonOptions);
+                    var errorMessage = errorResponse?.Response?.Message != null && errorResponse.Response.Message.Length > 0
+                        ? string.Join(", ", errorResponse.Response.Message)
+                        : errorResponse?.Error ?? "Erro desconhecido";
+
+                    _logger.LogError("Erro ao criar instância: {StatusCode} - {ErrorMessage}", 
+                        response.StatusCode, errorMessage);
+
+                    throw new HttpRequestException($"Erro ao criar instância: {errorMessage}", null, response.StatusCode);
+                }
+                catch (JsonException)
+                {
+                    // Se não conseguir desserializar o erro, usa a resposta bruta
+                    _logger.LogError("Erro ao criar instância: {StatusCode} - {ResponseContent}", 
+                        response.StatusCode, responseContent);
+
+                    throw new HttpRequestException($"Erro ao criar instância: {response.StatusCode} - {responseContent}", 
+                        null, response.StatusCode);
+                }
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao criar instância na API Evolution");
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Obtém todas as instâncias disponíveis.
     /// </summary>
     /// <returns>Uma lista de instâncias disponíveis.</returns>
@@ -74,13 +163,16 @@ public class EvolutionInstanceService : IEvolutionInstanceService
             // Lê o conteúdo da resposta
             var content = await response.Content.ReadAsStringAsync();
 
-            // Desserializa a resposta JSON
-            var result = JsonSerializer.Deserialize<InstancesResponse>(content, _jsonOptions);
+            // Desserializa a resposta JSON como um array de InstanceResponse
+            var instances = JsonSerializer.Deserialize<List<InstanceResponse>>(content, _jsonOptions);
 
-            if (result == null)
+            if (instances == null)
             {
                 throw new JsonException("Falha ao desserializar a resposta da API");
             }
+
+            // Cria uma nova InstancesResponse com as instâncias desserializadas
+            var result = new InstancesResponse(instances);
 
             _logger.LogInformation("Instâncias obtidas com sucesso. Total: {Count}", result.Count);
 
@@ -125,13 +217,16 @@ public class EvolutionInstanceService : IEvolutionInstanceService
             // Lê o conteúdo da resposta
             var content = await response.Content.ReadAsStringAsync();
 
-            // Desserializa a resposta JSON
-            var result = JsonSerializer.Deserialize<InstancesResponse>(content, _jsonOptions);
+            // Desserializa a resposta JSON como um array de InstanceResponse
+            var instances = JsonSerializer.Deserialize<List<InstanceResponse>>(content, _jsonOptions);
 
-            if (result == null)
+            if (instances == null)
             {
                 throw new JsonException("Falha ao desserializar a resposta da API");
             }
+
+            // Cria uma nova InstancesResponse com as instâncias desserializadas
+            var result = new InstancesResponse(instances);
 
             _logger.LogInformation("Instâncias obtidas com sucesso (formato V2). Total: {Count}", result.Count);
 

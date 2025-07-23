@@ -41,46 +41,43 @@ public class EvolutionInstanceServiceTests
     public async Task FetchInstancesAsync_ReturnsValidResponse_WhenApiCallSucceeds()
     {
         // Arrange
-        var expectedResponse = new InstancesResponse
+        var instancesArray = new List<InstanceResponse>
         {
             new InstanceResponse
             {
-                Instance = new InstanceDetails
+                Id = "347f2197-7026-489c-b3db-ac40a08c0e91",
+                Name = "Elias",
+                ConnectionStatus = "close",
+                Integration = "WHATSAPP-BAILEYS",
+                Token = "9E3F517F-8CFC-43DD-8CBD-0BDD6B85F4D1",
+                ClientName = "evolution_exchange",
+                CreatedAt = DateTime.Parse("2025-07-23T13:48:10.241Z"),
+                UpdatedAt = DateTime.Parse("2025-07-23T13:48:10.241Z"),
+                Setting = new InstanceSettingV2
                 {
-                    InstanceName = "example-name",
-                    InstanceId = "421a4121-a3d9-40cc-a8db-c3a1df353126",
-                    Owner = "553198296801@s.whatsapp.net",
-                    ProfileName = "Guilherme Gomes",
-                    ProfileStatus = "This is the profile status.",
-                    Status = "open",
-                    ServerUrl = "https://example.evolution-api.com",
-                    ApiKey = "B3844804-481D-47A4-B69C-F14B4206EB56",
-                    Integration = new IntegrationDetails
-                    {
-                        IntegrationType = "WHATSAPP-BAILEYS",
-                        WebhookWaBusiness = "https://example.evolution-api.com/webhook/whatsapp/db5e11d3-ded5-4d91-b3fb-48272688f206"
-                    }
-                }
-            },
-            new InstanceResponse
-            {
-                Instance = new InstanceDetails
+                    Id = "cmdg0qt8s0009n54q3gs93dja",
+                    RejectCall = false,
+                    MsgCall = "",
+                    GroupsIgnore = false,
+                    AlwaysOnline = false,
+                    ReadMessages = false,
+                    ReadStatus = false,
+                    SyncFullHistory = false,
+                    WavoipToken = "",
+                    CreatedAt = DateTime.Parse("2025-07-23T13:48:10.251Z"),
+                    UpdatedAt = DateTime.Parse("2025-07-23T13:48:10.251Z"),
+                    InstanceId = "347f2197-7026-489c-b3db-ac40a08c0e91"
+                },
+                Count = new InstanceCountV2
                 {
-                    InstanceName = "teste-docs",
-                    InstanceId = "af6c5b7c-ee27-4f94-9ea8-192393746ddd",
-                    Status = "close",
-                    ServerUrl = "https://example.evolution-api.com",
-                    ApiKey = "123456",
-                    Integration = new IntegrationDetails
-                    {
-                        Token = "123456",
-                        WebhookWaBusiness = "https://example.evolution-api.com/webhook/whatsapp/teste-docs"
-                    }
+                    Message = 0,
+                    Contact = 0,
+                    Chat = 0
                 }
             }
         };
 
-        var jsonResponse = JsonSerializer.Serialize(expectedResponse);
+        var jsonResponse = JsonSerializer.Serialize(instancesArray);
 
         _httpMessageHandlerMock
             .Protected()
@@ -102,9 +99,24 @@ public class EvolutionInstanceServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(2, result.Count);
-        Assert.Equal("example-name", result[0].Instance?.InstanceName);
-        Assert.Equal("teste-docs", result[1].Instance?.InstanceName);
+        Assert.Single(result);
+        Assert.Equal("347f2197-7026-489c-b3db-ac40a08c0e91", result[0].Id);
+        Assert.Equal("Elias", result[0].Name);
+        Assert.Equal("close", result[0].ConnectionStatus);
+        Assert.Equal("WHATSAPP-BAILEYS", result[0].Integration);
+        Assert.Equal("9E3F517F-8CFC-43DD-8CBD-0BDD6B85F4D1", result[0].Token);
+        Assert.Equal("evolution_exchange", result[0].ClientName);
+        
+        // Verifica as configurações
+        Assert.NotNull(result[0].Setting);
+        Assert.Equal("cmdg0qt8s0009n54q3gs93dja", result[0].Setting!.Id);
+        Assert.False(result[0].Setting!.RejectCall);
+        
+        // Verifica as contagens
+        Assert.NotNull(result[0].Count);
+        Assert.Equal(0, result[0].Count!.Message);
+        Assert.Equal(0, result[0].Count!.Contact);
+        Assert.Equal(0, result[0].Count!.Chat);
     }
 
     [Fact]

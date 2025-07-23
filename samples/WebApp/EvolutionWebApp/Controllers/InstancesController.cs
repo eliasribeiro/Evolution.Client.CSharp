@@ -73,4 +73,63 @@ public class InstancesController : Controller
             return RedirectToAction(nameof(Index));
         }
     }
+
+    /// <summary>
+    /// Exibe o formulário para criar uma nova instância.
+    /// </summary>
+    /// <returns>A view com o formulário de criação.</returns>
+    public IActionResult Create()
+    {
+        return View(new CreateInstanceViewModel());
+    }
+
+    /// <summary>
+    /// Processa a criação de uma nova instância.
+    /// </summary>
+    /// <param name="model">O modelo com os dados da instância a ser criada.</param>
+    /// <returns>Redireciona para a lista de instâncias ou retorna a view com erros.</returns>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateInstanceViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            _logger.LogInformation("Tentando criar nova instância: {InstanceName}", model.InstanceName);
+
+            var request = model.ToCreateInstanceRequest();
+            var result = await _evolutionClient.Instance.CreateInstanceAsync(request);
+
+            _logger.LogInformation("Instância criada com sucesso: {InstanceName} (ID: {InstanceId})", 
+                result.Instance?.InstanceName, result.Instance?.InstanceId);
+
+            TempData["SuccessMessage"] = $"Instância '{result.Instance?.InstanceName}' criada com sucesso! ID: {result.Instance?.InstanceId}";
+            
+            return RedirectToAction(nameof(Index));
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Erro HTTP ao criar instância: {InstanceName}", model.InstanceName);
+            
+            // Extrai a mensagem de erro mais específica
+            var errorMessage = ex.Message;
+            if (ex.Message.Contains("Erro ao criar instância:"))
+            {
+                errorMessage = ex.Message.Replace("Erro ao criar instância: ", "");
+            }
+            
+            ModelState.AddModelError("", $"Erro ao criar instância: {errorMessage}");
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao criar instância: {InstanceName}", model.InstanceName);
+            ModelState.AddModelError("", $"Erro inesperado ao criar instância: {ex.Message}");
+            return View(model);
+        }
+    }
 }

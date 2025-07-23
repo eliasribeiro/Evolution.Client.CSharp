@@ -15,6 +15,20 @@
         </div>
     }
 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Sucesso!</h4>
+            <p>@TempData["SuccessMessage"]</p>
+        </div>
+    }
+
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Nova Instância
+        </a>
+    </div>
+
     @if (Model != null && Model.Any())
     {
         <div class="card">
@@ -61,6 +75,12 @@
         <div class="alert alert-info" role="alert">
             <h4 class="alert-heading">Nenhuma instância encontrada!</h4>
             <p>Não há instâncias disponíveis no momento. Verifique se a API está configurada corretamente.</p>
+            <hr>
+            <p class="mb-0">
+                <a asp-action="Create" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Criar sua primeira instância
+                </a>
+            </p>
         </div>
     }
 </div>
