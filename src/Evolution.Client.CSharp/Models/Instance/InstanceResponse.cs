@@ -77,7 +77,7 @@ public class InstanceResponse
     /// Obtém ou define o código de razão da desconexão.
     /// </summary>
     [JsonPropertyName("disconnectionReasonCode")]
-    public string? DisconnectionReasonCode { get; set; }
+    public int? DisconnectionReasonCode { get; set; }
 
     /// <summary>
     /// Obtém ou define o objeto de desconexão.

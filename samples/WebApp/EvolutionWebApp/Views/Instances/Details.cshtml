@@ -27,33 +27,136 @@
 
                                 <dt class="col-sm-4">Status:</dt>
                                 <dd class="col-sm-8">
-                                    @Model.ConnectionStatus
+                                    <span class="badge @(Model.ConnectionStatus == "open" ? "bg-success" : "bg-danger")">
+                                        @Model.ConnectionStatus
+                                    </span>
                                 </dd>
 
+                                <dt class="col-sm-4">Integração:</dt>
+                                <dd class="col-sm-8">@Model.Integration</dd>
+
                                 <dt class="col-sm-4">Número:</dt>
-                                <dd class="col-sm-8">@Model.Number</dd>
+                                <dd class="col-sm-8">@(Model.Number ?? "Não definido")</dd>
+
+                                <dt class="col-sm-4">Token:</dt>
+                                <dd class="col-sm-8">@Model.Token</dd>
+
+                                <dt class="col-sm-4">Cliente:</dt>
+                                <dd class="col-sm-8">@(Model.ClientName ?? "Não definido")</dd>
+
+                                <dt class="col-sm-4">Criado em:</dt>
+                                <dd class="col-sm-8">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+
+                                <dt class="col-sm-4">Atualizado em:</dt>
+                                <dd class="col-sm-8">@Model.UpdatedAt.ToString("dd/MM/yyyy HH:mm:ss")</dd>
                             </dl>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="col-md-6">
+                        @if (Model.DisconnectionReasonCode.HasValue || !string.IsNullOrEmpty(Model.DisconnectionObject?.ToString()) || Model.DisconnectionAt.HasValue)
+                        {
+                            <div class="mb-3">
+                                <h4>Informações de Desconexão</h4>
+                                <hr />
+                                <dl class="row">
+                                    @if (Model.DisconnectionReasonCode.HasValue)
+                                    {
+                                        <dt class="col-sm-4">Código:</dt>
+                                        <dd class="col-sm-8">
+                                            <span class="badge bg-warning">@Model.DisconnectionReasonCode</span>
+                                        </dd>
+                                    }
 
-                @* Webhook information is not available in the current model *@
-                <div class="mt-4">
-                    <h4>Configuração de Webhook</h4>
-                    <hr />
-                    <div class="alert alert-info">
-                        <p>As informações detalhadas de webhook não estão disponíveis na resposta básica da API.</p>
-                        <p>Para obter detalhes de webhook, é necessário fazer uma chamada específica para o endpoint de webhook.</p>
-                    </div>
-                </div>
+                                    @if (Model.DisconnectionAt.HasValue)
+                                    {
+                                        <dt class="col-sm-4">Data:</dt>
+                                        <dd class="col-sm-8">@Model.DisconnectionAt.Value.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+                                    }
 
-                @* Config information is not available in the current model *@
-                <div class="mt-4">
-                    <h4>Configurações</h4>
-                    <hr />
-                    <div class="alert alert-info">
-                        <p>As informações detalhadas de configuração não estão disponíveis na resposta básica da API.</p>
-                        <p>Para obter detalhes de configuração, é necessário fazer uma chamada específica para o endpoint de configurações.</p>
+                                    @if (!string.IsNullOrEmpty(Model.DisconnectionObject?.ToString()))
+                                    {
+                                        <dt class="col-sm-12">Detalhes:</dt>
+                                        <dd class="col-sm-12">
+                                            <div class="alert alert-warning">
+                                                <small>
+                                                    <pre style="white-space: pre-wrap; word-break: break-all;">@Model.DisconnectionObject</pre>
+                                                </small>
+                                            </div>
+                                        </dd>
+                                    }
+                                </dl>
+                            </div>
+                        }
+
+                        @if (Model.Setting != null)
+                        {
+                            <div class="mb-3">
+                                <h4>Configurações</h4>
+                                <hr />
+                                <dl class="row">
+                                    <dt class="col-sm-6">Rejeitar Chamadas:</dt>
+                                    <dd class="col-sm-6">
+                                        <span class="badge @(Model.Setting.RejectCall ? "bg-danger" : "bg-success")">
+                                            @(Model.Setting.RejectCall ? "Sim" : "Não")
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-6">Ignorar Grupos:</dt>
+                                    <dd class="col-sm-6">
+                                        <span class="badge @(Model.Setting.GroupsIgnore ? "bg-warning" : "bg-success")">
+                                            @(Model.Setting.GroupsIgnore ? "Sim" : "Não")
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-6">Sempre Online:</dt>
+                                    <dd class="col-sm-6">
+                                        <span class="badge @(Model.Setting.AlwaysOnline ? "bg-success" : "bg-secondary")">
+                                            @(Model.Setting.AlwaysOnline ? "Sim" : "Não")
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-6">Ler Mensagens:</dt>
+                                    <dd class="col-sm-6">
+                                        <span class="badge @(Model.Setting.ReadMessages ? "bg-success" : "bg-secondary")">
+                                            @(Model.Setting.ReadMessages ? "Sim" : "Não")
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-6">Ler Status:</dt>
+                                    <dd class="col-sm-6">
+                                        <span class="badge @(Model.Setting.ReadStatus ? "bg-success" : "bg-secondary")">
+                                            @(Model.Setting.ReadStatus ? "Sim" : "Não")
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-6">Sincronizar Histórico:</dt>
+                                    <dd class="col-sm-6">
+                                        <span class="badge @(Model.Setting.SyncFullHistory ? "bg-info" : "bg-secondary")">
+                                            @(Model.Setting.SyncFullHistory ? "Sim" : "Não")
+                                        </span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        }
+
+                        @if (Model.Count != null)
+                        {
+                            <div class="mb-3">
+                                <h4>Estatísticas</h4>
+                                <hr />
+                                <dl class="row">
+                                    <dt class="col-sm-4">Mensagens:</dt>
+                                    <dd class="col-sm-8"><span class="badge bg-primary">@Model.Count.Message</span></dd>
+
+                                    <dt class="col-sm-4">Contatos:</dt>
+                                    <dd class="col-sm-8"><span class="badge bg-info">@Model.Count.Contact</span></dd>
+
+                                    <dt class="col-sm-4">Chats:</dt>
+                                    <dd class="col-sm-8"><span class="badge bg-success">@Model.Count.Chat</span></dd>
+                                </dl>
+                            </div>
+                        }
                     </div>
                 </div>
             }

@@ -17,7 +17,7 @@ public class CreateInstanceRequest
     /// Obtém ou define o token da API (deixe vazio para criar dinamicamente).
     /// </summary>
     [JsonPropertyName("token")]
-    public string? Token { get; set; }
+    public string Token { get; set; } = string.Empty;
 
     /// <summary>
     /// Obtém ou define se deve criar QR Code automaticamente após a criação.

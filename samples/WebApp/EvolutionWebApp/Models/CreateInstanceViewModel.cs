@@ -34,8 +34,7 @@ public class CreateInstanceViewModel
     /// </summary>
     [Display(Name = "Número do Proprietário")]
     [StringLength(15, ErrorMessage = "O número deve ter no máximo 15 caracteres")]
-    [RegularExpression(@"^\d+$", ErrorMessage = "O número deve conter apenas dígitos")]
-    public string? Number { get; set; }
+    public string Number { get; set; } = string.Empty;
 
     /// <summary>
     /// Obtém ou define o tipo de integração do WhatsApp.
@@ -102,9 +101,9 @@ public class CreateInstanceViewModel
         return new CreateInstanceRequest
         {
             InstanceName = InstanceName,
-            Token = string.IsNullOrWhiteSpace(Token) ? null : Token,
+            Token = string.IsNullOrWhiteSpace(Token) ? string.Empty : Token,
             QrCode = QrCode,
-            Number = string.IsNullOrWhiteSpace(Number) ? null : Number,
+            Number = string.IsNullOrWhiteSpace(Number) ? string.Empty : Number,
             Integration = Integration,
             Webhook = string.IsNullOrWhiteSpace(Webhook) ? null : Webhook,
             WebhookByEvents = WebhookByEvents,
