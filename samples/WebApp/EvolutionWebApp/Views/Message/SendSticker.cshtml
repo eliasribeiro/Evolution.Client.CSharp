@@ -1,0 +1,267 @@
+@model EvolutionWebApp.Models.SendStickerMessageViewModel
+
+@{
+    ViewData["Title"] = "Enviar Sticker";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-smile text-primary"></i> Enviar Sticker</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Message" asp-action="Index">Mensagens</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Enviar Sticker</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-smile"></i> Enviar Sticker
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="SendSticker" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                           value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                                    <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Number" class="form-label">Número do Destinatário <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="Number" name="Number" 
+                                           value="@ViewBag.Number" placeholder="5511999999999" required>
+                                    <div class="form-text">Número com código do país (sem símbolos)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Sticker" class="form-label">URL ou Base64 do Sticker <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="Sticker" name="Sticker" rows="4" 
+                                      placeholder="https://exemplo.com/sticker.webp ou data:image/webp;base64,..." required>@ViewBag.Sticker</textarea>
+                            <div class="form-text">URL pública do sticker ou dados em base64</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Delay" class="form-label">Atraso (ms)</label>
+                                    <input type="number" class="form-control" id="Delay" name="Delay" 
+                                           value="@ViewBag.Delay" placeholder="0" min="0" max="60000">
+                                    <div class="form-text">Atraso em milissegundos antes de enviar</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Mentioned" class="form-label">Usuários Mencionados</label>
+                                    <input type="text" class="form-control" id="Mentioned" name="Mentioned" 
+                                           value="@ViewBag.Mentioned" placeholder="5511999999999, 5511888888888">
+                                    <div class="form-text">JIDs separados por vírgula (opcional)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="LinkPreview" name="LinkPreview" 
+                                               value="true" @(ViewBag.LinkPreview == true ? "checked" : "")>
+                                        <label class="form-check-label" for="LinkPreview">
+                                            Exibir preview de links
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="MentionsEveryOne" name="MentionsEveryOne" 
+                                               value="true" @(ViewBag.MentionsEveryOne == true ? "checked" : "")>
+                                        <label class="form-check-label" for="MentionsEveryOne">
+                                            Mencionar todos (grupos)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-reply"></i> Mensagem Citada (Opcional)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="QuotedMessageId" class="form-label">ID da Mensagem</label>
+                                            <input type="text" class="form-control" id="QuotedMessageId" name="QuotedMessageId" 
+                                                   value="@ViewBag.QuotedMessageId" placeholder="ID da mensagem a ser citada">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="QuotedMessageText" class="form-label">Texto da Mensagem</label>
+                                            <input type="text" class="form-control" id="QuotedMessageText" name="QuotedMessageText" 
+                                                   value="@ViewBag.QuotedMessageText" placeholder="Texto da mensagem citada">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-smile"></i> Enviar Sticker
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Preencha a instância e número (obrigatórios)</li>
+                        <li><i class="fas fa-check text-success"></i> Forneça URL ou base64 do sticker</li>
+                        <li><i class="fas fa-check text-success"></i> Configure opções adicionais se necessário</li>
+                        <li><i class="fas fa-check text-success"></i> Clique em "Enviar Sticker"</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-phone text-info"></i> Formato do número:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Correto:</strong> 5511999999999</li>
+                        <li><strong>Incorreto:</strong> +55 (11) 99999-9999</li>
+                        <li><strong>Incorreto:</strong> 11999999999</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-image text-primary"></i> Formatos de sticker:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>URL:</strong> https://exemplo.com/sticker.webp</li>
+                        <li><strong>Base64:</strong> data:image/webp;base64,...</li>
+                        <li><strong>Formatos:</strong> WEBP (recomendado), PNG</li>
+                        <li><strong>Tamanho:</strong> Máximo 512x512 pixels</li>
+                    </ul>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Dica:</strong> Para melhor compatibilidade, use stickers 
+                        no formato WEBP com fundo transparente.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Result != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-check-circle"></i> Sticker Enviado
+                        </h5>
+                        <span class="badge bg-success fs-6">Sucesso</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong><i class="fas fa-fingerprint"></i> ID da Mensagem:</strong></td>
+                                        <td><code>@Model.Result.MessageId</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-at"></i> Destinatário:</strong></td>
+                                        <td><code>@Model.Result.RemoteJid</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-info-circle"></i> Status:</strong></td>
+                                        <td>
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i> @Model.Result.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong><i class="fas fa-user"></i> Enviada por mim:</strong></td>
+                                        <td>
+                                            @if (Model.Result.FromMe)
+                                            {
+                                                <span class="badge bg-primary">
+                                                    <i class="fas fa-check"></i> Sim
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-times"></i> Não
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    @if (Model.Result.TimestampAsDateTime.HasValue)
+                                    {
+                                        <tr>
+                                            <td><strong><i class="fas fa-calendar"></i> Data/Hora:</strong></td>
+                                            <td>@Model.Result.TimestampAsDateTime.Value.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Sucesso!</strong> Seu sticker foi enviado e está sendo processado pelo WhatsApp.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

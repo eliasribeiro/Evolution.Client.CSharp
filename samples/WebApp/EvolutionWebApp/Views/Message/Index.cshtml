@@ -24,7 +24,7 @@
                 <strong>Bem-vindo ao módulo de Mensagens!</strong>
                 <p class="mb-0">
                     Utilize o menu <strong>Mensagens</strong> na barra de navegação para acessar as funcionalidades disponíveis:
-                    <strong>Enviar Mensagem de Texto</strong>.
+                    <strong>Enviar Texto</strong>, <strong>Enviar Áudio</strong>, <strong>Enviar Sticker</strong>, <strong>Enviar Localização</strong> e muito mais.
                 </p>
             </div>
         </div>
@@ -90,6 +90,65 @@
     </div>
 
     <div class="row">
+        <!-- Card Enviar Áudio -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-microphone fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Áudio</h5>
+                    <p class="card-text">
+                        Envie mensagens de áudio para contatos individuais ou grupos.
+                        Suporte a menções, citações e preview de links.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendAudio" class="btn btn-info">
+                        <i class="fas fa-microphone"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Enviar Sticker -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-smile fa-3x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Sticker</h5>
+                    <p class="card-text">
+                        Envie stickers divertidos para seus contatos.
+                        Suporte a formatos WEBP e PNG com transparência.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendSticker" class="btn btn-secondary">
+                        <i class="fas fa-smile"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Enviar Localização -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Localização</h5>
+                    <p class="card-text">
+                        Compartilhe localizações precisas usando coordenadas.
+                        Inclua nome do local e endereço se desejar.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendLocation" class="btn btn-danger">
+                        <i class="fas fa-map-marker-alt"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -103,6 +162,11 @@
                             <h6><i class="fas fa-check-circle text-success"></i> Funcionalidades Disponíveis</h6>
                             <ul class="list-unstyled">
                                 <li><i class="fas fa-paper-plane text-primary"></i> Envio de mensagens de texto</li>
+                                <li><i class="fas fa-microphone text-info"></i> Envio de mensagens de áudio</li>
+                                <li><i class="fas fa-smile text-secondary"></i> Envio de stickers</li>
+                                <li><i class="fas fa-map-marker-alt text-danger"></i> Envio de localização</li>
+                                <li><i class="fas fa-file-upload text-success"></i> Envio de mídia (imagens, vídeos, documentos)</li>
+                                <li><i class="fas fa-broadcast-tower text-warning"></i> Publicação de status</li>
                                 <li><i class="fas fa-at text-info"></i> Menções a usuários específicos</li>
                                 <li><i class="fas fa-reply text-warning"></i> Citação de mensagens</li>
                                 <li><i class="fas fa-link text-success"></i> Preview de links</li>

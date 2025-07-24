@@ -257,4 +257,232 @@ public class EvolutionMessageService : IEvolutionMessageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Envia um áudio para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados do áudio.</param>
+    /// <returns>A resposta com informações do áudio enviado.</returns>
+    public async Task<SendAudioResponse> SendAudioAsync(string instanceName, SendAudioRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.Audio))
+            throw new ArgumentException("O áudio é obrigatório.", nameof(request.Audio));
+
+        try
+        {
+            _logger.LogInformation("Enviando áudio. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+
+            var endpoint = $"/message/sendAudio/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendAudioResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Áudio enviado com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendAudioResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar áudio. Instância: {InstanceName}, Destinatário: {Number}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar áudio: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar áudio. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia um sticker para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados do sticker.</param>
+    /// <returns>A resposta com informações do sticker enviado.</returns>
+    public async Task<SendStickerResponse> SendStickerAsync(string instanceName, SendStickerRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.Sticker))
+            throw new ArgumentException("O sticker é obrigatório.", nameof(request.Sticker));
+
+        try
+        {
+            _logger.LogInformation("Enviando sticker. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+
+            var endpoint = $"/message/sendSticker/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendStickerResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Sticker enviado com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendStickerResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar sticker. Instância: {InstanceName}, Destinatário: {Number}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar sticker: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar sticker. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia uma localização para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da localização.</param>
+    /// <returns>A resposta com informações da localização enviada.</returns>
+    public async Task<SendLocationResponse> SendLocationAsync(string instanceName, SendLocationRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ArgumentException("O nome da localização é obrigatório.", nameof(request.Name));
+
+        if (string.IsNullOrWhiteSpace(request.Address))
+            throw new ArgumentException("O endereço da localização é obrigatório.", nameof(request.Address));
+
+        if (request.Latitude == 0)
+            throw new ArgumentException("A latitude da localização é obrigatória.", nameof(request.Latitude));
+
+        if (request.Longitude == 0)
+            throw new ArgumentException("A longitude da localização é obrigatória.", nameof(request.Longitude));
+
+        try
+        {
+            _logger.LogInformation("Enviando localização. Instância: {InstanceName}, Destinatário: {Number}, Local: {Name}", 
+                instanceName, request.Number, request.Name);
+
+            var endpoint = $"/message/sendLocation/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendLocationResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Localização enviada com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendLocationResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar localização. Instância: {InstanceName}, Destinatário: {Number}, Local: {Name}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, request.Name, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar localização: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar localização. Instância: {InstanceName}, Destinatário: {Number}, Local: {Name}", 
+                instanceName, request.Number, request.Name);
+            throw;
+        }
+    }
 }
