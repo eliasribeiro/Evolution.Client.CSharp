@@ -1,8 +1,235 @@
-﻿@model EvolutionWebApp.Models.DeleteMessageViewModel
+@model EvolutionWebApp.Models.DeleteMessageViewModel
 
 @{
     ViewData["Title"] = "Deletar Mensagem para Todos";
 }
 
-<h2>Deletar Mensagem para Todos</h2>
-<p>Funcionalidade temporariamente indisponível.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-trash-alt text-danger"></i> Deletar Mensagem para Todos</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Chat" asp-action="Index">Chat</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Deletar Mensagem para Todos</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-trash-alt"></i> Deletar Mensagem para Todos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="DeleteMessageForEveryone" method="post">
+                        <div class="mb-3">
+                            <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                   value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="MessageId" class="form-label">ID da Mensagem <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="MessageId" name="MessageId" 
+                                   value="@ViewBag.MessageId" placeholder="Digite o ID da mensagem" required>
+                            <div class="form-text">ID único da mensagem a ser deletada</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="RemoteJid" class="form-label">Remote JID <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="RemoteJid" name="RemoteJid" 
+                                   value="@ViewBag.RemoteJid" placeholder="Digite o Remote JID" required>
+                            <div class="form-text">JID do contato ou grupo (ex: 5511999999999@@s.whatsapp.net)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="FromMe" name="FromMe" 
+                                       value="true" @(ViewBag.FromMe == true ? "checked" : "")>
+                                <label class="form-check-label" for="FromMe">
+                                    Mensagem enviada por mim
+                                </label>
+                                <div class="form-text">Marque se a mensagem foi enviada por você</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Participant" class="form-label">Participante (Opcional)</label>
+                            <input type="text" class="form-control" id="Participant" name="Participant" 
+                                   value="@ViewBag.Participant" placeholder="Digite o participante (apenas para grupos)">
+                            <div class="form-text">Usado apenas em grupos para identificar o participante</div>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Atenção:</strong> Esta ação é irreversível. A mensagem será deletada para todos os participantes da conversa.
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Deletar Mensagem para Todos
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Preencha o nome da instância (obrigatório)</li>
+                        <li><i class="fas fa-check text-success"></i> Digite o ID da mensagem (obrigatório)</li>
+                        <li><i class="fas fa-check text-success"></i> Digite o Remote JID (obrigatório)</li>
+                        <li><i class="fas fa-check text-success"></i> Marque se a mensagem foi enviada por você</li>
+                        <li><i class="fas fa-check text-success"></i> Adicione participante se for um grupo (opcional)</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-key text-info"></i> Campos obrigatórios:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>ID da Mensagem:</strong> Identificador único da mensagem</li>
+                        <li><strong>Remote JID:</strong> Identificador do contato ou grupo</li>
+                        <li><strong>From Me:</strong> Indica se você enviou a mensagem</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-users text-primary"></i> Para grupos:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Participante:</strong> JID do participante que enviou a mensagem</li>
+                        <li><strong>Remote JID:</strong> Deve terminar com "@@g.us"</li>
+                    </ul>
+
+                    <div class="alert alert-danger mt-3">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>Importante:</strong> Você só pode deletar mensagens que foram enviadas por você 
+                        e dentro do prazo permitido pelo WhatsApp (geralmente até 1 hora após o envio).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Result != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-check-circle"></i> Resultado da Operação
+                        </h5>
+                        <span class="badge bg-success fs-6">Mensagem deletada</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informações da operação -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <i class="fas fa-server"></i> <strong>Instância:</strong> @Model.InstanceName
+                                </small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> Operação realizada em @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong><i class="fas fa-fingerprint"></i> ID da Mensagem:</strong></td>
+                                        <td><code>@Model.Result.MessageId</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-at"></i> Remote JID:</strong></td>
+                                        <td><code>@Model.Result.RemoteJid</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-user"></i> Enviada por mim:</strong></td>
+                                        <td>
+                                            @if (Model.Result.FromMe)
+                                            {
+                                                <span class="badge bg-primary">
+                                                    <i class="fas fa-check"></i> Sim
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-times"></i> Não
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong><i class="fas fa-info-circle"></i> Status:</strong></td>
+                                        <td>
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i> @Model.Result.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><i class="fas fa-cog"></i> Tipo de Protocolo:</strong></td>
+                                        <td><code>@Model.Result.ProtocolType</code></td>
+                                    </tr>
+                                    @if (Model.Result.TimestampAsDateTime.HasValue)
+                                    {
+                                        <tr>
+                                            <td><strong><i class="fas fa-calendar"></i> Data/Hora:</strong></td>
+                                            <td>@Model.Result.TimestampAsDateTime.Value.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Sucesso!</strong> A mensagem foi marcada para deleção. 
+                            O status "@Model.Result.Status" indica que a operação está sendo processada pelo WhatsApp.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

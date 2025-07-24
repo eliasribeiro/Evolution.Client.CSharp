@@ -1,0 +1,220 @@
+@model Evolution.Client.CSharp.WebApp.Models.SendMediaViewModel
+@{
+    ViewData["Title"] = "Enviar Mídia";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-file-upload me-2"></i>
+                        Enviar Mídia
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="SendMedia" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="InstanceName" class="form-label"></label>
+                                    <input asp-for="InstanceName" class="form-control" placeholder="Ex: minha-instancia" />
+                                    <span asp-validation-for="InstanceName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Number" class="form-label"></label>
+                                    <input asp-for="Number" class="form-control" placeholder="Ex: 5511999999999" />
+                                    <span asp-validation-for="Number" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="MediaType" class="form-label"></label>
+                                    <select asp-for="MediaType" class="form-select" id="mediaTypeSelect">
+                                        <option value="image">Imagem</option>
+                                        <option value="video">Vídeo</option>
+                                        <option value="document">Documento</option>
+                                    </select>
+                                    <span asp-validation-for="MediaType" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="MimeType" class="form-label"></label>
+                                    <select asp-for="MimeType" class="form-select" id="mimeTypeSelect">
+                                        <option value="image/png">PNG</option>
+                                        <option value="image/jpeg">JPEG</option>
+                                        <option value="image/gif">GIF</option>
+                                        <option value="image/webp">WebP</option>
+                                    </select>
+                                    <span asp-validation-for="MimeType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Media" class="form-label"></label>
+                            <textarea asp-for="Media" class="form-control" rows="4" placeholder="Cole aqui a URL da mídia ou o código base64..."></textarea>
+                            <div class="form-text">Você pode usar uma URL pública ou dados em base64</div>
+                            <span asp-validation-for="Media" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="FileName" class="form-label"></label>
+                                    <input asp-for="FileName" class="form-control" placeholder="Ex: documento.pdf" />
+                                    <span asp-validation-for="FileName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Delay" class="form-label"></label>
+                                    <input asp-for="Delay" type="number" class="form-control" min="0" placeholder="0" />
+                                    <span asp-validation-for="Delay" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Caption" class="form-label"></label>
+                            <textarea asp-for="Caption" class="form-control" rows="3" placeholder="Digite uma legenda para a mídia..."></textarea>
+                            <span asp-validation-for="Caption" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input asp-for="LinkPreview" class="form-check-input" type="checkbox" />
+                                        <label asp-for="LinkPreview" class="form-check-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input asp-for="MentionsEveryOne" class="form-check-input" type="checkbox" />
+                                        <label asp-for="MentionsEveryOne" class="form-check-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MentionedText" class="form-label"></label>
+                            <textarea asp-for="MentionedText" class="form-control" rows="3" placeholder="5511999999999&#10;5511888888888&#10;..."></textarea>
+                            <div class="form-text">Digite um JID por linha</div>
+                            <span asp-validation-for="MentionedText" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="QuotedMessageId" class="form-label"></label>
+                            <input asp-for="QuotedMessageId" class="form-control" placeholder="ID da mensagem a ser citada" />
+                            <span asp-validation-for="QuotedMessageId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Enviar Mídia
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Result))
+            {
+                <div class="card mt-4 shadow">
+                    <div class="card-header @(Model.HasError ? "bg-danger" : "bg-success") text-white">
+                        <h5 class="mb-0">
+                            <i class="fas @(Model.HasError ? "fa-exclamation-triangle" : "fa-check-circle") me-2"></i>
+                            @(Model.HasError ? "Erro" : "Sucesso")
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word;">@Model.Result</pre>
+                    </div>
+                </div>
+            }
+
+            <div class="card mt-4 shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Dicas de Uso
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li><strong>Tipos de Mídia:</strong> Imagem, vídeo ou documento</li>
+                        <li><strong>Formato da Mídia:</strong> Use URL pública ou dados em base64</li>
+                        <li><strong>Nome do Arquivo:</strong> Obrigatório para documentos</li>
+                        <li><strong>Tipo MIME:</strong> Deve corresponder ao tipo de arquivo</li>
+                        <li><strong>Legenda:</strong> Texto opcional que acompanha a mídia</li>
+                        <li><strong>Menções:</strong> Use JIDs completos (ex: 5511999999999@s.whatsapp.net)</li>
+                        <li><strong>Atraso:</strong> Tempo em milissegundos antes de enviar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mediaTypeSelect = document.getElementById('mediaTypeSelect');
+            const mimeTypeSelect = document.getElementById('mimeTypeSelect');
+
+            const mimeTypes = {
+                'image': [
+                    { value: 'image/png', text: 'PNG' },
+                    { value: 'image/jpeg', text: 'JPEG' },
+                    { value: 'image/gif', text: 'GIF' },
+                    { value: 'image/webp', text: 'WebP' }
+                ],
+                'video': [
+                    { value: 'video/mp4', text: 'MP4' },
+                    { value: 'video/avi', text: 'AVI' },
+                    { value: 'video/mov', text: 'MOV' }
+                ],
+                'document': [
+                    { value: 'application/pdf', text: 'PDF' },
+                    { value: 'application/msword', text: 'DOC' },
+                    { value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', text: 'DOCX' },
+                    { value: 'application/vnd.ms-excel', text: 'XLS' },
+                    { value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', text: 'XLSX' },
+                    { value: 'text/plain', text: 'TXT' }
+                ]
+            };
+
+            function updateMimeTypes() {
+                if (mediaTypeSelect && mimeTypeSelect) {
+                    const selectedType = mediaTypeSelect.value;
+                    const types = mimeTypes[selectedType] || [];
+                    
+                    mimeTypeSelect.innerHTML = '';
+                    types.forEach(type => {
+                        const option = document.createElement('option');
+                        option.value = type.value;
+                        option.textContent = type.text;
+                        mimeTypeSelect.appendChild(option);
+                    });
+                }
+            }
+
+            if (mediaTypeSelect) {
+                mediaTypeSelect.addEventListener('change', updateMimeTypes);
+                updateMimeTypes(); // Inicializar
+            }
+        });
+    </script>
+}

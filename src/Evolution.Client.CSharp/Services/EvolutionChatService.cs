@@ -384,82 +384,6 @@ public class EvolutionChatService : IEvolutionChatService
     }
 
     /// <summary>
-    /// Deleta uma mensagem para todos os participantes da conversa.
-    /// </summary>
-    /// <param name="instanceName">O nome da instância.</param>
-    /// <param name="request">A requisição contendo as informações da mensagem a ser deletada.</param>
-    /// <returns>A resposta da operação de deleção.</returns>
-    public async Task<DeleteMessageForEveryoneResponse> DeleteMessageForEveryoneAsync(string instanceName, DeleteMessageForEveryoneRequest request)
-    {
-        if (string.IsNullOrWhiteSpace(instanceName))
-            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
-
-        if (request == null)
-            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
-
-        if (string.IsNullOrWhiteSpace(request.Id))
-            throw new ArgumentException("O ID da mensagem é obrigatório.", nameof(request.Id));
-
-        if (string.IsNullOrWhiteSpace(request.RemoteJid))
-            throw new ArgumentException("O Remote JID é obrigatório.", nameof(request.RemoteJid));
-
-        try
-        {
-            _logger.LogInformation("Deletando mensagem para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}, Remote JID: {RemoteJid}",
-                instanceName, request.Id, request.RemoteJid);
-
-            var endpoint = $"/chat/deleteMessageForEveryone/{instanceName}";
-
-            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, endpoint)
-            {
-                Content = content
-            });
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<DeleteMessageForEveryoneResponse>(responseContent, _jsonOptions);
-
-                _logger.LogInformation("Mensagem deletada com sucesso para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}",
-                    instanceName, request.Id, result?.Status ?? "desconhecido");
-
-                return result ?? new DeleteMessageForEveryoneResponse();
-            }
-            else
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Erro ao deletar mensagem para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}. Status: {StatusCode}, Erro: {Error}",
-                    instanceName, request.Id, response.StatusCode, errorContent);
-
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou mensagem com ID '{request.Id}' não existe.");
-                }
-
-                throw new HttpRequestException($"Erro ao deletar mensagem para todos: {response.StatusCode} - {errorContent}");
-            }
-        }
-        catch (HttpRequestException)
-        {
-            throw; // Re-throw HttpRequestException para manter o tratamento específico
-        }
-        catch (JsonException ex)
-        {
-            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
-            throw;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro inesperado ao deletar mensagem para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}",
-                instanceName, request.Id);
-            throw;
-        }
-    }
-
-    /// <summary>
     /// Obtém o base64 de uma mensagem de mídia.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
@@ -529,7 +453,7 @@ public class EvolutionChatService : IEvolutionChatService
     }
 
     /// <summary>
-    /// Atualiza o conteúdo de uma mensagem existente.
+    /// Atualiza o conteúdo de uma mensagem enviada.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
     /// <param name="request">A requisição contendo as informações da mensagem a ser atualizada.</param>
@@ -543,13 +467,16 @@ public class EvolutionChatService : IEvolutionChatService
             throw new ArgumentNullException(nameof(request));
 
         if (string.IsNullOrWhiteSpace(request.Number))
-            throw new ArgumentException("O número é obrigatório.", nameof(request.Number));
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
 
         if (string.IsNullOrWhiteSpace(request.Text))
-            throw new ArgumentException("O texto da mensagem é obrigatório.", nameof(request.Text));
+            throw new ArgumentException("O novo texto da mensagem é obrigatório.", nameof(request.Text));
 
-        if (request.Key == null || string.IsNullOrWhiteSpace(request.Key.Id) || string.IsNullOrWhiteSpace(request.Key.RemoteJid))
-            throw new ArgumentException("A chave da mensagem (ID e RemoteJid) é obrigatória.", nameof(request.Key));
+        if (request.Key == null || string.IsNullOrWhiteSpace(request.Key.Id))
+            throw new ArgumentException("A chave da mensagem com ID é obrigatória.", nameof(request.Key));
+
+        if (string.IsNullOrWhiteSpace(request.Key.RemoteJid))
+            throw new ArgumentException("O RemoteJid da mensagem é obrigatório.", nameof(request.Key.RemoteJid));
 
         try
         {

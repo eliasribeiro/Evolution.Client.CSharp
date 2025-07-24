@@ -272,6 +272,62 @@ public class ChatController : Controller
     }
 
     /// <summary>
+    /// Deleta uma mensagem para todos os participantes da conversa.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="messageId">O ID da mensagem a ser deletada.</param>
+    /// <param name="remoteJid">O JID remoto do chat.</param>
+    /// <param name="fromMe">Indica se a mensagem foi enviada pelo proprietário da instância.</param>
+    /// <param name="participant">O participante (usado apenas em grupos).</param>
+    /// <returns>A view com o resultado da operação.</returns>
+    [HttpPost]
+    public IActionResult DeleteMessageForEveryone(string instanceName, string messageId, string remoteJid, bool fromMe = true, string? participant = null)
+    {
+        var viewModel = new DeleteMessageViewModel();
+
+        try
+        {
+            // Preserva os valores do formulário
+            ViewBag.InstanceName = instanceName;
+            ViewBag.MessageId = messageId;
+            ViewBag.RemoteJid = remoteJid;
+            ViewBag.FromMe = fromMe;
+            ViewBag.Participant = participant;
+
+            if (string.IsNullOrWhiteSpace(instanceName))
+            {
+                TempData["ErrorMessage"] = "Nome da instância é obrigatório.";
+                return View(viewModel);
+            }
+
+            if (string.IsNullOrWhiteSpace(messageId))
+            {
+                TempData["ErrorMessage"] = "ID da mensagem é obrigatório.";
+                return View(viewModel);
+            }
+
+            if (string.IsNullOrWhiteSpace(remoteJid))
+            {
+                TempData["ErrorMessage"] = "Remote JID é obrigatório.";
+                return View(viewModel);
+            }
+
+            _logger.LogInformation("Tentativa de deletar mensagem para todos na instância: {InstanceName}, ID da mensagem: {MessageId}, Remote JID: {RemoteJid}",
+                instanceName, messageId, remoteJid);
+
+            // NOTA: A funcionalidade de deletar mensagem ainda não está implementada no SDK
+            TempData["ErrorMessage"] = "A funcionalidade de deletar mensagem ainda não está implementada no SDK Evolution Client.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao tentar deletar mensagem para todos na instância: {InstanceName}, ID da mensagem: {MessageId}", instanceName, messageId);
+            TempData["ErrorMessage"] = "Erro interno do servidor. Tente novamente.";
+        }
+
+        return View(viewModel);
+    }
+
+    /// <summary>
     /// Busca contatos usando formulário ASP.NET MVC tradicional.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
@@ -606,97 +662,6 @@ public class ChatController : Controller
     }
 
     /// <summary>
-    /// Deleta uma mensagem para todos usando formulário ASP.NET MVC tradicional.
-    /// </summary>
-    /// <param name="instanceName">O nome da instância.</param>
-    /// <param name="messageId">ID da mensagem a ser deletada.</param>
-    /// <param name="remoteJid">Remote JID da conversa.</param>
-    /// <param name="fromMe">Indica se a mensagem foi enviada por mim.</param>
-    /// <param name="participant">Participante (opcional, usado em grupos).</param>
-    /// <returns>A view com o resultado da operação.</returns>
-    [HttpPost]
-    public async Task<IActionResult> DeleteMessageForEveryone(string instanceName, string messageId, string remoteJid, bool fromMe, string? participant = null)
-    {
-        var viewModel = new DeleteMessageViewModel();
-
-        try
-        {
-            // Preserva os valores do formulário
-            ViewBag.InstanceName = instanceName;
-            ViewBag.MessageId = messageId;
-            ViewBag.RemoteJid = remoteJid;
-            ViewBag.FromMe = fromMe;
-            ViewBag.Participant = participant;
-
-            if (string.IsNullOrWhiteSpace(instanceName))
-            {
-                TempData["ErrorMessage"] = "Nome da instância é obrigatório.";
-                return View(viewModel);
-            }
-
-            if (string.IsNullOrWhiteSpace(messageId))
-            {
-                TempData["ErrorMessage"] = "ID da mensagem é obrigatório.";
-                return View(viewModel);
-            }
-
-            if (string.IsNullOrWhiteSpace(remoteJid))
-            {
-                TempData["ErrorMessage"] = "Remote JID é obrigatório.";
-                return View(viewModel);
-            }
-
-            var request = new DeleteMessageForEveryoneRequest
-            {
-                Id = messageId.Trim(),
-                RemoteJid = remoteJid.Trim(),
-                FromMe = fromMe,
-                Participant = string.IsNullOrWhiteSpace(participant) ? null : participant.Trim()
-            };
-
-            _logger.LogInformation("Deletando mensagem para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}, Remote JID: {RemoteJid}",
-                instanceName, messageId, remoteJid);
-
-            var result = await _evolutionClient.Chat.DeleteMessageForEveryoneAsync(instanceName, request);
-
-            // Mapeia o resultado para o ViewModel
-            viewModel.Result = new DeleteMessageResult
-            {
-                MessageId = result.Key.Id,
-                RemoteJid = result.Key.RemoteJid,
-                FromMe = result.Key.FromMe,
-                MessageTimestamp = result.MessageTimestamp,
-                Status = result.Status,
-                ProtocolType = result.Message.ProtocolMessage.Type
-            };
-
-            viewModel.InstanceName = instanceName;
-            viewModel.MessageId = messageId;
-            viewModel.RemoteJid = remoteJid;
-            viewModel.FromMe = fromMe;
-            viewModel.Participant = participant;
-
-            _logger.LogInformation("Mensagem deletada com sucesso para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}",
-                instanceName, messageId, result.Status);
-
-            TempData["SuccessMessage"] = $"Mensagem deletada com sucesso para todos! Status: {result.Status}";
-        }
-        catch (InvalidOperationException ex) when (ex.Message.Contains("não encontrada"))
-        {
-            _logger.LogWarning("Instância não encontrada ou mensagem inválida: {InstanceName}, {MessageId}", instanceName, messageId);
-            TempData["ErrorMessage"] = $"Instância '{instanceName}' não encontrada ou mensagem com ID '{messageId}' não existe.";
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao deletar mensagem para todos. Instância: {InstanceName}, ID da mensagem: {MessageId}",
-                instanceName, messageId);
-            TempData["ErrorMessage"] = "Erro interno do servidor. Tente novamente.";
-        }
-
-        return View(viewModel);
-    }
-
-    /// <summary>
     /// Busca contatos da instância especificada.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
@@ -906,17 +871,17 @@ public class ChatController : Controller
     }
 
     /// <summary>
-    /// Atualiza o conteúdo de uma mensagem existente.
+    /// Atualiza o conteúdo de uma mensagem enviada.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
-    /// <param name="number">O número do telefone do destinatário.</param>
-    /// <param name="text">O novo conteúdo da mensagem.</param>
-    /// <param name="messageId">O ID da mensagem a ser atualizada.</param>
+    /// <param name="number">O número do destinatário.</param>
+    /// <param name="text">O novo texto da mensagem.</param>
     /// <param name="remoteJid">O JID remoto do chat.</param>
-    /// <param name="fromMe">Indica se a mensagem foi enviada pela instância proprietária.</param>
+    /// <param name="messageId">O ID da mensagem a ser atualizada.</param>
+    /// <param name="fromMe">Indica se a mensagem foi enviada pelo proprietário da instância.</param>
     /// <returns>Um JSON com as informações da mensagem atualizada.</returns>
     [HttpPost]
-    public async Task<IActionResult> UpdateMessage(string instanceName, string number, string text, string messageId, string remoteJid, bool fromMe)
+    public async Task<IActionResult> UpdateMessage(string instanceName, string number, string text, string remoteJid, string messageId, bool fromMe = true)
     {
         try
         {
@@ -927,22 +892,22 @@ public class ChatController : Controller
 
             if (string.IsNullOrWhiteSpace(number))
             {
-                return Json(new { success = false, message = "Número do telefone é obrigatório." });
+                return Json(new { success = false, message = "Número do destinatário é obrigatório." });
             }
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                return Json(new { success = false, message = "Texto da mensagem é obrigatório." });
-            }
-
-            if (string.IsNullOrWhiteSpace(messageId))
-            {
-                return Json(new { success = false, message = "ID da mensagem é obrigatório." });
+                return Json(new { success = false, message = "Novo texto da mensagem é obrigatório." });
             }
 
             if (string.IsNullOrWhiteSpace(remoteJid))
             {
                 return Json(new { success = false, message = "Remote JID é obrigatório." });
+            }
+
+            if (string.IsNullOrWhiteSpace(messageId))
+            {
+                return Json(new { success = false, message = "ID da mensagem é obrigatório." });
             }
 
             var request = new UpdateMessageRequest
@@ -951,9 +916,9 @@ public class ChatController : Controller
                 Text = text.Trim(),
                 Key = new UpdateMessageKey
                 {
-                    Id = messageId.Trim(),
                     RemoteJid = remoteJid.Trim(),
-                    FromMe = fromMe
+                    FromMe = fromMe,
+                    Id = messageId.Trim()
                 }
             };
 
@@ -967,7 +932,7 @@ public class ChatController : Controller
 
             return Json(new { 
                 success = true, 
-                message = "Mensagem atualizada com sucesso!",
+                message = $"Mensagem atualizada com sucesso! ID: {result.Key.Id}",
                 data = result
             });
         }
@@ -978,8 +943,7 @@ public class ChatController : Controller
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning("Dados inválidos para atualização da mensagem: {InstanceName}, ID da mensagem: {MessageId}, Erro: {Error}", 
-                instanceName, messageId, ex.Message);
+            _logger.LogWarning("Dados inválidos para atualização da mensagem: {InstanceName}, ID da mensagem: {MessageId}, Erro: {Error}", instanceName, messageId, ex.Message);
             return Json(new { success = false, message = ex.Message });
         }
         catch (Exception ex)

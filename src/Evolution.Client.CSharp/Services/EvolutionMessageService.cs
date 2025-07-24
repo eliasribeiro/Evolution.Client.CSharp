@@ -108,4 +108,153 @@ public class EvolutionMessageService : IEvolutionMessageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Envia um status para os contatos.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados do status.</param>
+    /// <returns>A resposta com informações do status enviado.</returns>
+    public async Task<SendStatusResponse> SendStatusAsync(string instanceName, SendStatusRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Type))
+            throw new ArgumentException("O tipo do status é obrigatório.", nameof(request.Type));
+
+        if (string.IsNullOrWhiteSpace(request.Content))
+            throw new ArgumentException("O conteúdo do status é obrigatório.", nameof(request.Content));
+
+        try
+        {
+            _logger.LogInformation("Enviando status. Instância: {InstanceName}, Tipo: {Type}", 
+                instanceName, request.Type);
+
+            var endpoint = $"/message/sendStatus/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendStatusResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Status enviado com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendStatusResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar status. Instância: {InstanceName}, Tipo: {Type}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Type, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar status: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar status. Instância: {InstanceName}, Tipo: {Type}", 
+                instanceName, request.Type);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia mídia (imagem, vídeo ou documento) para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da mídia.</param>
+    /// <returns>A resposta com informações da mídia enviada.</returns>
+    public async Task<SendMediaResponse> SendMediaAsync(string instanceName, SendMediaRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.MediaType))
+            throw new ArgumentException("O tipo da mídia é obrigatório.", nameof(request.MediaType));
+
+        if (string.IsNullOrWhiteSpace(request.Media))
+            throw new ArgumentException("A mídia é obrigatória.", nameof(request.Media));
+
+        try
+        {
+            _logger.LogInformation("Enviando mídia. Instância: {InstanceName}, Destinatário: {Number}, Tipo: {MediaType}", 
+                instanceName, request.Number, request.MediaType);
+
+            var endpoint = $"/message/sendMedia/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendMediaResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Mídia enviada com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendMediaResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar mídia. Instância: {InstanceName}, Destinatário: {Number}, Tipo: {MediaType}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, request.MediaType, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar mídia: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar mídia. Instância: {InstanceName}, Destinatário: {Number}, Tipo: {MediaType}", 
+                instanceName, request.Number, request.MediaType);
+            throw;
+        }
+    }
 }

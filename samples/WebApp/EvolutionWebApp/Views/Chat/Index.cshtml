@@ -23,7 +23,7 @@
                 <h5><i class="fas fa-info-circle"></i> Funcionalidades do Chat</h5>
                 <p class="mb-0">
                     Utilize o menu <strong>Chat</strong> na barra de navegação para acessar as funcionalidades disponíveis:
-                    <strong>Verificar WhatsApp</strong>, <strong>Buscar Contatos</strong>, <strong>Buscar Chats</strong>, <strong>Buscar Foto de Perfil</strong>, <strong>Deletar Mensagem</strong>, <strong>Buscar Mensagens</strong>, <strong>Obter Base64 de Mídia</strong> e <strong>Atualizar Mensagem</strong>.
+                    <strong>Verificar WhatsApp</strong>, <strong>Buscar Contatos</strong>, <strong>Buscar Chats</strong>, <strong>Buscar Mensagens</strong>, <strong>Atualizar Mensagem</strong> e <strong>Obter Base64 de Mídia</strong>.
                 </p>
             </div>
         </div>
@@ -87,58 +87,39 @@
             </div>
         </div>
 
-        <!-- Card Buscar Foto de Perfil -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-user-circle fa-3x text-info"></i>
-                    </div>
-                    <h5 class="card-title">Buscar Foto de Perfil</h5>
-                    <p class="card-text">
-                        Obtenha a URL da foto de perfil de qualquer número do WhatsApp.
-                        Visualize e baixe as imagens de perfil.
-                    </p>
-                    <a asp-controller="Chat" asp-action="FetchProfilePicUrl" class="btn btn-info">
-                        <i class="fas fa-search"></i> Acessar
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Deletar Mensagem -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-trash-alt fa-3x text-danger"></i>
-                    </div>
-                    <h5 class="card-title">Deletar Mensagem</h5>
-                    <p class="card-text">
-                        Delete mensagens para todos os participantes da conversa.
-                        Funciona apenas com suas próprias mensagens.
-                    </p>
-                    <a asp-controller="Chat" asp-action="DeleteMessageForEveryone" class="btn btn-danger">
-                        <i class="fas fa-trash-alt"></i> Acessar
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <!-- Card Buscar Mensagens -->
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-body text-center">
                     <div class="mb-3">
-                        <i class="fas fa-envelope fa-3x text-warning"></i>
+                        <i class="fas fa-envelope fa-3x text-info"></i>
                     </div>
                     <h5 class="card-title">Buscar Mensagens</h5>
                     <p class="card-text">
                         Busque mensagens enviadas e recebidas na instância.
                         Filtre por contato/grupo e navegue com paginação.
                     </p>
-                    <a asp-controller="Chat" asp-action="FindMessages" class="btn btn-warning">
+                    <a asp-controller="Chat" asp-action="FindMessages" class="btn btn-info">
                         <i class="fas fa-search"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Atualizar Mensagem -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-edit fa-3x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title">Atualizar Mensagem</h5>
+                    <p class="card-text">
+                        Edite o conteúdo de mensagens de texto já enviadas.
+                        Funciona apenas com mensagens próprias e de texto.
+                    </p>
+                    <a asp-controller="Chat" asp-action="UpdateMessage" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Acessar
                     </a>
                 </div>
             </div>
@@ -162,25 +143,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Card Atualizar Mensagem -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-edit fa-3x text-danger"></i>
-                    </div>
-                    <h5 class="card-title">Atualizar Mensagem</h5>
-                    <p class="card-text">
-                        Atualize o conteúdo de mensagens de texto já enviadas.
-                        Edite mensagens que você enviou anteriormente.
-                    </p>
-                    <a asp-controller="Chat" asp-action="UpdateMessage" class="btn btn-danger">
-                        <i class="fas fa-edit"></i> Acessar
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="row mt-4">
@@ -193,7 +155,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h6><i class="fas fa-check-circle text-success"></i> Verificar WhatsApp</h6>
                             <ul class="small">
                                 <li>Use números com código do país (ex: 5561999887766)</li>
@@ -201,7 +163,7 @@
                                 <li>Ideal para validar listas de contatos</li>
                             </ul>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h6><i class="fas fa-address-book text-primary"></i> Buscar Contatos</h6>
                             <ul class="small">
                                 <li>Deixe campos vazios para listar todos os contatos</li>
@@ -209,7 +171,7 @@
                                 <li>Remote JID identifica contatos únicos</li>
                             </ul>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h6><i class="fas fa-envelope text-info"></i> Buscar Mensagens</h6>
                             <ul class="small">
                                 <li>Filtre por contato individual ou grupo</li>
@@ -218,22 +180,20 @@
                             </ul>
                         </div>
                         <div class="col-md-3">
+                            <h6><i class="fas fa-edit text-secondary"></i> Atualizar Mensagem</h6>
+                            <ul class="small">
+                                <li>Apenas mensagens de texto podem ser editadas</li>
+                                <li>Só é possível editar mensagens próprias (fromMe = true)</li>
+                                <li>Use a busca de mensagens para obter ID e Remote JID</li>
+                                <li>Para grupos, use o formato: grupo@g.us</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
                             <h6><i class="fas fa-file-download text-warning"></i> Obter Base64 de Mídia</h6>
                             <ul class="small">
                                 <li>Informe o ID da mensagem de mídia</li>
                                 <li>Suporte a imagens, vídeos, áudios e documentos</li>
                                 <li>Opção para converter vídeos para MP4</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <h6><i class="fas fa-edit text-danger"></i> Atualizar Mensagem</h6>
-                            <ul class="small">
-                                <li>Apenas mensagens de texto podem ser atualizadas</li>
-                                <li>Você só pode atualizar mensagens que enviou</li>
-                                <li>Informe o ID da mensagem, Remote JID e novo texto</li>
-                                <li>Mensagens muito antigas podem não ser editáveis</li>
                             </ul>
                         </div>
                     </div>

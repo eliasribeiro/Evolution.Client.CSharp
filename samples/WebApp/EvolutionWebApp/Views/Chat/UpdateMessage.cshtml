@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-edit mr-2"></i>
                         Atualizar Mensagem
                     </h3>
                 </div>
@@ -17,15 +17,15 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="instanceName">Nome da Instância:</label>
-                                    <input type="text" class="form-control" id="instanceName" name="instanceName" required>
+                                    <label for="instanceName">Nome da Instância <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="instanceName" name="instanceName" placeholder="Digite o nome da instância" required>
                                     <small class="form-text text-muted">Nome da instância do WhatsApp</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="number">Número do Telefone:</label>
-                                    <input type="text" class="form-control" id="number" name="number" required>
+                                    <label for="number">Número do Destinatário <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="number" name="number" placeholder="5511999999999" required>
                                     <small class="form-text text-muted">Número com código do país (ex: 5511999999999)</small>
                                 </div>
                             </div>
@@ -34,55 +34,51 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="messageId">ID da Mensagem:</label>
-                                    <input type="text" class="form-control" id="messageId" name="messageId" required>
-                                    <small class="form-text text-muted">ID único da mensagem a ser atualizada</small>
+                                    <label for="remoteJid">Remote JID <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="remoteJid" name="remoteJid" placeholder="5511999999999@s.whatsapp.net" required>
+                                    <small class="form-text text-muted">JID remoto do chat (ex: 5511999999999@s.whatsapp.net)</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="remoteJid">Remote JID:</label>
-                                    <input type="text" class="form-control" id="remoteJid" name="remoteJid" required>
-                                    <small class="form-text text-muted">JID do chat (ex: 5511999999999@s.whatsapp.net)</small>
+                                    <label for="messageId">ID da Mensagem <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="messageId" name="messageId" placeholder="Digite o ID da mensagem" required>
+                                    <small class="form-text text-muted">ID único da mensagem a ser atualizada</small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-12">
                                 <div class="form-group">
-                                    <label for="text">Novo Texto da Mensagem:</label>
-                                    <textarea class="form-control" id="text" name="text" rows="4" required></textarea>
+                                    <label for="text">Novo Texto da Mensagem <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="text" name="text" rows="4" placeholder="Digite o novo conteúdo da mensagem..." required></textarea>
                                     <small class="form-text text-muted">Novo conteúdo que substituirá o texto atual da mensagem</small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="fromMe" name="fromMe">
-                                        <label class="form-check-label" for="fromMe">
-                                            Mensagem enviada por mim
-                                        </label>
-                                        <small class="form-text text-muted d-block">Marque se a mensagem foi enviada pela sua instância</small>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="fromMe" name="fromMe" checked>
+                                        <label class="custom-control-label" for="fromMe">Mensagem enviada por mim</label>
+                                        <small class="form-text text-muted d-block">Marque se a mensagem foi enviada pelo proprietário da instância</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                    Atualizar Mensagem
-                                </button>
-                                <button type="button" class="btn btn-secondary ml-2" onclick="clearForm()">
-                                    <i class="fas fa-eraser"></i>
-                                    Limpar
-                                </button>
-                            </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-edit mr-2"></i>
+                                Atualizar Mensagem
+                            </button>
+                            <button type="button" class="btn btn-secondary ml-2" onclick="clearForm()">
+                                <i class="fas fa-eraser mr-2"></i>
+                                Limpar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -96,7 +92,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-check-circle"></i>
+                        <i class="fas fa-check-circle mr-2"></i>
                         Resultado da Atualização
                     </h3>
                 </div>
@@ -110,51 +106,78 @@
     <!-- Seção de Informações -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card card-info">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-info-circle"></i>
-                        Informações
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Informações Importantes
                     </h3>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-info">
-                        <h5><i class="fas fa-lightbulb"></i> Como usar:</h5>
-                        <ul>
-                            <li><strong>Nome da Instância:</strong> Informe o nome da sua instância do WhatsApp</li>
-                            <li><strong>Número do Telefone:</strong> Número com código do país (ex: 5511999999999)</li>
-                            <li><strong>ID da Mensagem:</strong> ID único da mensagem que você deseja atualizar</li>
-                            <li><strong>Remote JID:</strong> Identificador do chat (contato ou grupo)</li>
-                            <li><strong>Novo Texto:</strong> O conteúdo que substituirá o texto atual da mensagem</li>
-                            <li><strong>Mensagem enviada por mim:</strong> Marque se a mensagem foi enviada pela sua instância</li>
-                        </ul>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-exclamation-triangle text-warning mr-2"></i>Requisitos</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success mr-2"></i>Instância deve estar conectada</li>
+                                <li><i class="fas fa-check text-success mr-2"></i>Mensagem deve existir e ser editável</li>
+                                <li><i class="fas fa-check text-success mr-2"></i>Apenas mensagens de texto podem ser editadas</li>
+                                <li><i class="fas fa-check text-success mr-2"></i>Só é possível editar mensagens próprias</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-lightbulb text-info mr-2"></i>Dicas</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-arrow-right text-primary mr-2"></i>Use a busca de mensagens para encontrar o ID</li>
+                                <li><i class="fas fa-arrow-right text-primary mr-2"></i>O Remote JID é o identificador do chat</li>
+                                <li><i class="fas fa-arrow-right text-primary mr-2"></i>Para grupos, use o formato: grupo@g.us</li>
+                                <li><i class="fas fa-arrow-right text-primary mr-2"></i>Para contatos, use: numero@s.whatsapp.net</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Seção de Dicas -->
+    <!-- Seção de Dicas de Uso -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card card-success">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-tips"></i>
-                        Dicas Importantes
+                        <i class="fas fa-question-circle mr-2"></i>
+                        Como Usar
                     </h3>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-warning">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Observações:</h5>
-                        <ul>
-                            <li><strong>Limitações:</strong> Só é possível atualizar mensagens de texto</li>
-                            <li><strong>Tempo:</strong> Mensagens muito antigas podem não ser atualizáveis</li>
-                            <li><strong>Permissões:</strong> Você só pode atualizar mensagens que enviou</li>
-                            <li><strong>Remote JID:</strong> Para contatos use formato: número@s.whatsapp.net</li>
-                            <li><strong>Remote JID:</strong> Para grupos use o ID do grupo fornecido pela API</li>
-                            <li><strong>Validação:</strong> Certifique-se de que todos os dados estão corretos</li>
-                        </ul>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="info-box bg-light">
+                                <span class="info-box-icon bg-primary"><i class="fas fa-search"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">1. Encontre a Mensagem</span>
+                                    <span class="info-box-number">Use a busca de mensagens para obter o ID e Remote JID</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-box bg-light">
+                                <span class="info-box-icon bg-warning"><i class="fas fa-edit"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">2. Preencha os Dados</span>
+                                    <span class="info-box-number">Insira todas as informações obrigatórias</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-box bg-light">
+                                <span class="info-box-icon bg-success"><i class="fas fa-check"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">3. Atualize</span>
+                                    <span class="info-box-number">Clique em "Atualizar Mensagem" e aguarde o resultado</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,161 +185,164 @@
     </div>
 </div>
 
-<script>
-document.getElementById('updateMessageForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    updateMessage();
-});
-
-async function updateMessage() {
-    const instanceName = document.getElementById('instanceName').value.trim();
-    const number = document.getElementById('number').value.trim();
-    const text = document.getElementById('text').value.trim();
-    const messageId = document.getElementById('messageId').value.trim();
-    const remoteJid = document.getElementById('remoteJid').value.trim();
-    const fromMe = document.getElementById('fromMe').checked;
-
-    if (!instanceName || !number || !text || !messageId || !remoteJid) {
-        showAlert('Todos os campos obrigatórios devem ser preenchidos.', 'warning');
-        return;
-    }
-
-    const submitButton = document.querySelector('button[type="submit"]');
-    const originalText = submitButton.innerHTML;
-    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Atualizando...';
-    submitButton.disabled = true;
-
-    try {
-        const formData = new FormData();
-        formData.append('instanceName', instanceName);
-        formData.append('number', number);
-        formData.append('text', text);
-        formData.append('messageId', messageId);
-        formData.append('remoteJid', remoteJid);
-        formData.append('fromMe', fromMe);
-
-        const response = await fetch('/Chat/UpdateMessage', {
-            method: 'POST',
-            body: formData
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#updateMessageForm').on('submit', function(e) {
+                e.preventDefault();
+                updateMessage();
+            });
         });
 
-        const result = await response.json();
+        function updateMessage() {
+            const form = $('#updateMessageForm');
+            const submitBtn = form.find('button[type="submit"]');
+            const originalText = submitBtn.html();
 
-        if (result.success) {
-            showResult(result.data, result.message);
-            showAlert(result.message, 'success');
-        } else {
-            showAlert(result.message, 'danger');
-            hideResult();
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-        showAlert('Erro ao processar a solicitação. Tente novamente.', 'danger');
-        hideResult();
-    } finally {
-        submitButton.innerHTML = originalText;
-        submitButton.disabled = false;
-    }
-}
+            // Validação básica
+            const instanceName = $('#instanceName').val().trim();
+            const number = $('#number').val().trim();
+            const text = $('#text').val().trim();
+            const remoteJid = $('#remoteJid').val().trim();
+            const messageId = $('#messageId').val().trim();
 
-function showResult(data, message) {
-    const resultSection = document.getElementById('resultSection');
-    const resultContent = document.getElementById('resultContent');
-    
-    let html = `
-        <div class="alert alert-success">
-            <h5><i class="fas fa-check-circle"></i> ${message}</h5>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <h6><i class="fas fa-key"></i> Informações da Mensagem:</h6>
-                <ul class="list-group list-group-flush">
-    `;
+            if (!instanceName || !number || !text || !remoteJid || !messageId) {
+                showAlert('Todos os campos obrigatórios devem ser preenchidos.', 'warning');
+                return;
+            }
 
-    if (data.key) {
-        html += `
-                    <li class="list-group-item"><strong>ID:</strong> ${data.key.id || 'N/A'}</li>
-                    <li class="list-group-item"><strong>Remote JID:</strong> ${data.key.remoteJid || 'N/A'}</li>
-                    <li class="list-group-item"><strong>From Me:</strong> ${data.key.fromMe ? 'Sim' : 'Não'}</li>
-        `;
-    }
+            // Desabilita o botão e mostra loading
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Atualizando...');
 
-    html += `
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <h6><i class="fas fa-info-circle"></i> Detalhes:</h6>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Timestamp:</strong> ${data.messageTimestamp || 'N/A'}</li>
-                    <li class="list-group-item"><strong>Status:</strong> ${data.status || 'N/A'}</li>
-                </ul>
-            </div>
-        </div>
-    `;
+            const formData = {
+                instanceName: instanceName,
+                number: number,
+                text: text,
+                remoteJid: remoteJid,
+                messageId: messageId,
+                fromMe: $('#fromMe').is(':checked')
+            };
 
-    if (data.message) {
-        html += `
-        <div class="row mt-3">
-            <div class="col-12">
-                <h6><i class="fas fa-comment"></i> Conteúdo da Mensagem:</h6>
-                <div class="card">
-                    <div class="card-body">
-        `;
-
-        if (data.message.conversation) {
-            html += `<p><strong>Texto:</strong> ${data.message.conversation}</p>`;
+            $.ajax({
+                url: '@Url.Action("UpdateMessage", "Chat")',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        showAlert(response.message, 'success');
+                        displayResult(response.data);
+                    } else {
+                        showAlert(response.message, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Erro na requisição:', error);
+                    showAlert('Erro de comunicação com o servidor. Tente novamente.', 'error');
+                },
+                complete: function() {
+                    // Reabilita o botão
+                    submitBtn.prop('disabled', false).html(originalText);
+                }
+            });
         }
 
-        if (data.message.extendedTextMessage && data.message.extendedTextMessage.text) {
-            html += `<p><strong>Texto Estendido:</strong> ${data.message.extendedTextMessage.text}</p>`;
-        }
+        function displayResult(data) {
+            const resultSection = $('#resultSection');
+            const resultContent = $('#resultContent');
 
-        html += `
+            let html = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-key text-primary mr-2"></i>Informações da Mensagem</h5>
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td><strong>ID da Mensagem:</strong></td>
+                                <td><code>${data.key.id}</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Remote JID:</strong></td>
+                                <td><code>${data.key.remoteJid}</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Enviada por mim:</strong></td>
+                                <td><span class="badge ${data.key.fromMe ? 'badge-success' : 'badge-secondary'}">${data.key.fromMe ? 'Sim' : 'Não'}</span></td>
+                            </tr>
+                            ${data.key.participant ? `
+                            <tr>
+                                <td><strong>Participante:</strong></td>
+                                <td><code>${data.key.participant}</code></td>
+                            </tr>
+                            ` : ''}
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-comment text-success mr-2"></i>Conteúdo Atualizado</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                ${data.message.conversation ? `
+                                    <p><strong>Texto:</strong></p>
+                                    <div class="alert alert-light">${data.message.conversation}</div>
+                                ` : ''}
+                                ${data.message.extendedTextMessage ? `
+                                    <p><strong>Texto Estendido:</strong></p>
+                                    <div class="alert alert-light">${data.message.extendedTextMessage.text}</div>
+                                ` : ''}
+                                ${data.messageTimestamp ? `
+                                    <p><strong>Timestamp:</strong> <code>${new Date(data.messageTimestamp * 1000).toLocaleString()}</code></p>
+                                ` : ''}
+                                ${data.status ? `
+                                    <p><strong>Status:</strong> <span class="badge badge-info">${data.status}</span></p>
+                                ` : ''}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        `;
-    }
+            `;
 
-    resultContent.innerHTML = html;
-    resultSection.style.display = 'block';
-    resultSection.scrollIntoView({ behavior: 'smooth' });
-}
+            resultContent.html(html);
+            resultSection.show();
 
-function hideResult() {
-    document.getElementById('resultSection').style.display = 'none';
-}
-
-function clearForm() {
-    document.getElementById('updateMessageForm').reset();
-    hideResult();
-    showAlert('Formulário limpo com sucesso!', 'info');
-}
-
-function showAlert(message, type) {
-    // Remove alertas existentes
-    const existingAlerts = document.querySelectorAll('.alert-dismissible');
-    existingAlerts.forEach(alert => alert.remove());
-
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="close" data-dismiss="alert">
-            <span>&times;</span>
-        </button>
-    `;
-
-    // Insere o alerta no topo da página
-    const container = document.querySelector('.container-fluid');
-    container.insertBefore(alertDiv, container.firstChild);
-
-    // Remove o alerta automaticamente após 5 segundos
-    setTimeout(() => {
-        if (alertDiv.parentNode) {
-            alertDiv.remove();
+            // Scroll para a seção de resultados
+            $('html, body').animate({
+                scrollTop: resultSection.offset().top - 100
+            }, 500);
         }
-    }, 5000);
+
+        function clearForm() {
+            $('#updateMessageForm')[0].reset();
+            $('#resultSection').hide();
+            showAlert('Formulário limpo com sucesso!', 'info');
+        }
+
+        function showAlert(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                              type === 'error' ? 'alert-danger' : 
+                              type === 'warning' ? 'alert-warning' : 'alert-info';
+            
+            const icon = type === 'success' ? 'check-circle' : 
+                        type === 'error' ? 'exclamation-triangle' : 
+                        type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+
+            const alert = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    <i class="fas fa-${icon} mr-2"></i>
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+
+            // Remove alertas anteriores
+            $('.alert').remove();
+            
+            // Adiciona o novo alerta no topo da página
+            $('body').prepend(alert);
+
+            // Auto-remove após 5 segundos
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        }
+    </script>
 }
-</script>

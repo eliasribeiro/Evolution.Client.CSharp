@@ -21,7 +21,7 @@ public class UpdateMessageRequest
     public string Text { get; set; } = string.Empty;
 
     /// <summary>
-    /// Chave da mensagem que identifica a mensagem a ser atualizada.
+    /// Chave da mensagem a ser atualizada.
     /// </summary>
     [JsonPropertyName("key")]
     public UpdateMessageKey Key { get; set; } = new();
@@ -33,19 +33,19 @@ public class UpdateMessageRequest
 public class UpdateMessageKey
 {
     /// <summary>
-    /// JID remoto do chat (contato ou grupo).
+    /// JID remoto do chat do contato ou grupo.
     /// </summary>
     [JsonPropertyName("remoteJid")]
     public string RemoteJid { get; set; } = string.Empty;
 
     /// <summary>
-    /// Indica se a mensagem foi enviada pela instância proprietária ou não.
+    /// Indica se a mensagem foi enviada pelo proprietário da instância ou não.
     /// </summary>
     [JsonPropertyName("fromMe")]
     public bool FromMe { get; set; }
 
     /// <summary>
-    /// ID único da mensagem.
+    /// ID da mensagem.
     /// </summary>
     [JsonPropertyName("id")]
     public string Id { get; set; } = string.Empty;

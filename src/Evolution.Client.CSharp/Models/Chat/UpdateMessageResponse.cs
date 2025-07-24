@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace Evolution.Client.CSharp.Models.Chat;
 
 /// <summary>
-/// Representa a resposta da atualização de uma mensagem.
+/// Representa a resposta da operação de atualizar mensagem.
 /// </summary>
 public class UpdateMessageResponse
 {
@@ -11,25 +11,23 @@ public class UpdateMessageResponse
     /// Chave da mensagem atualizada.
     /// </summary>
     [JsonPropertyName("key")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public UpdatedMessageKey? Key { get; set; }
+    public UpdateMessageResponseKey Key { get; set; } = new();
 
     /// <summary>
     /// Conteúdo da mensagem atualizada.
     /// </summary>
     [JsonPropertyName("message")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public UpdatedMessageContent? Message { get; set; }
+    public UpdatedMessageContent Message { get; set; } = new();
 
     /// <summary>
-    /// Timestamp da mensagem atualizada.
+    /// Timestamp da atualização.
     /// </summary>
     [JsonPropertyName("messageTimestamp")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? MessageTimestamp { get; set; }
+    public long? MessageTimestamp { get; set; }
 
     /// <summary>
-    /// Status da mensagem atualizada.
+    /// Status da operação.
     /// </summary>
     [JsonPropertyName("status")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -37,30 +35,34 @@ public class UpdateMessageResponse
 }
 
 /// <summary>
-/// Representa a chave da mensagem atualizada.
+/// Representa a chave da mensagem atualizada na resposta.
 /// </summary>
-public class UpdatedMessageKey
+public class UpdateMessageResponseKey
 {
     /// <summary>
-    /// JID remoto do chat (contato ou grupo).
+    /// JID remoto do chat.
     /// </summary>
     [JsonPropertyName("remoteJid")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? RemoteJid { get; set; }
+    public string RemoteJid { get; set; } = string.Empty;
 
     /// <summary>
-    /// Indica se a mensagem foi enviada pela instância proprietária.
+    /// Indica se a mensagem foi enviada pelo proprietário da instância.
     /// </summary>
     [JsonPropertyName("fromMe")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? FromMe { get; set; }
+    public bool FromMe { get; set; }
 
     /// <summary>
-    /// ID único da mensagem.
+    /// ID da mensagem.
     /// </summary>
     [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Participante (para grupos).
+    /// </summary>
+    [JsonPropertyName("participant")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Id { get; set; }
+    public string? Participant { get; set; }
 }
 
 /// <summary>
@@ -69,18 +71,25 @@ public class UpdatedMessageKey
 public class UpdatedMessageContent
 {
     /// <summary>
-    /// Mensagem de texto estendida (para mensagens de texto).
+    /// Mensagem de texto atualizada.
+    /// </summary>
+    [JsonPropertyName("conversation")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Conversation { get; set; }
+
+    /// <summary>
+    /// Mensagem de texto estendida (para mensagens longas).
     /// </summary>
     [JsonPropertyName("extendedTextMessage")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ExtendedTextMessage? ExtendedTextMessage { get; set; }
 
     /// <summary>
-    /// Conversação simples (para mensagens de texto simples).
+    /// Contexto da mensagem (para respostas).
     /// </summary>
-    [JsonPropertyName("conversation")]
+    [JsonPropertyName("messageContextInfo")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Conversation { get; set; }
+    public MessageContextInfo? MessageContextInfo { get; set; }
 }
 
 /// <summary>
@@ -92,6 +101,12 @@ public class ExtendedTextMessage
     /// Texto da mensagem.
     /// </summary>
     [JsonPropertyName("text")]
+    public string Text { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Informações de contexto da mensagem.
+    /// </summary>
+    [JsonPropertyName("contextInfo")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Text { get; set; }
+    public MessageContextInfo? ContextInfo { get; set; }
 }

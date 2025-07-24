@@ -48,14 +48,6 @@ public interface IEvolutionChatService
     Task<FetchProfilePicUrlResponse> FetchProfilePicUrlAsync(string instanceName, FetchProfilePicUrlRequest request);
 
     /// <summary>
-    /// Deleta uma mensagem para todos os participantes da conversa.
-    /// </summary>
-    /// <param name="instanceName">O nome da instância.</param>
-    /// <param name="request">A requisição contendo as informações da mensagem a ser deletada.</param>
-    /// <returns>A resposta da operação de deleção.</returns>
-    Task<DeleteMessageForEveryoneResponse> DeleteMessageForEveryoneAsync(string instanceName, DeleteMessageForEveryoneRequest request);
-
-    /// <summary>
     /// Obtém o base64 de uma mensagem de mídia.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
@@ -64,7 +56,7 @@ public interface IEvolutionChatService
     Task<GetBase64FromMediaMessageResponse> GetBase64FromMediaMessageAsync(string instanceName, GetBase64FromMediaMessageRequest request);
 
     /// <summary>
-    /// Atualiza o conteúdo de uma mensagem existente.
+    /// Atualiza o conteúdo de uma mensagem enviada.
     /// </summary>
     /// <param name="instanceName">O nome da instância.</param>
     /// <param name="request">A requisição contendo as informações da mensagem a ser atualizada.</param>

@@ -33,6 +33,18 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-envelope"></i> Mensagens
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="messageDropdown">
+                                <li><a class="dropdown-item" href="/Message/Index"><i class="fas fa-tachometer-alt"></i> Dashboard de Mensagens</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Message/SendText"><i class="fas fa-comment"></i> Enviar Texto</a></li>
+                                <li><a class="dropdown-item" href="/Message/SendMedia"><i class="fas fa-file-upload"></i> Enviar Mídia</a></li>
+                                <li><a class="dropdown-item" href="/Message/SendStatus"><i class="fas fa-broadcast-tower"></i> Enviar Status</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="chatDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-chat-dots"></i> Chat
                             </a>
@@ -42,21 +54,11 @@
                                 <li><a class="dropdown-item" href="/Chat/CheckWhatsApp"><i class="fas fa-check-circle"></i> Verificar WhatsApp</a></li>
                                 <li><a class="dropdown-item" href="/Chat/FindContacts"><i class="fas fa-address-book"></i> Buscar Contatos</a></li>
                                 <li><a class="dropdown-item" href="/Chat/FindChats"><i class="fas fa-comments"></i> Buscar Chats</a></li>
+                                <li><a class="dropdown-item" href="/Chat/FindMessages"><i class="fas fa-envelope"></i> Buscar Mensagens</a></li>
+                                <li><a class="dropdown-item" href="/Chat/UpdateMessage"><i class="fas fa-edit"></i> Atualizar Mensagem</a></li>
                                 <li><a class="dropdown-item" href="/Chat/FetchProfilePicUrl"><i class="fas fa-user-circle"></i> Buscar Foto de Perfil</a></li>
                                 <li><a class="dropdown-item" href="/Chat/DeleteMessageForEveryone"><i class="fas fa-trash-alt"></i> Deletar Mensagem</a></li>
-                                <li><a class="dropdown-item" href="/Chat/FindMessages"><i class="fas fa-envelope"></i> Buscar Mensagens</a></li>
                                 <li><a class="dropdown-item" href="/Chat/GetBase64FromMediaMessage"><i class="fas fa-file-download"></i> Obter Base64 de Mídia</a></li>
-                                <li><a class="dropdown-item" href="/Chat/UpdateMessage"><i class="fas fa-edit"></i> Atualizar Mensagem</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-envelope"></i> Mensagens
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="messageDropdown">
-                                <li><a class="dropdown-item" href="/Message/Index"><i class="fas fa-tachometer-alt"></i> Dashboard de Mensagens</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/Message/SendText"><i class="fas fa-paper-plane"></i> Enviar Mensagem de Texto</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
