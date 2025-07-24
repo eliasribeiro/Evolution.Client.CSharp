@@ -149,6 +149,122 @@
     </div>
 
     <div class="row">
+        <!-- Card Enviar Contato -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-address-card fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Contato</h5>
+                    <p class="card-text">
+                        Compartilhe informações de contato incluindo nome, telefone, email e organização.
+                        Ideal para networking e compartilhamento de dados.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendContact" class="btn btn-primary">
+                        <i class="fas fa-address-card"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Enviar Reação -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-heart fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Reação</h5>
+                    <p class="card-text">
+                        Reaja a mensagens específicas com emojis.
+                        Expresse sentimentos e interaja de forma rápida.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendReaction" class="btn btn-danger">
+                        <i class="fas fa-heart"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Enviar Enquete -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-poll fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Enquete</h5>
+                    <p class="card-text">
+                        Crie enquetes interativas com múltiplas opções.
+                        Colete opiniões e feedback dos seus contatos.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendPoll" class="btn btn-success">
+                        <i class="fas fa-poll"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Card Enviar Lista -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-list fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Lista</h5>
+                    <p class="card-text">
+                        Envie listas organizadas com seções e itens.
+                        Perfeito para menus, catálogos e opções estruturadas.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendList" class="btn btn-info">
+                        <i class="fas fa-list"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Enviar Botões -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-mouse-pointer fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Enviar Botões</h5>
+                    <p class="card-text">
+                        Crie mensagens interativas com botões clicáveis.
+                        Facilite a navegação e interação dos usuários.
+                    </p>
+                    <a asp-controller="Message" asp-action="SendButton" class="btn btn-warning">
+                        <i class="fas fa-mouse-pointer"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Placeholder para futuras funcionalidades -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-dashed">
+                <div class="card-body text-center d-flex align-items-center justify-content-center">
+                    <div>
+                        <div class="mb-3">
+                            <i class="fas fa-plus-circle fa-3x text-muted"></i>
+                        </div>
+                        <h5 class="card-title text-muted">Mais Funcionalidades</h5>
+                        <p class="card-text text-muted">
+                            Novas funcionalidades serão adicionadas em breve.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -165,6 +281,11 @@
                                 <li><i class="fas fa-microphone text-info"></i> Envio de mensagens de áudio</li>
                                 <li><i class="fas fa-smile text-secondary"></i> Envio de stickers</li>
                                 <li><i class="fas fa-map-marker-alt text-danger"></i> Envio de localização</li>
+                                <li><i class="fas fa-address-card text-primary"></i> Envio de contatos</li>
+                                <li><i class="fas fa-heart text-danger"></i> Envio de reações</li>
+                                <li><i class="fas fa-poll text-success"></i> Envio de enquetes</li>
+                                <li><i class="fas fa-list text-info"></i> Envio de listas</li>
+                                <li><i class="fas fa-mouse-pointer text-warning"></i> Envio de botões</li>
                                 <li><i class="fas fa-file-upload text-success"></i> Envio de mídia (imagens, vídeos, documentos)</li>
                                 <li><i class="fas fa-broadcast-tower text-warning"></i> Publicação de status</li>
                                 <li><i class="fas fa-at text-info"></i> Menções a usuários específicos</li>

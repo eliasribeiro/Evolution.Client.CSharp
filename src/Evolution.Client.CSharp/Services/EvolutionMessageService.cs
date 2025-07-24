@@ -485,4 +485,402 @@ public class EvolutionMessageService : IEvolutionMessageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Envia contatos para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados dos contatos.</param>
+    /// <returns>A resposta com informações dos contatos enviados.</returns>
+    public async Task<SendContactResponse> SendContactAsync(string instanceName, SendContactRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (request.Contact == null || !request.Contact.Any())
+            throw new ArgumentException("Pelo menos um contato é obrigatório.", nameof(request.Contact));
+
+        try
+        {
+            _logger.LogInformation("Enviando contatos. Instância: {InstanceName}, Destinatário: {Number}, Quantidade: {Count}", 
+                instanceName, request.Number, request.Contact.Count);
+
+            var endpoint = $"/message/sendContact/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendContactResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Contatos enviados com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendContactResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar contatos. Instância: {InstanceName}, Destinatário: {Number}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar contatos: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar contatos. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia reação a uma mensagem.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da reação.</param>
+    /// <returns>A resposta com informações da reação enviada.</returns>
+    public async Task<SendReactionResponse> SendReactionAsync(string instanceName, SendReactionRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (request.Key == null)
+            throw new ArgumentException("A chave da mensagem é obrigatória.", nameof(request.Key));
+
+        if (string.IsNullOrWhiteSpace(request.Key.RemoteJid))
+            throw new ArgumentException("O JID remoto é obrigatório.", nameof(request.Key.RemoteJid));
+
+        if (string.IsNullOrWhiteSpace(request.Key.Id))
+            throw new ArgumentException("O ID da mensagem é obrigatório.", nameof(request.Key.Id));
+
+        if (string.IsNullOrWhiteSpace(request.Reaction))
+            throw new ArgumentException("A reação é obrigatória.", nameof(request.Reaction));
+
+        try
+        {
+            _logger.LogInformation("Enviando reação. Instância: {InstanceName}, Mensagem: {MessageId}, Reação: {Reaction}", 
+                instanceName, request.Key.Id, request.Reaction);
+
+            var endpoint = $"/message/sendReaction/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendReactionResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Reação enviada com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendReactionResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar reação. Instância: {InstanceName}, Mensagem: {MessageId}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Key.Id, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou mensagem '{request.Key.Id}' inválida.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar reação: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar reação. Instância: {InstanceName}, Mensagem: {MessageId}", 
+                instanceName, request.Key.Id);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia enquete para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da enquete.</param>
+    /// <returns>A resposta com informações da enquete enviada.</returns>
+    public async Task<SendPollResponse> SendPollAsync(string instanceName, SendPollRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ArgumentException("O nome da enquete é obrigatório.", nameof(request.Name));
+
+        if (request.SelectableCount <= 0)
+            throw new ArgumentException("O número de opções selecionáveis deve ser maior que zero.", nameof(request.SelectableCount));
+
+        if (request.Values == null || !request.Values.Any())
+            throw new ArgumentException("Pelo menos uma opção é obrigatória.", nameof(request.Values));
+
+        try
+        {
+            _logger.LogInformation("Enviando enquete. Instância: {InstanceName}, Destinatário: {Number}, Título: {Name}", 
+                instanceName, request.Number, request.Name);
+
+            var endpoint = $"/message/sendPoll/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendPollResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Enquete enviada com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendPollResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar enquete. Instância: {InstanceName}, Destinatário: {Number}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar enquete: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar enquete. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia lista para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da lista.</param>
+    /// <returns>A resposta com informações da lista enviada.</returns>
+    public async Task<SendListResponse> SendListAsync(string instanceName, SendListRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.Title))
+            throw new ArgumentException("O título da lista é obrigatório.", nameof(request.Title));
+
+        if (string.IsNullOrWhiteSpace(request.Description))
+            throw new ArgumentException("A descrição da lista é obrigatória.", nameof(request.Description));
+
+        if (string.IsNullOrWhiteSpace(request.ButtonText))
+            throw new ArgumentException("O texto do botão é obrigatório.", nameof(request.ButtonText));
+
+        if (string.IsNullOrWhiteSpace(request.FooterText))
+            throw new ArgumentException("O texto do rodapé é obrigatório.", nameof(request.FooterText));
+
+        if (request.Values == null || !request.Values.Any())
+            throw new ArgumentException("Pelo menos um valor é obrigatório.", nameof(request.Values));
+
+        try
+        {
+            _logger.LogInformation("Enviando lista. Instância: {InstanceName}, Destinatário: {Number}, Título: {Title}", 
+                instanceName, request.Number, request.Title);
+
+            var endpoint = $"/message/sendList/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendListResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Lista enviada com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendListResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar lista. Instância: {InstanceName}, Destinatário: {Number}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar lista: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar lista. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Envia botões para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados dos botões.</param>
+    /// <returns>A resposta com informações dos botões enviados.</returns>
+    public async Task<SendButtonResponse> SendButtonAsync(string instanceName, SendButtonRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(instanceName))
+            throw new ArgumentException("O nome da instância é obrigatório.", nameof(instanceName));
+
+        if (request == null)
+            throw new ArgumentNullException(nameof(request), "A requisição é obrigatória.");
+
+        if (string.IsNullOrWhiteSpace(request.Number))
+            throw new ArgumentException("O número do destinatário é obrigatório.", nameof(request.Number));
+
+        if (string.IsNullOrWhiteSpace(request.Title))
+            throw new ArgumentException("O título dos botões é obrigatório.", nameof(request.Title));
+
+        if (string.IsNullOrWhiteSpace(request.Description))
+            throw new ArgumentException("A descrição dos botões é obrigatória.", nameof(request.Description));
+
+        if (string.IsNullOrWhiteSpace(request.Footer))
+            throw new ArgumentException("O rodapé dos botões é obrigatório.", nameof(request.Footer));
+
+        if (request.Buttons == null || !request.Buttons.Any())
+            throw new ArgumentException("Pelo menos um botão é obrigatório.", nameof(request.Buttons));
+
+        try
+        {
+            _logger.LogInformation("Enviando botões. Instância: {InstanceName}, Destinatário: {Number}, Título: {Title}", 
+                instanceName, request.Number, request.Title);
+
+            var endpoint = $"/message/sendButton/{instanceName}";
+            
+            var jsonContent = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<SendButtonResponse>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Botões enviados com sucesso. Instância: {InstanceName}, ID da mensagem: {MessageId}, Status: {Status}", 
+                    instanceName, result?.Key.Id ?? "desconhecido", result?.Status ?? "desconhecido");
+
+                return result ?? new SendButtonResponse();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Erro ao enviar botões. Instância: {InstanceName}, Destinatário: {Number}. Status: {StatusCode}, Erro: {Error}", 
+                    instanceName, request.Number, response.StatusCode, errorContent);
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new InvalidOperationException($"Instância '{instanceName}' não encontrada ou número '{request.Number}' inválido.");
+                }
+
+                throw new HttpRequestException($"Erro ao enviar botões: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            throw; // Re-throw HttpRequestException para manter o tratamento específico
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Erro ao serializar/desserializar dados da API Evolution");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro inesperado ao enviar botões. Instância: {InstanceName}, Destinatário: {Number}", 
+                instanceName, request.Number);
+            throw;
+        }
+    }
 }

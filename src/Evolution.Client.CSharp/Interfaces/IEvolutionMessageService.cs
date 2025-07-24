@@ -54,4 +54,44 @@ public interface IEvolutionMessageService
     /// <param name="request">A requisição contendo os dados da localização.</param>
     /// <returns>A resposta com informações da localização enviada.</returns>
     Task<SendLocationResponse> SendLocationAsync(string instanceName, SendLocationRequest request);
+
+    /// <summary>
+    /// Envia contatos para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados dos contatos.</param>
+    /// <returns>A resposta com informações dos contatos enviados.</returns>
+    Task<SendContactResponse> SendContactAsync(string instanceName, SendContactRequest request);
+
+    /// <summary>
+    /// Envia reação a uma mensagem.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da reação.</param>
+    /// <returns>A resposta com informações da reação enviada.</returns>
+    Task<SendReactionResponse> SendReactionAsync(string instanceName, SendReactionRequest request);
+
+    /// <summary>
+    /// Envia enquete para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da enquete.</param>
+    /// <returns>A resposta com informações da enquete enviada.</returns>
+    Task<SendPollResponse> SendPollAsync(string instanceName, SendPollRequest request);
+
+    /// <summary>
+    /// Envia lista para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados da lista.</param>
+    /// <returns>A resposta com informações da lista enviada.</returns>
+    Task<SendListResponse> SendListAsync(string instanceName, SendListRequest request);
+
+    /// <summary>
+    /// Envia botões para um destinatário.
+    /// </summary>
+    /// <param name="instanceName">O nome da instância.</param>
+    /// <param name="request">A requisição contendo os dados dos botões.</param>
+    /// <returns>A resposta com informações dos botões enviados.</returns>
+    Task<SendButtonResponse> SendButtonAsync(string instanceName, SendButtonRequest request);
 }

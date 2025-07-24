@@ -1,0 +1,292 @@
+@model EvolutionWebApp.Models.SendPollMessageViewModel
+
+@{
+    ViewData["Title"] = "Enviar Enquete";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-poll text-success"></i> Enviar Enquete</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Message" asp-action="Index">Mensagens</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Enviar Enquete</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-poll"></i> Enviar Enquete
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="SendPoll" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                           value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                                    <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Number" class="form-label">Número do Destinatário <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="Number" name="Number" 
+                                           value="@ViewBag.Number" placeholder="5511999999999" required>
+                                    <div class="form-text">Número com código do país (sem símbolos)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-question-circle"></i> Configuração da Enquete</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="Name" class="form-label">Título da Enquete <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="Name" name="Name" 
+                                           value="@ViewBag.Name" placeholder="Qual sua cor favorita?" required>
+                                    <div class="form-text">Pergunta principal da enquete</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="SelectableCount" class="form-label">Opções Selecionáveis <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" id="SelectableCount" name="SelectableCount" 
+                                                   value="@ViewBag.SelectableCount" placeholder="1" min="1" max="10" required>
+                                            <div class="form-text">Quantas opções podem ser selecionadas</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tipo de Enquete</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="PollType" id="singleChoice" value="1" checked>
+                                                <label class="form-check-label" for="singleChoice">
+                                                    Escolha única
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="PollType" id="multipleChoice" value="multiple">
+                                                <label class="form-check-label" for="multipleChoice">
+                                                    Múltipla escolha
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="Values" class="form-label">Opções da Enquete <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="Values" name="Values" rows="5" 
+                                              placeholder="Azul&#10;Vermelho&#10;Verde&#10;Amarelo" required>@ViewBag.Values</textarea>
+                                    <div class="form-text">Uma opção por linha (mínimo 2, máximo 12)</div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <strong>Exemplo de enquete:</strong><br>
+                                    <strong>Título:</strong> Qual sua cor favorita?<br>
+                                    <strong>Opções:</strong><br>
+                                    • Azul<br>
+                                    • Vermelho<br>
+                                    • Verde<br>
+                                    • Amarelo
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Delay" class="form-label">Atraso (ms)</label>
+                                    <input type="number" class="form-control" id="Delay" name="Delay" 
+                                           value="@ViewBag.Delay" placeholder="0" min="0" max="60000">
+                                    <div class="form-text">Atraso em milissegundos antes de enviar</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Mentioned" class="form-label">Usuários Mencionados</label>
+                                    <input type="text" class="form-control" id="Mentioned" name="Mentioned" 
+                                           value="@ViewBag.Mentioned" placeholder="5511999999999, 5511888888888">
+                                    <div class="form-text">JIDs separados por vírgula (opcional)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="LinkPreview" name="LinkPreview" 
+                                               value="true" @(ViewBag.LinkPreview == true ? "checked" : "")>
+                                        <label class="form-check-label" for="LinkPreview">
+                                            Exibir preview de links
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="MentionsEveryOne" name="MentionsEveryOne" 
+                                               value="true" @(ViewBag.MentionsEveryOne == true ? "checked" : "")>
+                                        <label class="form-check-label" for="MentionsEveryOne">
+                                            Mencionar todos (grupos)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-reply"></i> Mensagem Citada (Opcional)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="QuotedMessageId" class="form-label">ID da Mensagem</label>
+                                            <input type="text" class="form-control" id="QuotedMessageId" name="QuotedMessageId" 
+                                                   value="@ViewBag.QuotedMessageId" placeholder="ID da mensagem a ser citada">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="QuotedMessageText" class="form-label">Texto da Mensagem</label>
+                                            <input type="text" class="form-control" id="QuotedMessageText" name="QuotedMessageText" 
+                                                   value="@ViewBag.QuotedMessageText" placeholder="Texto da mensagem citada">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-poll"></i> Enviar Enquete
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Preencha a instância e número</li>
+                        <li><i class="fas fa-check text-success"></i> Digite o título da enquete</li>
+                        <li><i class="fas fa-check text-success"></i> Configure quantas opções podem ser selecionadas</li>
+                        <li><i class="fas fa-check text-success"></i> Liste as opções (uma por linha)</li>
+                        <li><i class="fas fa-check text-success"></i> Clique em "Enviar Enquete"</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-poll text-success"></i> Regras da Enquete:</h6>
+                    <ul class="list-unstyled">
+                        <li>Mínimo: 2 opções</li>
+                        <li>Máximo: 12 opções</li>
+                        <li>Uma opção por linha</li>
+                        <li>Título obrigatório</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-users text-info"></i> Tipos:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Escolha única:</strong> Apenas uma opção</li>
+                        <li><strong>Múltipla escolha:</strong> Várias opções</li>
+                    </ul>
+
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-chart-bar"></i>
+                        <strong>Dica:</strong> Use enquetes para coletar opiniões 
+                        e tomar decisões em grupo.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Result != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-check-circle text-success"></i> Resultado do Envio
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>ID da Mensagem:</strong> @Model.Result.MessageId</p>
+                                <p><strong>Status:</strong> @Model.Result.Status</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Timestamp:</strong> @Model.Result.MessageTimestamp</p>
+                                <p><strong>JID Remoto:</strong> @Model.Result.RemoteJid</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    document.getElementById('multipleChoice').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('SelectableCount').min = '1';
+            document.getElementById('SelectableCount').max = '10';
+            document.getElementById('SelectableCount').value = '2';
+        }
+    });
+
+    document.getElementById('singleChoice').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('SelectableCount').value = '1';
+            document.getElementById('SelectableCount').min = '1';
+            document.getElementById('SelectableCount').max = '1';
+        }
+    });
+</script>

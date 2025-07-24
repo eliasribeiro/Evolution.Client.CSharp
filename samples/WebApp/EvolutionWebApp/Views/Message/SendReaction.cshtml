@@ -1,0 +1,206 @@
+@model EvolutionWebApp.Models.SendReactionMessageViewModel
+
+@{
+    ViewData["Title"] = "Enviar Reação";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-heart text-danger"></i> Enviar Reação</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Message" asp-action="Index">Mensagens</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Enviar Reação</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-heart"></i> Enviar Reação
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="SendReaction" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="InstanceName" class="form-label">Instância <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="InstanceName" name="InstanceName" 
+                                           value="@ViewBag.InstanceName" placeholder="Digite o nome da instância" required>
+                                    <div class="form-text">Nome da instância conectada ao WhatsApp</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="RemoteJid" class="form-label">JID do Chat <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="RemoteJid" name="RemoteJid" 
+                                           value="@ViewBag.RemoteJid" placeholder="5511999999999@s.whatsapp.net" required>
+                                    <div class="form-text">JID completo do chat ou grupo</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="FromMe" class="form-label">Remetente <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="FromMe" name="FromMe" required>
+                                        <option value="">Selecione o remetente</option>
+                                        <option value="true" selected="@(ViewBag.FromMe == "true")">Eu (true)</option>
+                                        <option value="false" selected="@(ViewBag.FromMe == "false")">Outro usuário (false)</option>
+                                    </select>
+                                    <div class="form-text">Indica se a mensagem foi enviada por você</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Id" class="form-label">ID da Mensagem <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="Id" name="Id" 
+                                           value="@ViewBag.Id" placeholder="3EB0C767D097B7C7E230" required>
+                                    <div class="form-text">ID único da mensagem a reagir</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Reaction" class="form-label">Reação <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="Reaction" name="Reaction" 
+                                       value="@ViewBag.Reaction" placeholder="😀" required maxlength="2">
+                                <button type="button" class="btn btn-outline-secondary" onclick="showEmojiPicker()">
+                                    <i class="fas fa-smile"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Emoji para reagir à mensagem</div>
+                            
+                            <!-- Seletor de emojis -->
+                            <div class="mt-2">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('❤️')">❤️</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('😂')">😂</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('😮')">😮</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('😢')">😢</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('😡')">😡</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('👍')">👍</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('👎')">👎</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('🙏')">🙏</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('👏')">👏</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm emoji-btn" onclick="selectEmoji('🔥')">🔥</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-heart"></i> Enviar Reação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Como usar:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Preencha a instância e JID do chat</li>
+                        <li><i class="fas fa-check text-success"></i> Selecione o remetente da mensagem</li>
+                        <li><i class="fas fa-check text-success"></i> Digite o ID da mensagem</li>
+                        <li><i class="fas fa-check text-success"></i> Escolha um emoji para reagir</li>
+                        <li><i class="fas fa-check text-success"></i> Clique em "Enviar Reação"</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-id-card text-info"></i> Formato do JID:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Chat individual:</strong> 5511999999999@s.whatsapp.net</li>
+                        <li><strong>Grupo:</strong> 120363123456789@g.us</li>
+                    </ul>
+
+                    <h6 class="mt-3"><i class="fas fa-heart text-danger"></i> Reações:</h6>
+                    <ul class="list-unstyled">
+                        <li>Use emojis simples (1-2 caracteres)</li>
+                        <li>Clique nos emojis sugeridos</li>
+                        <li>Para remover reação, envie string vazia</li>
+                    </ul>
+
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Atenção:</strong> Você precisa do ID exato da mensagem 
+                        para reagir a ela.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Result != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-check-circle text-success"></i> Resultado do Envio
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>ID da Mensagem:</strong> @Model.Result.MessageId</p>
+                                <p><strong>Status:</strong> @Model.Result.Status</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Timestamp:</strong> @Model.Result.MessageTimestamp</p>
+                                <p><strong>JID Remoto:</strong> @Model.Result.RemoteJid</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function selectEmoji(emoji) {
+        document.getElementById('Reaction').value = emoji;
+    }
+
+    function showEmojiPicker() {
+        // Implementação futura para seletor de emoji mais avançado
+        alert('Use os emojis sugeridos ou digite diretamente no campo.');
+    }
+</script>
