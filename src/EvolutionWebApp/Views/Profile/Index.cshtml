@@ -1,0 +1,171 @@
+@{
+    ViewData["Title"] = "Configurações de Perfil";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-user-cog"></i>
+                Configurações de Perfil
+            </h2>
+            <p class="text-muted">Gerencie as configurações de perfil e privacidade da sua instância WhatsApp.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Buscar Perfil de Negócio -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-building fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Perfil de Negócio</h5>
+                    <p class="card-text">Busque informações do perfil de negócio de um número do WhatsApp.</p>
+                    <a href="@Url.Action("FetchBusinessProfile", "Profile")" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar Perfil de Negócio
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buscar Perfil de Usuário -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Perfil de Usuário</h5>
+                    <p class="card-text">Busque informações do perfil de um usuário do WhatsApp.</p>
+                    <a href="@Url.Action("FetchProfile", "Profile")" class="btn btn-info">
+                        <i class="fas fa-search"></i> Buscar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atualizar Nome do Perfil -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-edit fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Nome do Perfil</h5>
+                    <p class="card-text">Atualize o nome do perfil da sua instância.</p>
+                    <a href="@Url.Action("UpdateProfileName", "Profile")" class="btn btn-success">
+                        <i class="fas fa-edit"></i> Atualizar Nome
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atualizar Status do Perfil -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-comment-dots fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Status do Perfil</h5>
+                    <p class="card-text">Atualize o status do perfil da sua instância.</p>
+                    <a href="@Url.Action("UpdateProfileStatus", "Profile")" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Atualizar Status
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atualizar Foto do Perfil -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-camera fa-3x text-purple"></i>
+                    </div>
+                    <h5 class="card-title">Foto do Perfil</h5>
+                    <p class="card-text">Atualize a foto do perfil da sua instância.</p>
+                    <a href="@Url.Action("UpdateProfilePicture", "Profile")" class="btn btn-purple">
+                        <i class="fas fa-camera"></i> Atualizar Foto
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remover Foto do Perfil -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-trash-alt fa-3x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Remover Foto</h5>
+                    <p class="card-text">Remova a foto do perfil da sua instância.</p>
+                    <a href="@Url.Action("RemoveProfilePicture", "Profile")" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Remover Foto
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configurações de Privacidade -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-secondary"></i>
+                    </div>
+                    <h5 class="card-title">Privacidade</h5>
+                    <p class="card-text">Busque as configurações de privacidade da instância.</p>
+                    <a href="@Url.Action("FetchPrivacySettings", "Profile")" class="btn btn-secondary">
+                        <i class="fas fa-shield-alt"></i> Ver Privacidade
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atualizar Configurações de Privacidade -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-cog fa-3x text-dark"></i>
+                    </div>
+                    <h5 class="card-title">Configurar Privacidade</h5>
+                    <p class="card-text">Atualize as configurações de privacidade da instância.</p>
+                    <a href="@Url.Action("UpdatePrivacySettings", "Profile")" class="btn btn-dark">
+                        <i class="fas fa-cog"></i> Configurar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-purple {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+    }
+    
+    .btn-purple:hover {
+        background-color: #5a359a;
+        border-color: #5a359a;
+        color: white;
+    }
+    
+    .text-purple {
+        color: #6f42c1 !important;
+    }
+    
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>

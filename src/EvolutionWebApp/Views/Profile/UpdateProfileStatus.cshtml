@@ -1,0 +1,155 @@
+@model Evolution.Client.CSharp.Models.Profile.UpdateProfileStatusRequest
+
+@{
+    ViewData["Title"] = "Atualizar Status do Perfil";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Início</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile")">Perfil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Atualizar Status</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">
+                <i class="fas fa-comment-dots"></i>
+                Atualizar Status do Perfil
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit"></i>
+                        Informações do Status
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateProfileStatus" method="post">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">Nome da Instância *</label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância WhatsApp configurada.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label">Novo Status do Perfil *</label>
+                            <textarea asp-for="Status" class="form-control" rows="3"
+                                      placeholder="Digite o novo status do perfil" required maxlength="139"></textarea>
+                            <div class="form-text">Status que aparecerá no seu perfil do WhatsApp (máximo 139 caracteres).</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Atualizar Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Atualizar Status do Perfil:</strong><br>
+                        Esta funcionalidade permite alterar o status que aparece no seu perfil do WhatsApp.
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Observações importantes:</strong>
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-exclamation-triangle text-warning"></i> Máximo de 139 caracteres</li>
+                        <li><i class="fas fa-info-circle text-info"></i> Visível para seus contatos</li>
+                        <li><i class="fas fa-clock text-secondary"></i> Alteração é imediata</li>
+                        <li><i class="fas fa-smile text-success"></i> Pode incluir emojis</li>
+                    </ul>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Exemplos de status:</strong>
+                    </p>
+                    <ul class="list-unstyled small">
+                        <li>• Disponível para atendimento 📞</li>
+                        <li>• Em reunião até às 15h ⏰</li>
+                        <li>• Férias até 15/12 🏖️</li>
+                        <li>• Atendimento comercial 💼</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Success == true && ViewBag.Response != null)
+    {
+        var response = ViewBag.Response as Evolution.Client.CSharp.Models.Profile.UpdateProfileStatusResponse;
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-check-circle"></i>
+                        Status Atualizado com Sucesso!
+                    </h4>
+                    <p><strong>Resultado:</strong> @response.Success</p>
+                    @if (!string.IsNullOrEmpty(response.Message))
+                    {
+                        <p><strong>Mensagem:</strong> @response.Message</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.Success == false && !string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Erro ao Atualizar Status
+                    </h4>
+                    <p>@ViewBag.Error</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Atenção
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>

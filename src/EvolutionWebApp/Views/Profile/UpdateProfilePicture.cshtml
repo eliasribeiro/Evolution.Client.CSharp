@@ -1,0 +1,166 @@
+@model Evolution.Client.CSharp.Models.Profile.UpdateProfilePictureRequest
+
+@{
+    ViewData["Title"] = "Atualizar Foto do Perfil";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Início</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile")">Perfil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Atualizar Foto</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">
+                <i class="fas fa-camera"></i>
+                Atualizar Foto do Perfil
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-upload"></i>
+                        Upload da Foto
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateProfilePicture" method="post">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">Nome da Instância *</label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância WhatsApp configurada.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Picture" class="form-label">URL da Foto ou Base64 *</label>
+                            <textarea asp-for="Picture" class="form-control" rows="4"
+                                      placeholder="Cole aqui a URL da imagem ou o código Base64" required></textarea>
+                            <div class="form-text">URL pública da imagem ou código Base64 da foto.</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-purple">
+                                <i class="fas fa-save"></i> Atualizar Foto
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Atualizar Foto do Perfil:</strong><br>
+                        Esta funcionalidade permite alterar a foto do seu perfil do WhatsApp.
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Formatos aceitos:</strong>
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-link text-info"></i> URL pública da imagem</li>
+                        <li><i class="fas fa-code text-warning"></i> Código Base64</li>
+                    </ul>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Observações:</strong>
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-image text-success"></i> JPG, PNG, WebP</li>
+                        <li><i class="fas fa-compress text-secondary"></i> Máximo 16MB</li>
+                        <li><i class="fas fa-crop text-info"></i> Formato quadrado recomendado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Success == true && ViewBag.Response != null)
+    {
+        var response = ViewBag.Response as Evolution.Client.CSharp.Models.Profile.UpdateProfilePictureResponse;
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-check-circle"></i>
+                        Foto Atualizada com Sucesso!
+                    </h4>
+                    <p><strong>Resultado:</strong> @response.Success</p>
+                    @if (!string.IsNullOrEmpty(response.Message))
+                    {
+                        <p><strong>Mensagem:</strong> @response.Message</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.Success == false && !string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Erro ao Atualizar Foto
+                    </h4>
+                    <p>@ViewBag.Error</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Atenção
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .btn-purple {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+    }
+    
+    .btn-purple:hover {
+        background-color: #5a359a;
+        border-color: #5a359a;
+        color: white;
+    }
+</style>

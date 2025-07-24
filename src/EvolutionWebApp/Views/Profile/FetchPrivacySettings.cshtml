@@ -1,0 +1,162 @@
+@{
+    ViewData["Title"] = "Configurações de Privacidade";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Início</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile")">Perfil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Configurações de Privacidade</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">
+                <i class="fas fa-shield-alt"></i>
+                Configurações de Privacidade
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-search"></i>
+                        Buscar Configurações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FetchPrivacySettings" method="post">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">Nome da Instância *</label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância WhatsApp configurada.</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-search"></i> Buscar Configurações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Configurações de Privacidade:</strong><br>
+                        Visualize as configurações atuais de privacidade da instância.
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Configurações disponíveis:</strong>
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Confirmação de leitura</li>
+                        <li><i class="fas fa-check text-success"></i> Foto do perfil</li>
+                        <li><i class="fas fa-check text-success"></i> Status</li>
+                        <li><i class="fas fa-check text-success"></i> Última vez online</li>
+                        <li><i class="fas fa-check text-success"></i> Adicionar a grupos</li>
+                        <li><i class="fas fa-check text-success"></i> Chamadas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Success == true && ViewBag.Response != null)
+    {
+        var response = ViewBag.Response as Evolution.Client.CSharp.Models.Profile.FetchPrivacySettingsResponse;
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-check-circle"></i>
+                        Configurações de Privacidade
+                    </h4>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-eye"></i> Confirmação de Leitura</h6>
+                            <p><span class="badge bg-info">@response.ReadReceipts</span></p>
+                            
+                            <h6><i class="fas fa-user-circle"></i> Foto do Perfil</h6>
+                            <p><span class="badge bg-info">@response.Profile</span></p>
+                            
+                            <h6><i class="fas fa-comment-dots"></i> Status</h6>
+                            <p><span class="badge bg-info">@response.Status</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-clock"></i> Última Vez Online</h6>
+                            <p><span class="badge bg-info">@response.Online</span></p>
+                            
+                            <h6><i class="fas fa-users"></i> Adicionar a Grupos</h6>
+                            <p><span class="badge bg-info">@response.GroupAdd</span></p>
+                            
+                            <h6><i class="fas fa-phone"></i> Chamadas</h6>
+                            <p><span class="badge bg-info">@response.CallAdd</span></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <a href="@Url.Action("UpdatePrivacySettings", "Profile")" class="btn btn-dark">
+                            <i class="fas fa-cog"></i> Atualizar Configurações
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.Success == false && !string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Erro ao Buscar Configurações
+                    </h4>
+                    <p>@ViewBag.Error</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Atenção
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>

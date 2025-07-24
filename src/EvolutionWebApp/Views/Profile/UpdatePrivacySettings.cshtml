@@ -1,0 +1,228 @@
+@model Evolution.Client.CSharp.Models.Profile.UpdatePrivacySettingsRequest
+
+@{
+    ViewData["Title"] = "Atualizar Configurações de Privacidade";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Início</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile")">Perfil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Atualizar Privacidade</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">
+                <i class="fas fa-cog"></i>
+                Atualizar Configurações de Privacidade
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt"></i>
+                        Configurações de Privacidade
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdatePrivacySettings" method="post">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">Nome da Instância *</label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância WhatsApp configurada.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="ReadReceipts" class="form-label">
+                                        <i class="fas fa-eye"></i> Confirmação de Leitura
+                                    </label>
+                                    <select asp-for="ReadReceipts" class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option value="all">Todos</option>
+                                        <option value="contacts">Apenas Contatos</option>
+                                        <option value="none">Ninguém</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Profile" class="form-label">
+                                        <i class="fas fa-user-circle"></i> Foto do Perfil
+                                    </label>
+                                    <select asp-for="Profile" class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option value="all">Todos</option>
+                                        <option value="contacts">Apenas Contatos</option>
+                                        <option value="none">Ninguém</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Status" class="form-label">
+                                        <i class="fas fa-comment-dots"></i> Status
+                                    </label>
+                                    <select asp-for="Status" class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option value="all">Todos</option>
+                                        <option value="contacts">Apenas Contatos</option>
+                                        <option value="none">Ninguém</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Online" class="form-label">
+                                        <i class="fas fa-clock"></i> Última Vez Online
+                                    </label>
+                                    <select asp-for="Online" class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option value="all">Todos</option>
+                                        <option value="contacts">Apenas Contatos</option>
+                                        <option value="none">Ninguém</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="GroupAdd" class="form-label">
+                                        <i class="fas fa-users"></i> Adicionar a Grupos
+                                    </label>
+                                    <select asp-for="GroupAdd" class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option value="all">Todos</option>
+                                        <option value="contacts">Apenas Contatos</option>
+                                        <option value="none">Ninguém</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="CallAdd" class="form-label">
+                                        <i class="fas fa-phone"></i> Chamadas
+                                    </label>
+                                    <select asp-for="CallAdd" class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option value="all">Todos</option>
+                                        <option value="contacts">Apenas Contatos</option>
+                                        <option value="none">Ninguém</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-dark">
+                                <i class="fas fa-save"></i> Atualizar Configurações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Configurações de Privacidade:</strong><br>
+                        Configure quem pode ver suas informações e interagir com você.
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Opções disponíveis:</strong>
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-globe text-success"></i> <strong>Todos:</strong> Qualquer pessoa</li>
+                        <li><i class="fas fa-address-book text-warning"></i> <strong>Contatos:</strong> Apenas seus contatos</li>
+                        <li><i class="fas fa-ban text-danger"></i> <strong>Ninguém:</strong> Nenhuma pessoa</li>
+                    </ul>
+                    <hr>
+                    <div class="alert alert-info" role="alert">
+                        <small>
+                            <i class="fas fa-lightbulb"></i>
+                            <strong>Dica:</strong> Deixe campos vazios para manter as configurações atuais.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Success == true && ViewBag.Response != null)
+    {
+        var response = ViewBag.Response as Evolution.Client.CSharp.Models.Profile.UpdatePrivacySettingsResponse;
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-check-circle"></i>
+                        Configurações Atualizadas com Sucesso!
+                    </h4>
+                    <p><strong>Resultado:</strong> @response.Success</p>
+                    @if (!string.IsNullOrEmpty(response.Message))
+                    {
+                        <p><strong>Mensagem:</strong> @response.Message</p>
+                    }
+                    <hr>
+                    <div class="text-center">
+                        <a href="@Url.Action("FetchPrivacySettings", "Profile")" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> Ver Configurações Atuais
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.Success == false && !string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Erro ao Atualizar Configurações
+                    </h4>
+                    <p>@ViewBag.Error</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Atenção
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>

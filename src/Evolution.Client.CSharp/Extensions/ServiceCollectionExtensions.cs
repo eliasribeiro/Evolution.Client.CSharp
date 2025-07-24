@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<IEvolutionInstanceService, EvolutionInstanceService>();
         services.AddHttpClient<IEvolutionChatService, EvolutionChatService>();
         services.AddHttpClient<IEvolutionMessageService, EvolutionMessageService>();
+        services.AddHttpClient<IEvolutionProfileService, EvolutionProfileService>();
 
         // Registra os serviços
         services.TryAddSingleton<EvolutionApiClient>();
@@ -45,6 +46,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IEvolutionInstanceService, EvolutionInstanceService>();
         services.TryAddSingleton<IEvolutionChatService, EvolutionChatService>();
         services.TryAddSingleton<IEvolutionMessageService, EvolutionMessageService>();
+        services.TryAddSingleton<IEvolutionProfileService, EvolutionProfileService>();
 
         return services;
     }

@@ -28,21 +28,29 @@ public class EvolutionApiClient
     public IEvolutionMessageService Message { get; }
 
     /// <summary>
+    /// Obtém o serviço de perfil da API Evolution.
+    /// </summary>
+    public IEvolutionProfileService Profile { get; }
+
+    /// <summary>
     /// Inicializa uma nova instância da classe <see cref="EvolutionApiClient"/>.
     /// </summary>
     /// <param name="informationService">O serviço de informações da API.</param>
     /// <param name="instanceService">O serviço de instâncias da API.</param>
     /// <param name="chatService">O serviço de chat da API.</param>
     /// <param name="messageService">O serviço de mensagens da API.</param>
+    /// <param name="profileService">O serviço de perfil da API.</param>
     public EvolutionApiClient(
         IEvolutionInformationService informationService,
         IEvolutionInstanceService instanceService,
         IEvolutionChatService chatService,
-        IEvolutionMessageService messageService)
+        IEvolutionMessageService messageService,
+        IEvolutionProfileService profileService)
     {
         Information = informationService ?? throw new ArgumentNullException(nameof(informationService));
         Instance = instanceService ?? throw new ArgumentNullException(nameof(instanceService));
         Chat = chatService ?? throw new ArgumentNullException(nameof(chatService));
         Message = messageService ?? throw new ArgumentNullException(nameof(messageService));
+        Profile = profileService ?? throw new ArgumentNullException(nameof(profileService));
     }
 }

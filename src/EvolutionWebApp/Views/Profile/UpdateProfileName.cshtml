@@ -1,0 +1,144 @@
+@model Evolution.Client.CSharp.Models.Profile.UpdateProfileNameRequest
+
+@{
+    ViewData["Title"] = "Atualizar Nome do Perfil";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Início</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile")">Perfil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Atualizar Nome</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">
+                <i class="fas fa-edit"></i>
+                Atualizar Nome do Perfil
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-edit"></i>
+                        Informações do Perfil
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateProfileName" method="post">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">Nome da Instância *</label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância WhatsApp configurada.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Novo Nome do Perfil *</label>
+                            <input asp-for="Name" class="form-control" 
+                                   placeholder="Digite o novo nome do perfil" required maxlength="25">
+                            <div class="form-text">Nome que aparecerá no seu perfil do WhatsApp (máximo 25 caracteres).</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Atualizar Nome
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Atualizar Nome do Perfil:</strong><br>
+                        Esta funcionalidade permite alterar o nome que aparece no seu perfil do WhatsApp.
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Observações importantes:</strong>
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-exclamation-triangle text-warning"></i> Máximo de 25 caracteres</li>
+                        <li><i class="fas fa-info-circle text-info"></i> Visível para seus contatos</li>
+                        <li><i class="fas fa-clock text-secondary"></i> Alteração é imediata</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Success == true && ViewBag.Response != null)
+    {
+        var response = ViewBag.Response as Evolution.Client.CSharp.Models.Profile.UpdateProfileNameResponse;
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-check-circle"></i>
+                        Nome Atualizado com Sucesso!
+                    </h4>
+                    <p><strong>Resultado:</strong> @response.Success</p>
+                    @if (!string.IsNullOrEmpty(response.Message))
+                    {
+                        <p><strong>Mensagem:</strong> @response.Message</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.Success == false && !string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Erro ao Atualizar Nome
+                    </h4>
+                    <p>@ViewBag.Error</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Atenção
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
