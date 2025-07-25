@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Evolution.Client.CSharp.Configuration;
@@ -29,10 +30,23 @@ public class EvolutionMessageService : IEvolutionMessageService
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
+        var apiOptions = options?.Value ?? throw new ArgumentNullException(nameof(options));
+
+        // Configura o cliente HTTP
+        _httpClient.BaseAddress = new Uri(apiOptions.BaseUrl);
+        _httpClient.Timeout = TimeSpan.FromSeconds(apiOptions.TimeoutSeconds);
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        // Adiciona o cabeçalho de autenticação se a chave de API estiver definida
+        if (!string.IsNullOrEmpty(apiOptions.ApiKey))
+        {
+            _httpClient.DefaultRequestHeaders.Add("apikey", apiOptions.ApiKey);
+        }
+
         _jsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
+            PropertyNameCaseInsensitive = true
         };
     }
 

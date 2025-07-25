@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Evolution.Client.CSharp.Configuration;
@@ -27,7 +28,14 @@ public class EvolutionProfileService : IEvolutionProfileService
 
         // Configura o cliente HTTP
         _httpClient.BaseAddress = new Uri(_options.BaseUrl);
-        _httpClient.DefaultRequestHeaders.Add("apikey", _options.ApiKey);
+        _httpClient.Timeout = TimeSpan.FromSeconds(_options.TimeoutSeconds);
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        // Adiciona o cabeçalho de autenticação se a chave de API estiver definida
+        if (!string.IsNullOrEmpty(_options.ApiKey))
+        {
+            _httpClient.DefaultRequestHeaders.Add("apikey", _options.ApiKey);
+        }
     }
 
     /// <summary>

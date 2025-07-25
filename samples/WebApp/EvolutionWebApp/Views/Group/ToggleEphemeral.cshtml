@@ -1,0 +1,141 @@
+@model EvolutionWebApp.ViewModels.ToggleEphemeralViewModel
+
+@{
+    ViewData["Title"] = "Alternar Mensagens Efêmeras";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-clock"></i> Alternar Mensagens Efêmeras
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ToggleEphemeral" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">Nome da Instância</label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GroupJid" class="form-label">JID do Grupo</label>
+                            <input asp-for="GroupJid" class="form-control" placeholder="Digite o JID do grupo (ex: 123456789@g.us)" required />
+                            <span asp-validation-for="GroupJid" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Expiration" class="form-label">Tempo de Expiração</label>
+                            <select asp-for="Expiration" class="form-select" required>
+                                <option value="">Selecione o tempo de expiração</option>
+                                <option value="0">Desativar Mensagens Efêmeras</option>
+                                <option value="86400">24 horas (1 dia)</option>
+                                <option value="604800">7 dias (1 semana)</option>
+                                <option value="7776000">90 dias (3 meses)</option>
+                            </select>
+                            <div class="form-text">
+                                Mensagens efêmeras são automaticamente excluídas após o tempo especificado.
+                            </div>
+                            <span asp-validation-for="Expiration" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-clock"></i> Configurar Mensagens Efêmeras
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.IsSuccess && Model.Result != null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-check-circle"></i> Mensagens efêmeras configuradas com sucesso!</h5>
+                            @if (Model.Result.Success)
+                            {
+                                <p><strong>Status:</strong> Configuração aplicada com sucesso</p>
+                                @if (!string.IsNullOrEmpty(Model.Result.Message))
+                                {
+                                    <p><strong>Mensagem:</strong> @Model.Result.Message</p>
+                                }
+                                
+                                @if (Model.Expiration == 0)
+                                {
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> As mensagens efêmeras foram <strong>desativadas</strong> para este grupo.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-clock"></i> As mensagens agora serão excluídas automaticamente após 
+                                        @if (Model.Expiration == 86400)
+                                        {
+                                            <strong>24 horas</strong>
+                                        }
+                                        else if (Model.Expiration == 604800)
+                                        {
+                                            <strong>7 dias</strong>
+                                        }
+                                        else if (Model.Expiration == 7776000)
+                                        {
+                                            <strong>90 dias</strong>
+                                        }
+                                        else
+                                        {
+                                            <strong>@Model.Expiration segundos</strong>
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Erro</h5>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+
+                    <!-- Informações sobre mensagens efêmeras -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-info-circle"></i> Sobre Mensagens Efêmeras
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-clock text-primary"></i> Como Funcionam</h6>
+                                    <ul class="small">
+                                        <li>Mensagens são excluídas automaticamente após o tempo definido</li>
+                                        <li>A exclusão acontece para todos os participantes</li>
+                                        <li>Apenas administradores podem alterar essa configuração</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-shield-alt text-success"></i> Benefícios</h6>
+                                    <ul class="small">
+                                        <li>Maior privacidade e segurança</li>
+                                        <li>Reduz o acúmulo de mensagens antigas</li>
+                                        <li>Ideal para conversas sensíveis</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-warning mt-3">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                <strong>Atenção:</strong> Uma vez ativadas, as mensagens efêmeras se aplicam a todas as novas mensagens enviadas no grupo. Mensagens antigas não são afetadas.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

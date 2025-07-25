@@ -1,0 +1,110 @@
+@model EvolutionWebApp.ViewModels.UpdateParticipantViewModel
+
+@{
+    ViewData["Title"] = "Atualizar Participantes";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit"></i> Atualizar Participantes do Grupo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateParticipant" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">Nome da Instância</label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GroupJid" class="form-label">JID do Grupo</label>
+                            <input asp-for="GroupJid" class="form-control" placeholder="Digite o JID do grupo (ex: 123456789@g.us)" required />
+                            <span asp-validation-for="GroupJid" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Action" class="form-label">Ação</label>
+                            <select asp-for="Action" class="form-select" required>
+                                <option value="">Selecione uma ação</option>
+                                <option value="add">Adicionar Participantes</option>
+                                <option value="remove">Remover Participantes</option>
+                                <option value="promote">Promover a Administrador</option>
+                                <option value="demote">Rebaixar de Administrador</option>
+                            </select>
+                            <span asp-validation-for="Action" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Participants" class="form-label">Participantes</label>
+                            <textarea asp-for="Participants" class="form-control" rows="5" 
+                                      placeholder="Digite os números dos participantes, um por linha:&#10;5511999999999&#10;5511888888888&#10;5511777777777" required></textarea>
+                            <div class="form-text">Digite um número por linha (formato: 5511999999999)</div>
+                            <span asp-validation-for="Participants" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-edit"></i> Atualizar Participantes
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.IsSuccess && Model.Result != null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-check-circle"></i> Participantes atualizados com sucesso!</h5>
+                            @if (Model.Result.Success)
+                            {
+                                <p><strong>Status:</strong> Operação realizada com sucesso</p>
+                                @if (!string.IsNullOrEmpty(Model.Result.Message))
+                                {
+                                    <p><strong>Mensagem:</strong> @Model.Result.Message</p>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Erro</h5>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+
+                    <!-- Informações sobre as ações -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-info-circle"></i> Informações sobre as Ações
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-user-plus text-success"></i> Adicionar</h6>
+                                    <p class="small">Adiciona novos participantes ao grupo. Os números devem estar no formato internacional.</p>
+                                    
+                                    <h6><i class="fas fa-user-minus text-danger"></i> Remover</h6>
+                                    <p class="small">Remove participantes do grupo. Apenas administradores podem remover outros membros.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-arrow-up text-primary"></i> Promover</h6>
+                                    <p class="small">Promove membros a administradores do grupo.</p>
+                                    
+                                    <h6><i class="fas fa-arrow-down text-warning"></i> Rebaixar</h6>
+                                    <p class="small">Remove privilégios de administrador de participantes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

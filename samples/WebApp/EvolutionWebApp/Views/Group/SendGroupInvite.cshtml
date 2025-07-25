@@ -1,0 +1,84 @@
+@model SendGroupInviteViewModel
+
+@{
+    ViewData["Title"] = "Enviar Convite para Grupo";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-paper-plane"></i> Enviar Convite para Grupo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="SendGroupInvite" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">
+                                <i class="fas fa-server"></i> Nome da Instância
+                            </label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GroupJid" class="form-label">
+                                <i class="fas fa-hashtag"></i> ID do Grupo (JID)
+                            </label>
+                            <input asp-for="GroupJid" class="form-control" placeholder="Digite o JID do grupo" required />
+                            <small class="form-text text-muted">Exemplo: 120363123456789012@g.us</small>
+                            <span asp-validation-for="GroupJid" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Numbers" class="form-label">
+                                <i class="fas fa-phone"></i> Números para Convidar
+                            </label>
+                            <textarea asp-for="Numbers" class="form-control" rows="5" placeholder="Digite os números para convidar (um por linha)&#10;Exemplo:&#10;5511999999999&#10;5511888888888" required></textarea>
+                            <small class="form-text text-muted">Digite um número por linha, incluindo código do país</small>
+                            <span asp-validation-for="Numbers" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Text" class="form-label">
+                                <i class="fas fa-comment"></i> Mensagem do Convite (Opcional)
+                            </label>
+                            <textarea asp-for="Text" class="form-control" rows="3" placeholder="Digite uma mensagem personalizada para o convite (opcional)"></textarea>
+                            <span asp-validation-for="Text" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane"></i> Enviar Convites
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model?.HasError == true)
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Erro:</strong> @Model.Result
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(Model?.Result))
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Resultado dos Convites:</strong>
+                            <div class="mt-2">
+                                <pre class="bg-light p-2 rounded">@Model.Result</pre>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

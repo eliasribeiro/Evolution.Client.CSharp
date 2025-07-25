@@ -1,0 +1,121 @@
+@model EvolutionWebApp.ViewModels.FetchAllGroupsViewModel
+
+@{
+    ViewData["Title"] = "Listar Todos os Grupos";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-list"></i> Listar Todos os Grupos
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FetchAllGroups" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">Nome da Instância</label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-list"></i> Listar Grupos
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.IsSuccess && Model.Groups != null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-check-circle"></i> @Model.Groups.Count grupo(s) encontrado(s)!</h5>
+                        </div>
+
+                        @if (Model.Groups.Any())
+                        {
+                            <div class="table-responsive mt-3">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Assunto</th>
+                                            <th>Descrição</th>
+                                            <th>Tamanho</th>
+                                            <th>Proprietário</th>
+                                            <th>Criação</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var group in Model.Groups)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span id="groupId_@group.Id">@group.Id</span>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="copyToClipboard('groupId_@group.Id')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </td>
+                                                <td>@group.Subject</td>
+                                                <td>@(string.IsNullOrEmpty(group.Description) ? "-" : group.Description)</td>
+                                                <td>@group.Size</td>
+                                                <td>@group.Owner</td>
+                                                <td>@group.Creation</td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(group.PictureUrl))
+                                                    {
+                                                        <a href="@group.PictureUrl" target="_blank" class="btn btn-sm btn-outline-info">
+                                                            <i class="fas fa-image"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle"></i> Nenhum grupo encontrado para esta instância.
+                            </div>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Erro</h5>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+        navigator.clipboard.writeText(text).then(function() {
+            // Feedback visual
+            const button = element.nextElementSibling;
+            const originalIcon = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-success');
+            
+            setTimeout(function() {
+                button.innerHTML = originalIcon;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-secondary');
+            }, 2000);
+        });
+    }
+</script>

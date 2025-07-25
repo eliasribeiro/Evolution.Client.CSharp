@@ -1,0 +1,141 @@
+@model EvolutionWebApp.ViewModels.LeaveGroupViewModel
+
+@{
+    ViewData["Title"] = "Sair do Grupo";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sign-out-alt"></i> Sair do Grupo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Atenção:</strong> Esta ação fará com que a instância saia permanentemente do grupo. 
+                        Você precisará ser adicionado novamente por um administrador para retornar.
+                    </div>
+
+                    <form asp-action="LeaveGroup" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">Nome da Instância</label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GroupJid" class="form-label">JID do Grupo</label>
+                            <input asp-for="GroupJid" class="form-control" placeholder="Digite o JID do grupo (ex: 123456789@g.us)" required />
+                            <span asp-validation-for="GroupJid" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="confirmLeave" required>
+                                <label class="form-check-label" for="confirmLeave">
+                                    Confirmo que desejo sair deste grupo
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-sign-out-alt"></i> Sair do Grupo
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.IsSuccess && Model.Result != null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-check-circle"></i> Saída do grupo realizada com sucesso!</h5>
+                            @if (Model.Result.Success)
+                            {
+                                <p><strong>Status:</strong> Você saiu do grupo com sucesso</p>
+                                @if (!string.IsNullOrEmpty(Model.Result.Message))
+                                {
+                                    <p><strong>Mensagem:</strong> @Model.Result.Message</p>
+                                }
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> 
+                                    A instância não faz mais parte deste grupo. Para retornar, será necessário ser adicionado novamente por um administrador.
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Erro</h5>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+
+                    <!-- Informações importantes -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-info-circle"></i> Informações Importantes
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-exclamation-circle text-warning"></i> Consequências</h6>
+                                    <ul class="small">
+                                        <li>Você não receberá mais mensagens do grupo</li>
+                                        <li>Não poderá ver novas mensagens ou mídia</li>
+                                        <li>Seu histórico de mensagens será mantido</li>
+                                        <li>Outros membros verão que você saiu</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-undo text-primary"></i> Para Retornar</h6>
+                                    <ul class="small">
+                                        <li>Um administrador deve adicionar você novamente</li>
+                                        <li>Você pode ser adicionado via convite</li>
+                                        <li>Não há limite para ser readicionado</li>
+                                        <li>Seu histórico anterior será preservado</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-lightbulb"></i> 
+                                <strong>Alternativa:</strong> Se você é administrador, considere transferir a administração para outro membro antes de sair.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações relacionadas -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-tools"></i> Ações Relacionadas
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="btn-group" role="group">
+                                <a href="/Group/FindParticipants" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-users"></i> Ver Participantes
+                                </a>
+                                <a href="/Group/UpdateParticipant" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-user-edit"></i> Gerenciar Participantes
+                                </a>
+                                <a href="/Group/FindGroupByJid" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-search"></i> Info do Grupo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

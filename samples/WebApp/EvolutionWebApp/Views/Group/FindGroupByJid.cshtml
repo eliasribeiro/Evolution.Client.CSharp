@@ -1,0 +1,138 @@
+@model EvolutionWebApp.ViewModels.FindGroupByJidViewModel
+
+@{
+    ViewData["Title"] = "Buscar Grupo por JID";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-search"></i> Buscar Grupo por JID
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FindGroupByJid" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">Nome da Instância</label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GroupJid" class="form-label">JID do Grupo</label>
+                            <input asp-for="GroupJid" class="form-control" placeholder="Digite o JID do grupo (ex: 123456789@g.us)" required />
+                            <span asp-validation-for="GroupJid" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Buscar Grupo
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.IsSuccess && Model.Result != null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-check-circle"></i> Grupo encontrado com sucesso!</h5>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5>Informações do Grupo</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>ID:</strong> <span id="groupId">@Model.Result.Id</span> 
+                                           <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('groupId')">
+                                               <i class="fas fa-copy"></i>
+                                           </button>
+                                        </p>
+                                        <p><strong>Assunto:</strong> @Model.Result.Subject</p>
+                                        <p><strong>Descrição:</strong> @Model.Result.Description</p>
+                                        <p><strong>Tamanho:</strong> @Model.Result.Size participantes</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Proprietário:</strong> @Model.Result.Owner</p>
+                                        <p><strong>Criação:</strong> @Model.Result.Creation</p>
+                                        @if (!string.IsNullOrEmpty(Model.Result.PictureUrl))
+                                        {
+                                            <p><strong>Foto:</strong> <a href="@Model.Result.PictureUrl" target="_blank">Ver imagem</a></p>
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (Model.Result.Participants != null && Model.Result.Participants.Any())
+                                {
+                                    <hr />
+                                    <h6>Participantes (@Model.Result.Participants.Count)</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Admin</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var participant in Model.Result.Participants)
+                                                {
+                                                    <tr>
+                                                        <td>@participant.Id</td>
+                                                        <td>
+                                                            @if (participant.Admin == true)
+                                                            {
+                                                                <span class="badge bg-success">Admin</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-secondary">Membro</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Erro</h5>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+        navigator.clipboard.writeText(text).then(function() {
+            // Feedback visual
+            const button = element.nextElementSibling;
+            const originalIcon = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-success');
+            
+            setTimeout(function() {
+                button.innerHTML = originalIcon;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-secondary');
+            }, 2000);
+        });
+    }
+</script>

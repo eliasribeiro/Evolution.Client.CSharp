@@ -39,14 +39,21 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<IEvolutionChatService, EvolutionChatService>();
         services.AddHttpClient<IEvolutionMessageService, EvolutionMessageService>();
         services.AddHttpClient<IEvolutionProfileService, EvolutionProfileService>();
+        services.AddHttpClient<IEvolutionWebhookService, EvolutionWebhookService>();
+        services.AddHttpClient<IEvolutionSettingsService, EvolutionSettingsService>();
+        services.AddHttpClient<IEvolutionGroupService, EvolutionGroupService>();
 
         // Registra os serviços
         services.TryAddSingleton<EvolutionApiClient>();
+        services.TryAddSingleton<IEvolutionApiClient>(provider => provider.GetRequiredService<EvolutionApiClient>());
         services.TryAddSingleton<IEvolutionInformationService, EvolutionInformationService>();
         services.TryAddSingleton<IEvolutionInstanceService, EvolutionInstanceService>();
         services.TryAddSingleton<IEvolutionChatService, EvolutionChatService>();
         services.TryAddSingleton<IEvolutionMessageService, EvolutionMessageService>();
         services.TryAddSingleton<IEvolutionProfileService, EvolutionProfileService>();
+        services.TryAddSingleton<IEvolutionWebhookService, EvolutionWebhookService>();
+        services.TryAddSingleton<IEvolutionSettingsService, EvolutionSettingsService>();
+        services.TryAddSingleton<IEvolutionGroupService, EvolutionGroupService>();
 
         return services;
     }

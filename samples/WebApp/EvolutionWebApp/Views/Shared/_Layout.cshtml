@@ -70,6 +70,33 @@
                                 <li><a class="dropdown-item" href="/Chat/GetBase64FromMediaMessage"><i class="fas fa-file-download"></i> Obter Base64 de Mídia</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="groupDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-people"></i> Grupos
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="groupDropdown">
+                                <li><a class="dropdown-item" href="/Group/CreateGroup"><i class="fas fa-plus-circle"></i> Criar Grupo</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Group/UpdateGroupPicture"><i class="fas fa-image"></i> Atualizar Foto</a></li>
+                                <li><a class="dropdown-item" href="/Group/UpdateGroupSubject"><i class="fas fa-edit"></i> Atualizar Nome</a></li>
+                                <li><a class="dropdown-item" href="/Group/UpdateGroupDescription"><i class="fas fa-align-left"></i> Atualizar Descrição</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Group/FetchInviteCode"><i class="fas fa-link"></i> Buscar Código de Convite</a></li>
+                                <li><a class="dropdown-item" href="/Group/RevokeInviteCode"><i class="fas fa-ban"></i> Revogar Código de Convite</a></li>
+                                <li><a class="dropdown-item" href="/Group/SendGroupInvite"><i class="fas fa-paper-plane"></i> Enviar Convite</a></li>
+                                <li><a class="dropdown-item" href="/Group/FindGroupByInviteCode"><i class="fas fa-search"></i> Buscar Grupo por Convite</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="FindGroupByJid">Buscar por JID</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="FetchAllGroups">Listar Todos os Grupos</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="FindParticipants">Buscar Participantes</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="UpdateParticipant">Atualizar Participantes</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="UpdateGroupSetting">Atualizar Configurações</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="ToggleEphemeral">Alternar Mensagens Efêmeras</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Group" asp-action="LeaveGroup">Sair do Grupo</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
                                 <i class="bi bi-shield-lock"></i> Privacidade

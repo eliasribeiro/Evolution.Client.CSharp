@@ -36,6 +36,72 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="instancesDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-server me-1"></i>
+                                Instâncias
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Instances")">
+                                        <i class="fas fa-list me-2"></i>
+                                        Listar Instâncias
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Instances")">
+                                        <i class="fas fa-plus me-2"></i>
+                                        Criar Instância
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="groupDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-users me-1"></i>
+                                Grupos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Group")">
+                                        <i class="fas fa-search me-2"></i>
+                                        Buscar Grupos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("CreateGroup", "Group")">
+                                        <i class="fas fa-plus me-2"></i>
+                                        Criar Grupo
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="chatDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-comment-dots me-1"></i>
+                                Chat
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("FindContacts", "Chat")">
+                                        <i class="fas fa-address-book me-2"></i>
+                                        Buscar Contatos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("FindChats", "Chat")">
+                                        <i class="fas fa-comments me-2"></i>
+                                        Buscar Chats
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("WhatsAppNumbers", "Chat")">
+                                        <i class="fas fa-phone me-2"></i>
+                                        Verificar Números
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-comments me-1"></i>
                                 Mensagens
@@ -57,6 +123,72 @@
                                     <a class="dropdown-item" href="@Url.Action("SendStatus", "Message")">
                                         <i class="fas fa-broadcast-tower me-2"></i>
                                         Enviar Status
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>
+                                Perfil
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("FetchPrivacySettings", "Profile")">
+                                        <i class="fas fa-shield-alt me-2"></i>
+                                        Consultar Privacidade
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("UpdatePrivacySettings", "Profile")">
+                                        <i class="fas fa-user-shield me-2"></i>
+                                        Atualizar Privacidade
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="webhookDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-webhook me-1"></i>
+                                Webhook
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Webhook")">
+                                        <i class="fas fa-home me-2"></i>
+                                        Início
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("SetWebhook", "Webhook")">
+                                        <i class="fas fa-cog me-2"></i>
+                                        Configurar Webhook
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("FindWebhook", "Webhook")">
+                                        <i class="fas fa-search me-2"></i>
+                                        Consultar Webhook
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-cogs me-1"></i>
+                                Configurações
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Settings")">
+                                        <i class="fas fa-sliders-h me-2"></i>
+                                        Configurar Instância
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("FindSettings", "Settings")">
+                                        <i class="fas fa-search me-2"></i>
+                                        Consultar Configurações
                                     </a>
                                 </li>
                             </ul>

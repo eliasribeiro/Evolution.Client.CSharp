@@ -1,0 +1,258 @@
+@model Evolution.Client.CSharp.Models.Settings.SetSettingsRequest
+
+@{
+    ViewData["Title"] = "Configurações da Instância";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Início</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Settings")">Configurações</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Configurar</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">
+                <i class="fas fa-cogs"></i>
+                Configurações da Instância
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sliders-h"></i>
+                        Configurar Instância
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="SetSettings" method="post">
+                        <div class="mb-3">
+                            <label for="instanceName" class="form-label">Nome da Instância *</label>
+                            <input type="text" class="form-control" id="instanceName" name="instanceName" 
+                                   placeholder="Digite o nome da instância" required>
+                            <div class="form-text">Nome da instância WhatsApp a ser configurada.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-phone"></i>
+                                            Configurações de Chamadas
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="RejectCall" class="form-check-input" type="checkbox" id="rejectCall">
+                                                <label asp-for="RejectCall" class="form-check-label" for="rejectCall">
+                                                    <i class="fas fa-phone-slash"></i> Rejeitar Chamadas
+                                                </label>
+                                                <div class="form-text">Rejeita automaticamente chamadas recebidas.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label asp-for="MsgCall" class="form-label">
+                                                <i class="fas fa-comment"></i> Mensagem para Chamadas
+                                            </label>
+                                            <textarea asp-for="MsgCall" class="form-control" rows="3" 
+                                                      placeholder="Mensagem enviada quando uma chamada é rejeitada"></textarea>
+                                            <div class="form-text">Mensagem automática enviada ao rejeitar chamadas.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-users"></i>
+                                            Configurações de Grupos
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="GroupsIgnore" class="form-check-input" type="checkbox" id="groupsIgnore">
+                                                <label asp-for="GroupsIgnore" class="form-check-label" for="groupsIgnore">
+                                                    <i class="fas fa-eye-slash"></i> Ignorar Grupos
+                                                </label>
+                                                <div class="form-text">Ignora mensagens de grupos.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-user-circle"></i>
+                                            Status e Presença
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="AlwaysOnline" class="form-check-input" type="checkbox" id="alwaysOnline">
+                                                <label asp-for="AlwaysOnline" class="form-check-label" for="alwaysOnline">
+                                                    <i class="fas fa-circle text-success"></i> Sempre Online
+                                                </label>
+                                                <div class="form-text">Mantém o status sempre como online.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-envelope"></i>
+                                            Configurações de Mensagens
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="ReadMessages" class="form-check-input" type="checkbox" id="readMessages">
+                                                <label asp-for="ReadMessages" class="form-check-label" for="readMessages">
+                                                    <i class="fas fa-envelope-open"></i> Ler Mensagens Automaticamente
+                                                </label>
+                                                <div class="form-text">Marca mensagens como lidas automaticamente.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="ReadStatus" class="form-check-input" type="checkbox" id="readStatus">
+                                                <label asp-for="ReadStatus" class="form-check-label" for="readStatus">
+                                                    <i class="fas fa-check-double"></i> Confirmar Leitura
+                                                </label>
+                                                <div class="form-text">Envia confirmação de leitura das mensagens.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input asp-for="SyncFullHistory" class="form-check-input" type="checkbox" id="syncFullHistory">
+                                                <label asp-for="SyncFullHistory" class="form-check-label" for="syncFullHistory">
+                                                    <i class="fas fa-history"></i> Sincronizar Histórico Completo
+                                                </label>
+                                                <div class="form-text">Sincroniza todo o histórico de mensagens.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("Index", "Settings")" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar Configurações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Configurações:</strong><br>
+                        Personalize o comportamento da sua instância WhatsApp.
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Principais Configurações:</strong>
+                    </p>
+                    <ul class="list-unstyled small">
+                        <li><i class="fas fa-dot-circle text-danger"></i> Rejeição de chamadas</li>
+                        <li><i class="fas fa-dot-circle text-warning"></i> Ignorar grupos</li>
+                        <li><i class="fas fa-dot-circle text-success"></i> Status sempre online</li>
+                        <li><i class="fas fa-dot-circle text-info"></i> Leitura automática</li>
+                        <li><i class="fas fa-dot-circle text-primary"></i> Sincronização de histórico</li>
+                    </ul>
+                    <hr>
+                    <div class="alert alert-warning" role="alert">
+                        <small>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Atenção:</strong> Algumas configurações podem afetar a experiência do usuário.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Success == true && ViewBag.Response != null)
+    {
+        var response = ViewBag.Response as Evolution.Client.CSharp.Models.Settings.SetSettingsResponse;
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-check-circle"></i>
+                        Configurações Salvas com Sucesso!
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Rejeitar Chamadas:</strong> @(response?.Settings.RejectCall == true ? "Sim" : "Não")</p>
+                            <p><strong>Ignorar Grupos:</strong> @(response?.Settings.GroupsIgnore == true ? "Sim" : "Não")</p>
+                            <p><strong>Sempre Online:</strong> @(response?.Settings.AlwaysOnline == true ? "Sim" : "Não")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Ler Mensagens:</strong> @(response?.Settings.ReadMessages == true ? "Sim" : "Não")</p>
+                            <p><strong>Confirmar Leitura:</strong> @(response?.Settings.ReadStatus == true ? "Sim" : "Não")</p>
+                            <p><strong>Sincronizar Histórico:</strong> @(response?.Settings.SyncFullHistory == true ? "Sim" : "Não")</p>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(response?.Settings.MsgCall))
+                    {
+                        <p><strong>Mensagem para Chamadas:</strong> @response?.Settings.MsgCall</p>
+                    }
+                    <hr>
+                    <div class="text-center">
+                        <a href="@Url.Action("FindSettings", "Settings")" class="btn btn-secondary">
+                            <i class="fas fa-search"></i> Consultar Configurações
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.Success == false && !string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Erro ao Salvar Configurações
+                    </h4>
+                    <p>@ViewBag.Error</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

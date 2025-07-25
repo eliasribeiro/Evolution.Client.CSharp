@@ -1,0 +1,103 @@
+@model EvolutionWebApp.ViewModels.UpdateGroupSettingViewModel
+
+@{
+    ViewData["Title"] = "Atualizar Configurações do Grupo";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-cog"></i> Atualizar Configurações do Grupo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateGroupSetting" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">Nome da Instância</label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GroupJid" class="form-label">JID do Grupo</label>
+                            <input asp-for="GroupJid" class="form-control" placeholder="Digite o JID do grupo (ex: 123456789@g.us)" required />
+                            <span asp-validation-for="GroupJid" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Action" class="form-label">Configuração</label>
+                            <select asp-for="Action" class="form-select" required>
+                                <option value="">Selecione uma configuração</option>
+                                <option value="announcement">Apenas Admins Podem Enviar Mensagens</option>
+                                <option value="not_announcement">Todos Podem Enviar Mensagens</option>
+                                <option value="locked">Apenas Admins Podem Editar Info do Grupo</option>
+                                <option value="unlocked">Todos Podem Editar Info do Grupo</option>
+                            </select>
+                            <span asp-validation-for="Action" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-cog"></i> Atualizar Configuração
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.IsSuccess && Model.Result != null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-check-circle"></i> Configuração atualizada com sucesso!</h5>
+                            @if (Model.Result.Success)
+                            {
+                                <p><strong>Status:</strong> Configuração aplicada com sucesso</p>
+                                @if (!string.IsNullOrEmpty(Model.Result.Message))
+                                {
+                                    <p><strong>Mensagem:</strong> @Model.Result.Message</p>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Erro</h5>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+
+                    <!-- Informações sobre as configurações -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-info-circle"></i> Informações sobre as Configurações
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-bullhorn text-primary"></i> Modo Anúncio</h6>
+                                    <p class="small"><strong>Ativado:</strong> Apenas administradores podem enviar mensagens no grupo.</p>
+                                    <p class="small"><strong>Desativado:</strong> Todos os participantes podem enviar mensagens.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-lock text-warning"></i> Edição de Informações</h6>
+                                    <p class="small"><strong>Bloqueado:</strong> Apenas administradores podem editar as informações do grupo (nome, descrição, foto).</p>
+                                    <p class="small"><strong>Desbloqueado:</strong> Todos os participantes podem editar as informações do grupo.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-lightbulb"></i> 
+                                <strong>Dica:</strong> Essas configurações ajudam a manter a organização e controle do grupo, especialmente em grupos grandes ou corporativos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

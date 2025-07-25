@@ -1,0 +1,165 @@
+@model FindGroupByInviteCodeViewModel
+
+@{
+    ViewData["Title"] = "Buscar Grupo por Código de Convite";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-search"></i> Buscar Grupo por Código de Convite
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="FindGroupByInviteCode" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">
+                                <i class="fas fa-server"></i> Nome da Instância
+                            </label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="InviteCode" class="form-label">
+                                <i class="fas fa-link"></i> Código de Convite
+                            </label>
+                            <input asp-for="InviteCode" class="form-control" placeholder="Digite o código de convite" required />
+                            <small class="form-text text-muted">Exemplo: ABC123DEF456</small>
+                            <span asp-validation-for="InviteCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-info btn-lg">
+                                <i class="fas fa-search"></i> Buscar Grupo
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model?.HasError == true)
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Erro:</strong> @Model.Result
+                        </div>
+                    }
+                    else if (Model?.GroupInfo != null)
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Grupo Encontrado!</strong>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-users"></i> Informações do Grupo
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>ID do Grupo:</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="@Model.GroupInfo.Id" readonly id="groupId" />
+                                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('groupId')">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Nome do Grupo:</strong></label>
+                                            <input type="text" class="form-control" value="@Model.GroupInfo.Subject" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label"><strong>Descrição:</strong></label>
+                                    <textarea class="form-control" rows="2" readonly>@Model.GroupInfo.Description</textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Tamanho:</strong></label>
+                                            <input type="text" class="form-control" value="@Model.GroupInfo.Size participantes" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Proprietário:</strong></label>
+                                            <input type="text" class="form-control" value="@Model.GroupInfo.Owner" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Criação:</strong></label>
+                                            <input type="text" class="form-control" value="@Model.GroupInfo.CreationDate" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Código de Convite:</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="@Model.GroupInfo.InviteCode" readonly id="inviteCode" />
+                                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('inviteCode')">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>URL de Convite:</strong></label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="@Model.GroupInfo.InviteUrl" readonly id="inviteUrl" />
+                                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('inviteUrl')">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function copyToClipboard(elementId) {
+            var copyText = document.getElementById(elementId);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            
+            // Show feedback
+            var button = event.target.closest('button');
+            var originalHtml = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-success');
+            
+            setTimeout(function() {
+                button.innerHTML = originalHtml;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-secondary');
+            }, 2000);
+        }
+    </script>
+}

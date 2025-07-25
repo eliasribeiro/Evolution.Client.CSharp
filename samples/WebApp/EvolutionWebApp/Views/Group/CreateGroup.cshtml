@@ -1,0 +1,83 @@
+@model CreateGroupViewModel
+
+@{
+    ViewData["Title"] = "Criar Grupo";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle"></i> Criar Novo Grupo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateGroup" method="post">
+                        <div class="mb-3">
+                            <label asp-for="InstanceName" class="form-label">
+                                <i class="fas fa-server"></i> Nome da Instância
+                            </label>
+                            <input asp-for="InstanceName" class="form-control" placeholder="Digite o nome da instância" required />
+                            <span asp-validation-for="InstanceName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Subject" class="form-label">
+                                <i class="fas fa-tag"></i> Nome do Grupo
+                            </label>
+                            <input asp-for="Subject" class="form-control" placeholder="Digite o nome do grupo" required />
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">
+                                <i class="fas fa-align-left"></i> Descrição
+                            </label>
+                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Digite a descrição do grupo (opcional)"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Participants" class="form-label">
+                                <i class="fas fa-users"></i> Participantes
+                            </label>
+                            <textarea asp-for="Participants" class="form-control" rows="5" placeholder="Digite os números dos participantes (um por linha)&#10;Exemplo:&#10;5511999999999&#10;5511888888888"></textarea>
+                            <small class="form-text text-muted">Digite um número por linha, incluindo código do país</small>
+                            <span asp-validation-for="Participants" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus-circle"></i> Criar Grupo
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (!string.IsNullOrEmpty(Model?.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Erro:</strong> @Model.ErrorMessage
+                        </div>
+                    }
+                    else if (Model?.Result != null)
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Sucesso:</strong> Grupo criado com sucesso!
+                            <div class="mt-2">
+                                <strong>ID do Grupo:</strong> @Model.Result.GroupJid
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
