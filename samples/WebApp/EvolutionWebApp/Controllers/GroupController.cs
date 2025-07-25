@@ -511,7 +511,7 @@ public class GroupController : Controller
 
         try
         {
-            var response = await _evolutionClient.GroupService.FetchAllGroupsAsync(model.InstanceName);
+            var response = await _evolutionClient.GroupService.FetchAllGroupsAsync(model.InstanceName, getParticipants: true);
 
             model.Groups = response;
             model.ErrorMessage = null;

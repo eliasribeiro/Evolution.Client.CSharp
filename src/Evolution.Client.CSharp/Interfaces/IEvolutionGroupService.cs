@@ -89,9 +89,10 @@ public interface IEvolutionGroupService
     /// Fetch all groups
     /// </summary>
     /// <param name="instanceName">Name of the instance</param>
+    /// <param name="getParticipants">Whether to include participants in the response</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of all groups</returns>
-    Task<List<FetchAllGroupsResponse>> FetchAllGroupsAsync(string instanceName, CancellationToken cancellationToken = default);
+    Task<List<FetchAllGroupsResponse>> FetchAllGroupsAsync(string instanceName, bool getParticipants = true, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Busca grupos com base nos parâmetros fornecidos

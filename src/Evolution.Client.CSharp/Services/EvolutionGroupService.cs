@@ -217,12 +217,12 @@ public class EvolutionGroupService : IEvolutionGroupService
     }
 
     /// <inheritdoc />
-    public async Task<List<FetchAllGroupsResponse>> FetchAllGroupsAsync(string instanceName, CancellationToken cancellationToken = default)
+    public async Task<List<FetchAllGroupsResponse>> FetchAllGroupsAsync(string instanceName, bool getParticipants = true, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(instanceName))
             throw new ArgumentException("Nome da instância não pode ser vazio.", nameof(instanceName));
 
-        var response = await _httpClient.GetAsync($"group/fetchAllGroups/{instanceName}", cancellationToken);
+        var response = await _httpClient.GetAsync($"group/fetchAllGroups/{instanceName}?getParticipants={getParticipants.ToString().ToLower()}", cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);

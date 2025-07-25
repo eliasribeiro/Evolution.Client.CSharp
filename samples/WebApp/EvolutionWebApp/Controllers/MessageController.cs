@@ -143,7 +143,7 @@ public class MessageController : Controller
                 RemoteJid = result.Key.RemoteJid,
                 FromMe = result.Key.FromMe,
                 MessageText = result.Message.ExtendedTextMessage?.Text ?? result.Message.Conversation ?? text,
-                MessageTimestamp = result.MessageTimestamp,
+                MessageTimestamp = result.MessageTimestamp.ToString(),
                 Status = result.Status
             };
 
@@ -286,7 +286,7 @@ public class MessageController : Controller
                 MessageId = result.Key.Id,
                 RemoteJid = result.Key.RemoteJid,
                 FromMe = result.Key.FromMe,
-                MessageTimestamp = result.MessageTimestamp,
+                MessageTimestamp = result.MessageTimestamp.ToString(),
                 Status = result.Status
             };
 
@@ -429,7 +429,7 @@ public class MessageController : Controller
                 MessageId = result.Key.Id,
                 RemoteJid = result.Key.RemoteJid,
                 FromMe = result.Key.FromMe,
-                MessageTimestamp = result.MessageTimestamp,
+                MessageTimestamp = result.MessageTimestamp.ToString(),
                 Status = result.Status
             };
 
@@ -602,7 +602,7 @@ public class MessageController : Controller
                 MessageId = result.Key.Id,
                 RemoteJid = result.Key.RemoteJid,
                 FromMe = result.Key.FromMe,
-                MessageTimestamp = result.MessageTimestamp,
+                MessageTimestamp = result.MessageTimestamp.ToString(),
                 Status = result.Status
             };
 

@@ -84,9 +84,20 @@
                                                     <tr>
                                                         <td>@participant.Id</td>
                                                         <td>
-                                                            @if (participant.Admin == true)
+                                                            @if (!string.IsNullOrEmpty(participant.Admin))
                                                             {
-                                                                <span class="badge bg-success">Admin</span>
+                                                                @if (participant.Admin == "superadmin")
+                                                                {
+                                                                    <span class="badge bg-danger">Super Admin</span>
+                                                                }
+                                                                else if (participant.Admin == "admin")
+                                                                {
+                                                                    <span class="badge bg-success">Admin</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge bg-warning">@participant.Admin</span>
+                                                                }
                                                             }
                                                             else
                                                             {

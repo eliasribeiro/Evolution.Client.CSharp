@@ -66,7 +66,7 @@ public class EvolutionMessageServiceTests
                     Text = "Olá! Como você está?"
                 }
             },
-            MessageTimestamp = "1717689097",
+            MessageTimestamp = 1717689097,
             Status = "PENDING"
         };
 
@@ -94,7 +94,7 @@ public class EvolutionMessageServiceTests
         Assert.True(result.Key.FromMe);
         Assert.Equal("Olá! Como você está?", result.Message.ExtendedTextMessage?.Text);
         Assert.Equal("PENDING", result.Status);
-        Assert.Equal("1717689097", result.MessageTimestamp);
+        Assert.Equal(1717689097, result.MessageTimestamp);
     }
 
     [Fact]
@@ -234,7 +234,7 @@ public class EvolutionMessageServiceTests
                     Text = "Esta é uma resposta"
                 }
             },
-            MessageTimestamp = "1717689097",
+            MessageTimestamp = 1717689097,
             Status = "PENDING"
         };
 
@@ -289,7 +289,7 @@ public class EvolutionMessageServiceTests
                     Text = "Olá pessoal!"
                 }
             },
-            MessageTimestamp = "1717689097",
+            MessageTimestamp = 1717689097,
             Status = "PENDING"
         };
 
