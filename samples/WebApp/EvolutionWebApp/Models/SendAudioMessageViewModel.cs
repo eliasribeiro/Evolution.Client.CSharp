@@ -8,8 +8,8 @@ public class SendAudioMessageViewModel
     public string? Number { get; set; }
     public string? Audio { get; set; }
     public int? Delay { get; set; }
-    public bool LinkPreview { get; set; }
-    public bool MentionsEveryOne { get; set; }
+    public bool? LinkPreview { get; set; }
+    public bool? MentionsEveryOne { get; set; }
     public string? Mentioned { get; set; }
     public string? QuotedMessageId { get; set; }
     public string? QuotedMessageText { get; set; }

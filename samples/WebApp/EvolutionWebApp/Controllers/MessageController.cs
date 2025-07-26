@@ -205,8 +205,8 @@ public class MessageController : Controller
         string number, 
         string audio, 
         int? delay = null,
-        bool linkPreview = false,
-        bool mentionsEveryOne = false,
+        bool? linkPreview = null,
+        bool? mentionsEveryOne = null,
         string? mentioned = null,
         string? quotedMessageId = null,
         string? quotedMessageText = null)
